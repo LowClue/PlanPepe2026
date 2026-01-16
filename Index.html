@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Pepe 2026/2027 Pro</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jsPDF & AutoTable para Exportar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&family=Bangers&display=swap');
+        
+        :root { --anime-bg: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=2670&auto=format&fit=crop'); }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            color: #e2e8f0; 
+            margin: 0; padding: 0;
+            background-color: #0b0f19;
+            background-image: var(--anime-bg);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(11, 15, 25, 0.92); z-index: -1;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .comic-font { font-family: 'Bangers', cursive; letter-spacing: 1px; }
+        
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+
+        .hidden-tab { display: none; }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hidden { display: none !important; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-btn.active { color: #60a5fa; transform: scale(1.05); border-bottom: 2px solid #60a5fa; } 
+        .nav-btn { transition: all 0.2s ease; border-bottom: 2px solid transparent; }
+        .vid-link:hover { text-decoration: underline; color: #f472b6; transform: scale(1.05); }
+
+        .toggle-checkbox:checked { right: 0; border-color: #68D391; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
+
+        /* Estilos específicos para suplementos */
+        .supp-card.paused { opacity: 0.6; filter: grayscale(0.8); }
+        .supp-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .tag-morning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+        .tag-workout { background: rgba(248, 113, 113, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.4); }
+        .tag-night { background: rgba(129, 140, 248, 0.2); color: #818cf8; border: 1px solid rgba(129, 140, 248, 0.4); }
+        .tag-meal { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- HEADER PRO -->
+    <header class="p-4 pt-6 border-b border-slate-700 sticky top-0 z-40 shadow-2xl glass">
+        <div class="max-w-3xl mx-auto">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl text-white tracking-wider comic-font drop-shadow-lg leading-none">
+                        PEPE <span class="text-blue-500">2026</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 font-mono mt-1">OBJETIVO: 96KG ➔ 85KG</p>
+                </div>
+                <div class="text-right cursor-pointer p-2 hover:bg-white/5 rounded-full transition-colors" onclick="toggleSettings()">
+                    <i data-lucide="settings" class="w-6 h-6 text-slate-300"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="hidden mt-4 p-4 bg-black/90 rounded-lg border border-slate-600 backdrop-blur-md max-w-2xl mx-auto space-y-4 shadow-2xl">
+            
+            <!-- PRIVACIDAD TOGGLE -->
+            <div class="flex items-center justify-between bg-slate-800 p-3 rounded border border-slate-600">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="eye-off" class="text-yellow-400 w-5 h-5"></i>
+                    <div>
+                        <span class="text-sm font-bold text-white block">Modo Privado</span>
+                        <span class="text-[10px] text-slate-400">Ocultar fotos al enseñar la app.</span>
+                    </div>
+                </div>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="privacy-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" onclick="togglePrivacyMode()"/>
+                    <label for="privacy-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                </div>
+            </div>
+
+            <!-- EXPORTAR PDF REPORTE -->
+            <button onclick="generatePDFReport()" class="w-full bg-red-600 hover:bg-red-500 text-white p-3 rounded font-bold flex justify-center gap-2 items-center border border-red-400/30">
+                <i data-lucide="file-text" class="w-4 h-4"></i> GENERAR INFORME PDF (Resultados)
+            </button>
+
+            <!-- GESTIÓN DE SEMANAS (IMPORTAR CÓDIGO) -->
+            <div class="bg-slate-800 p-3 rounded border border-slate-600 space-y-2">
+                <p class="text-xs text-green-400 font-bold uppercase flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-3 h-3"></i> Añadir Nueva Semana
+                </p>
+                <textarea id="import-code-area" class="w-full bg-black/50 text-[10px] text-green-300 font-mono p-2 rounded border border-slate-700 h-16" placeholder='Pega aquí el código JSON de la nueva semana...'></textarea>
+                <button onclick="importNewWeek()" class="w-full bg-green-700 hover:bg-green-600 text-white py-1 rounded text-xs font-bold">IMPORTAR SEMANA</button>
+            </div>
+
+            <!-- GESTIÓN DE DATOS (BACKUP) -->
+            <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                <p class="text-xs text-blue-300 font-bold mb-2 uppercase">Copia de Seguridad</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="exportData()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded text-xs font-bold flex justify-center gap-2 items-center">
+                        <i data-lucide="download" class="w-3"></i> Guardar
+                    </button>
+                    <label class="bg-slate-600 hover:bg-slate-500 text-white px-3 py-2 rounded text-xs font-bold flex justify-center gap-2 items-center cursor-pointer">
+                        <i data-lucide="upload" class="w-3"></i> Cargar
+                        <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
+                    </label>
+                </div>
+            </div>
+            
+            <button onclick="resetData()" class="w-full text-xs text-red-400 hover:text-red-300 border border-red-900/50 p-2 rounded">
+                Borrar Todo (Reset de Fábrica)
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-2xl mx-auto p-4 space-y-6 pb-20">
+        
+        <!-- TAB 1: PLAN -->
+        <div id="tab-plan" class="tab-content fade-in">
+            <!-- Selector de Semana -->
+            <div class="glass p-3 rounded-xl mb-4 flex items-center justify-between border-b-2 border-blue-500">
+                <label class="text-xs font-bold text-slate-400 uppercase">Semana:</label>
+                <select id="week-selector" onchange="changeWeek()" class="bg-slate-900 border border-slate-600 text-white text-sm rounded p-1 pl-2 pr-8 outline-none focus:border-blue-500 font-mono w-48">
+                    <!-- Se llena con JS -->
+                </select>
+            </div>
+
+            <div id="plan-container" class="space-y-6">
+                <!-- Se rellena con JS -->
+            </div>
+        </div>
+
+        <!-- TAB 2: RUNNING -->
+        <div id="tab-running" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="glass p-6 rounded-xl border border-orange-500/30">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i data-lucide="footprints" class="text-orange-400"></i> Registro de Carrera
+                </h3>
+                <form id="runForm" class="space-y-4">
+                    <input type="date" id="runDate" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none" required>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Distancia (km)</label>
+                            <input type="number" id="runDist" step="0.01" placeholder="Ej: 5.0" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none focus:border-orange-500" required>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Tiempo (min)</label>
+                            <input type="number" id="runTime" step="1" placeholder="Ej: 30" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none focus:border-orange-500" required>
+                        </div>
+                    </div>
+                    <div id="pace-preview" class="text-center text-sm font-mono text-orange-300 h-6"></div>
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2">
+                        GUARDAR CARRERA
+                    </button>
+                </form>
+            </div>
+            <div class="glass p-4 rounded-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
+                    <i data-lucide="timer" class="w-4 h-4 text-orange-400"></i> Evolución Ritmo (min/km)
+                </h3>
+                <div class="h-48 relative w-full"><canvas id="chartRunning"></canvas></div>
+            </div>
+            <div class="glass p-4 rounded-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-300">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-900/50">
+                            <tr><th class="px-2 py-2">Fecha</th><th class="px-2 py-2">Km</th><th class="px-2 py-2">Tiempo</th><th class="px-2 py-2">Ritmo</th><th class="px-1 py-2"></th></tr>
+                        </thead>
+                        <tbody id="runningTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: FUERZA -->
+        <div id="tab-strength" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="glass p-4 rounded-xl">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i data-lucide="dumbbell" class="text-blue-400"></i> Progreso de Cargas
+                </h3>
+                <select id="exercise-select" onchange="renderStrengthChart()" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white text-sm outline-none focus:border-blue-500 mb-4">
+                    <option value="Prensa de Piernas">Prensa de Piernas</option>
+                    <option value="Jalón al Pecho">Jalón al Pecho</option>
+                    <option value="Remo en Máquina">Remo en Máquina</option>
+                    <option value="Press Pecho Máquina">Press Pecho Máquina</option>
+                    <option value="Extensión Cuádriceps">Extensión Cuádriceps</option>
+                    <option value="Curl Femoral">Curl Femoral</option>
+                    <option value="Face Pull">Face Pull</option>
+                </select>
+                <div class="h-64 relative w-full bg-slate-900/30 rounded-lg p-2">
+                    <canvas id="chartStrength"></canvas>
+                </div>
+            </div>
+            <div class="glass p-4 rounded-xl border border-yellow-500/20">
+                <h4 class="text-sm font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                    <i data-lucide="trophy" class="w-4 h-4"></i> Récords Personales (PR)
+                </h4>
+                <div id="pr-list" class="space-y-2 text-xs text-slate-300 font-mono"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SUPLEMENTACIÓN (NUEVA) -->
+        <div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="glass p-6 rounded-xl border border-teal-500/30">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="pill" class="text-teal-400"></i> Stack de Suplementos
+                    </h3>
+                    <button onclick="openSuppModal()" class="text-xs bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded flex items-center gap-1">
+                        <i data-lucide="plus" class="w-3 h-3"></i> Añadir
+                    </button>
+                </div>
+                <div id="supplements-list" class="space-y-4">
+                    <!-- JS Rendering -->
+                </div>
+                <p class="text-[10px] text-slate-500 mt-4 text-center italic">
+                    *Consulta siempre con un profesional de la salud antes de iniciar suplementación.
+                </p>
+            </div>
+            
+            <!-- Modal para Añadir/Editar Suplemento -->
+            <div id="supp-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="glass bg-slate-900 w-full max-w-md p-6 rounded-xl border border-slate-600 relative">
+                    <button onclick="closeSuppModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <h4 id="supp-modal-title" class="text-lg font-bold text-white mb-4">Editar Suplemento</h4>
+                    <form id="suppForm" class="space-y-4">
+                        <input type="hidden" id="suppId">
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Nombre</label>
+                            <input type="text" id="suppName" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm" placeholder="Ej: Creatina" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Dosis</label>
+                                <input type="text" id="suppDose" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm" placeholder="Ej: 5g / 1 scoop" required>
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Momento</label>
+                                <select id="suppTiming" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm">
+                                    <option value="morning">Mañana / Desayuno</option>
+                                    <option value="workout">Pre/Post Entreno</option>
+                                    <option value="meal">Con Comidas</option>
+                                    <option value="night">Noche / Antes dormir</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Instrucciones y Por Qué (Detallado)</label>
+                            <textarea id="suppDesc" rows="4" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-sm" placeholder="Explica cómo y por qué tomarlo..."></textarea>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2">
+                             <input type="checkbox" id="suppActive" class="w-4 h-4 rounded bg-slate-800 border-slate-600">
+                             <label for="suppActive" class="text-sm text-slate-300">Actualmente tomando</label>
+                        </div>
+                        <div class="flex gap-2 pt-2">
+                            <button type="button" onclick="deleteCurrentSupp()" id="btn-delete-supp" class="w-1/3 bg-red-900/50 text-red-300 border border-red-900 hover:bg-red-900 p-2 rounded text-xs font-bold hidden">ELIMINAR</button>
+                            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white p-2 rounded font-bold text-sm">GUARDAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: GALERÍA -->
+        <div id="tab-gallery" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="glass p-6 rounded-xl text-center border border-purple-500/30">
+                <i data-lucide="lock" class="w-8 h-8 text-purple-400 mx-auto mb-2"></i>
+                <h3 class="text-lg font-bold text-white">Fotos Privadas</h3>
+                <button onclick="document.getElementById('photo-input').click()" class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-lg text-sm font-bold shadow-lg mt-4">
+                    + Subir Foto
+                </button>
+                <input type="file" id="photo-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(this)">
+            </div>
+            <div class="glass p-4 rounded-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <label class="text-sm font-bold text-slate-300">Mes:</label>
+                    <select id="month-select" onchange="renderGallery()" class="bg-slate-800 border border-slate-600 rounded px-3 py-1 text-xs text-white outline-none">
+                        <option value="all">Todas</option>
+                    </select>
+                </div>
+                <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+
+        <!-- TAB 6: SALUD -->
+        <div id="tab-stats" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="grid grid-cols-3 gap-2">
+                <div class="glass p-3 rounded-xl text-center border-b-2 border-green-500">
+                    <div class="text-[10px] text-slate-400 mb-1">VFC</div>
+                    <div id="stat-vfc" class="text-xl font-bold text-green-400 mono">--</div>
+                </div>
+                <div class="glass p-3 rounded-xl text-center border-b-2 border-red-500">
+                    <div class="text-[10px] text-slate-400 mb-1">RHR</div>
+                    <div id="stat-rhr" class="text-xl font-bold text-red-400 mono">--</div>
+                </div>
+                <div class="glass p-3 rounded-xl text-center border-b-2 border-blue-500">
+                    <div class="text-[10px] text-slate-400 mb-1">PESO</div>
+                    <div id="stat-weight" class="text-xl font-bold text-blue-400 mono">--</div>
+                </div>
+            </div>
+            <div class="glass p-6 rounded-xl border border-slate-700">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <i data-lucide="clipboard-edit" class="text-blue-400"></i> Check-in Semanal
+                </h3>
+                <form id="entryForm" class="space-y-4">
+                    <input type="date" id="inputDate" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none" required>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="number" id="inputWeight" step="0.1" placeholder="Peso (kg)" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none" required>
+                        <input type="number" id="inputVfc" placeholder="VFC (ms)" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none" required>
+                        <input type="number" id="inputRhr" placeholder="RHR (ppm)" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none">
+                        <input type="number" id="inputPain" max="10" placeholder="Dolor (0-10)" class="w-full bg-slate-900/50 border border-slate-600 rounded p-3 text-white outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg">GUARDAR</button>
+                </form>
+            </div>
+            
+            <div class="glass p-4 rounded-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-2">VFC (Recuperación)</h3>
+                <div class="h-40 relative w-full"><canvas id="chartVfc"></canvas></div>
+            </div>
+            
+            <div class="glass p-4 rounded-xl">
+                <h3 class="text-sm font-bold text-slate-300 mb-2">Peso Corporal</h3>
+                <div class="h-40 relative w-full"><canvas id="chartWeight"></canvas></div>
+            </div>
+            <div class="glass p-4 rounded-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-300">
+                        <thead class="text-xs text-slate-500 uppercase bg-slate-900/50">
+                            <tr><th class="px-2 py-3">Fecha</th><th class="px-2 py-3">Kg</th><th class="px-2 py-3">VFC</th><th class="px-1 py-3"></th></tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- NAV INFERIOR -->
+    <nav class="fixed bottom-0 w-full bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-2 pb-6 z-50 flex justify-around text-[10px] font-bold uppercase tracking-widest shadow-2xl">
+        <button onclick="switchTab('plan')" id="btn-plan" class="nav-btn active flex flex-col items-center gap-1 p-2 w-full rounded-lg text-blue-400">
+            <i data-lucide="calendar-days" class="w-5 h-5"></i> Plan
+        </button>
+        <button onclick="switchTab('running')" id="btn-running" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-lg">
+            <i data-lucide="footprints" class="w-5 h-5"></i> Run
+        </button>
+        <button onclick="switchTab('strength')" id="btn-strength" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-lg">
+            <i data-lucide="dumbbell" class="w-5 h-5"></i> Fuerza
+        </button>
+        <button onclick="switchTab('supplements')" id="btn-supplements" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-lg">
+            <i data-lucide="pill" class="w-5 h-5"></i> Suplem
+        </button>
+        <button onclick="switchTab('gallery')" id="btn-gallery" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-lg">
+            <i data-lucide="image" class="w-5 h-5"></i> Fotos
+        </button>
+        <button onclick="switchTab('stats')" id="btn-stats" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-lg">
+            <i data-lucide="activity" class="w-5 h-5"></i> Salud
+        </button>
+    </nav>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- CONFIG BASE ---
+        let userSettings = JSON.parse(localStorage.getItem('pepeSettings')) || { bgUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477', privacyMode: false };
+
+        // --- DATA TEMPLATES (CON DESCRIPCIONES RESTAURADAS) ---
+        const defaultWeek = [
+            { id: "mon", day: "Lunes", title: "Gym A: Pierna + Core", type: "gym", exercises: [
+                { name: "Big 3 McGill", sets: "3", reps: "Var", vid: "https://www.youtube.com/watch?v=gpFxsTVl4lA", desc: "1) Curl-Up: Manos bajo lumbar, levanta cabeza 2cm, 10s. 2) Plancha Lat: Columna recta, 20s. 3) Bird-Dog: Estira brazo/pierna contraria buscando longitud.", track: false },
+                { name: "Prensa de Piernas", sets: "3", reps: "12", desc: "Pies anchura hombros. Baja lento (3s) hasta rodillas 90º. ¡IMPORTANTE! Glúteo pegado al asiento siempre.", track: true },
+                { name: "Extensión Cuádriceps", sets: "3", reps: "15", desc: "Sube explosivo, aguanta 1s arriba, baja lento. Ardor es bueno.", track: true },
+                { name: "Curl Femoral", sets: "3", reps: "12", desc: "Tumbado o sentado. Talones al glúteo. Protege rodillas.", track: true },
+                { name: "Estiramiento Psoas", sets: "1", reps: "1min", vid: "https://www.youtube.com/watch?v=saJxHBgcbOA", desc: "Posición caballero. Adelanta cadera suavemente. Vital para L5-S1.", track: false }
+            ], notes: "" },
+            { id: "tue", day: "Martes", title: "Cardio Zona 2", type: "cardio", exercises: [{ name: "Bici / Caminata", sets: "45min", reps: "Z2", desc: "115-130 ppm. Poder hablar. Bici: Manillar alto.", track: false }], notes: "" },
+            { id: "wed", day: "Miércoles", title: "Gym B: Torso", type: "gym", exercises: [
+                { name: "Jalón al Pecho", sets: "3", reps: "12", desc: "Inclínate levemente atrás. Baja codos. Descomprime vértebras.", track: true },
+                { name: "Remo en Máquina", sets: "3", reps: "12", desc: "Pecho apoyado. Junta escápulas (paletillas) al tirar. Cura dolor espalda alta.", track: true },
+                { name: "Press Pecho Máquina", sets: "3", reps: "12", desc: "Empuja sin despegar espalda.", track: true },
+                { name: "Face Pull", sets: "3", reps: "15", desc: "Cuerda a la cara, pulgares atrás. Hombro posterior.", track: true },
+                { name: "El Arquero", sets: "1", reps: "10/lado", vid: "https://www.youtube.com/watch?v=PYd3FRUa_4M", desc: "Tumbado de lado. Abre brazo dibujando arcoiris. Sigue mano con mirada.", track: false }
+            ], notes: "" },
+            { id: "thu", day: "Jueves", title: "Descanso Activo", type: "rest", exercises: [{ name: "Caminar", sets: "30min", reps: "Suave", desc: "Paseo relajante. Nada de pesas." }], notes: "" },
+            { id: "fri", day: "Viernes", title: "Test Ca-Co (Run)", type: "run", exercises: [{ name: "Bloque x6", sets: "18min", reps: "Total", desc: "1' Trote MUY suave + 2' Caminar. Repite 6 veces. Si duele lumbar: PARA." }], notes: "" },
+            { id: "sat", day: "Sábado", title: "Cardio Libre", type: "cardio", exercises: [{ name: "Actividad Libre", sets: "45min", reps: "Suave", desc: "Bici suave o Senderismo. Limpiar agujetas." }], notes: "" },
+            { id: "sun", day: "Domingo", title: "Check-in", type: "rest", exercises: [{ name: "Registro Datos", sets: "-", reps: "-", desc: "Pésate en ayunas. Mide VFC. Apúntalo en pestaña 'Salud'." }], notes: "" }
+        ];
+
+        // --- MIGRACIÓN DE DATOS (IMPORTANTE) ---
+        // Convertimos el formato antiguo (solo array de días) al nuevo (array de semanas)
+        let rawPlanData = JSON.parse(localStorage.getItem('pepePlanData'));
+        let weeksData = [];
+
+        if (!rawPlanData) {
+            // Usuario Nuevo
+            weeksData = [{ id: "week-1", label: "Semana 1 (Inicio)", days: defaultWeek }];
+        } else if (Array.isArray(rawPlanData) && !rawPlanData[0].days) {
+            // Usuario Antiguo (Migrar)
+            console.log("Migrando datos antiguos...");
+            weeksData = [{ id: "week-1", label: "Semana Actual", days: rawPlanData }];
+        } else {
+            // Usuario Actualizado
+            weeksData = rawPlanData;
+        }
+        localStorage.setItem('pepePlanData', JSON.stringify(weeksData));
+
+        let currentWeekIndex = weeksData.length - 1; // Seleccionar última semana por defecto
+
+        let strengthData = JSON.parse(localStorage.getItem('pepeStrength')) || {};
+        let galleryData = JSON.parse(localStorage.getItem('pepeGallery')) || [];
+        let progressData = JSON.parse(localStorage.getItem('pepeProgress')) || [{ date: '2026-01-15', weight: 96.0, vfc: 25, rhr: 63 }];
+        let runningData = JSON.parse(localStorage.getItem('pepeRunning')) || [];
+        
+        // --- SUPLEMENTACIÓN DATOS ---
+        const defaultSupplements = [
+            { id: '1', name: 'Proteína Aislada (Isolate HSN)', dose: '1 Scoop (30g)', timing: 'workout', active: true, desc: 'Es proteína pura de rápida absorción. Tómala justo después de entrenar mezclada con agua o leche para reparar el músculo rápidamente. Si no entrenas, puedes tomarla en el desayuno para llegar a tus requerimientos de proteína.' },
+            { id: '2', name: 'Omega 3 IFOS Ultra (HSN)', dose: '2 Perlas', timing: 'meal', active: true, desc: 'Esencial para reducir inflamación y mejorar salud cardiovascular. IMPORTANTE: Tómalo siempre con una comida grande (almuerzo o cena) que tenga algo de grasa para que se absorba bien. El sello IFOS garantiza que no tiene metales pesados.' },
+            { id: '3', name: 'Magnesio (Bisglicinato/Citrato)', dose: '200-400mg (2 cáps)', timing: 'night', active: true, desc: 'Clave para el sistema nervioso y relajación muscular. Tómalo 30-60 minutos antes de dormir. Ayuda a mejorar la calidad del sueño profundo y reducir calambres. El bisglicinato es la forma que mejor sienta al estómago.' }
+        ];
+        let suppData = JSON.parse(localStorage.getItem('pepeSupplements')) || defaultSupplements;
+
+        // --- RENDERIZADO DEL PLAN ---
+        function renderWeekSelector() {
+            const select = document.getElementById('week-selector');
+            select.innerHTML = weeksData.map((week, idx) => `<option value="${idx}" ${idx === currentWeekIndex ? 'selected' : ''}>${week.label}</option>`).join('');
+        }
+
+        function changeWeek() {
+            currentWeekIndex = parseInt(document.getElementById('week-selector').value);
+            renderPlan();
+        }
+
+        function renderPlan() {
+            renderWeekSelector();
+            const currentDays = weeksData[currentWeekIndex].days;
+            const container = document.getElementById('plan-container');
+            
+            container.innerHTML = currentDays.map((day, dIndex) => {
+                let colorClass = 'border-l-4 border-slate-500';
+                if(day.type === 'gym') colorClass = 'border-l-4 border-blue-500 shadow-blue-900/20';
+                if(day.type === 'cardio') colorClass = 'border-l-4 border-green-500 shadow-green-900/20';
+                if(day.type === 'run') colorClass = 'border-l-4 border-orange-500 shadow-orange-900/20';
+                if(day.type === 'rest') colorClass = 'border-l-4 border-purple-500 shadow-purple-900/20';
+
+                const exHtml = day.exercises.map((ex) => {
+                    const videoBtn = ex.vid ? `<a href="${ex.vid}" target="_blank" class="text-pink-400 font-bold hover:text-pink-300 ml-2 text-[10px] inline-flex items-center gap-1 border border-pink-500/30 rounded px-1.5 py-0.5 bg-pink-500/10 vid-link"><i data-lucide="youtube" class="w-3 h-3"></i> VIDEO</a>` : '';
+                    const weightInput = ex.track ? `<div class="mt-2 sm:mt-0 sm:ml-4"><input type="number" placeholder="kg" class="bg-slate-800 border border-slate-600 rounded w-20 text-sm text-center py-1 text-white focus:border-blue-500 outline-none" onchange="saveWeight('${day.id}', '${ex.name}', this.value)"></div>` : '';
+                    const descriptionHtml = ex.desc ? `<div class="text-xs text-slate-400 mt-1 leading-relaxed bg-slate-800/30 p-2 rounded border-l-2 border-slate-600">${ex.desc}</div>` : '';
+
+                    return `
+                    <div class="py-4 border-b border-slate-800/50 last:border-0">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center flex-wrap">
+                                    <span class="font-bold text-slate-200 text-sm sm:text-base">${ex.name}</span>
+                                    ${videoBtn}
+                                </div>
+                                <div class="text-xs font-mono text-blue-300 mt-0.5">${ex.sets} x ${ex.reps}</div>
+                                ${descriptionHtml}
+                            </div>
+                            ${weightInput}
+                        </div>
+                    </div>`;
+                }).join('');
+
+                const notesHtml = day.notes ? `<div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded text-sm text-yellow-200 italic flex gap-2"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 shrink-0"></i> ${day.notes}</div>` : '';
+
+                return `
+                <div class="glass rounded-xl overflow-hidden shadow-lg ${colorClass} relative group">
+                    <div class="p-4 bg-slate-900/60 flex justify-between items-center">
+                        <h3 class="font-bold text-white text-lg flex items-center gap-2">${day.day} <span class="text-sm text-slate-400 font-normal">| ${day.title}</span></h3>
+                        <button onclick="editDay(${dIndex})" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="p-4 bg-slate-900/20">${exHtml}${notesHtml}</div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // --- GESTIÓN DE SUPLEMENTOS ---
+        function renderSupplements() {
+            const container = document.getElementById('supplements-list');
+            container.innerHTML = suppData.map(s => {
+                let tagClass = 'tag-meal'; let tagText = 'Comida';
+                if(s.timing === 'morning') { tagClass = 'tag-morning'; tagText = 'Mañana'; }
+                if(s.timing === 'workout') { tagClass = 'tag-workout'; tagText = 'Entreno'; }
+                if(s.timing === 'night') { tagClass = 'tag-night'; tagText = 'Noche'; }
+                
+                const activeClass = s.active ? '' : 'paused';
+                const statusText = s.active ? '' : '<span class="text-xs text-slate-500 italic ml-2">(Pausado)</span>';
+
+                return `
+                <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-3 relative supp-card ${activeClass}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${s.name} ${statusText}</h4>
+                            <div class="text-xs font-mono text-teal-400 mt-0.5">${s.dose}</div>
+                        </div>
+                        <span class="supp-tag ${tagClass}">${tagText}</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed bg-slate-800/50 p-2 rounded">${s.desc}</p>
+                    <button onclick="editSupplement('${s.id}')" class="absolute top-2 right-12 text-slate-500 hover:text-white p-1"><i data-lucide="edit-2" class="w-3 h-3"></i></button>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function openSuppModal(id = null) {
+            const modal = document.getElementById('supp-modal');
+            const title = document.getElementById('supp-modal-title');
+            const btnDelete = document.getElementById('btn-delete-supp');
+            
+            document.getElementById('suppForm').reset();
+            
+            if(id) {
+                const s = suppData.find(i => i.id === id);
+                document.getElementById('suppId').value = s.id;
+                document.getElementById('suppName').value = s.name;
+                document.getElementById('suppDose').value = s.dose;
+                document.getElementById('suppTiming').value = s.timing;
+                document.getElementById('suppDesc').value = s.desc;
+                document.getElementById('suppActive').checked = s.active;
+                title.innerText = "Editar Suplemento";
+                btnDelete.classList.remove('hidden');
+            } else {
+                document.getElementById('suppId').value = '';
+                document.getElementById('suppActive').checked = true;
+                title.innerText = "Añadir Suplemento";
+                btnDelete.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeSuppModal() {
+            document.getElementById('supp-modal').classList.add('hidden');
+        }
+
+        function editSupplement(id) {
+            openSuppModal(id);
+        }
+
+        function deleteCurrentSupp() {
+            const id = document.getElementById('suppId').value;
+            if(confirm("¿Seguro que quieres borrar este suplemento? Si solo vas a dejar de tomarlo, mejor desmarca 'Actualmente tomando'.")) {
+                suppData = suppData.filter(s => s.id !== id);
+                localStorage.setItem('pepeSupplements', JSON.stringify(suppData));
+                renderSupplements();
+                closeSuppModal();
+            }
+        }
+
+        document.getElementById('suppForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('suppId').value;
+            const newSupp = {
+                id: id || Date.now().toString(),
+                name: document.getElementById('suppName').value,
+                dose: document.getElementById('suppDose').value,
+                timing: document.getElementById('suppTiming').value,
+                desc: document.getElementById('suppDesc').value,
+                active: document.getElementById('suppActive').checked
+            };
+
+            if(id) {
+                const idx = suppData.findIndex(s => s.id === id);
+                suppData[idx] = newSupp;
+            } else {
+                suppData.push(newSupp);
+            }
+            localStorage.setItem('pepeSupplements', JSON.stringify(suppData));
+            renderSupplements();
+            closeSuppModal();
+        });
+
+        // --- IMPORTAR NUEVA SEMANA (Funcionalidad Nueva) ---
+        function importNewWeek() {
+            const code = document.getElementById('import-code-area').value;
+            try {
+                const newWeek = JSON.parse(code);
+                // Validaciones básicas
+                if (!newWeek.id || !newWeek.label || !Array.isArray(newWeek.days)) throw new Error("Formato inválido");
+                
+                weeksData.push(newWeek);
+                localStorage.setItem('pepePlanData', JSON.stringify(weeksData));
+                currentWeekIndex = weeksData.length - 1;
+                renderPlan();
+                alert(`¡Semana importada con éxito!`);
+                document.getElementById('import-code-area').value = '';
+                toggleSettings();
+            } catch (e) {
+                alert("Error: El código JSON no es válido. Asegúrate de copiarlo completo.");
+            }
+        }
+
+        // --- EXPORTAR PDF (Funcionalidad Nueva) ---
+        function generatePDFReport() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Título
+            doc.setFontSize(22);
+            doc.text("Informe de Progreso - Pepe 2026", 14, 20);
+            doc.setFontSize(10);
+            doc.text(`Generado el: ${new Date().toLocaleDateString()}`, 14, 26);
+
+            let yPos = 35;
+
+            // 1. Estadísticas Corporales
+            doc.setFontSize(16); doc.setTextColor(0,0,255);
+            doc.text("1. Evolución Corporal (Peso y VFC)", 14, yPos);
+            
+            const statsBody = [...progressData].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(d => [d.date, `${d.weight} kg`, d.vfc, d.rhr || '-']);
+            doc.autoTable({
+                startY: yPos + 5,
+                head: [['Fecha', 'Peso', 'VFC', 'RHR']],
+                body: statsBody,
+                theme: 'striped'
+            });
+
+            yPos = doc.lastAutoTable.finalY + 15;
+
+            // 2. Récords Personales (Fuerza)
+            doc.setFontSize(16); doc.setTextColor(255,0,0);
+            doc.text("2. Récords Personales (PRs)", 14, yPos);
+            
+            const prBody = Object.keys(strengthData).map(key => {
+                const max = Math.max(...strengthData[key].map(d => parseFloat(d.weight)));
+                return [key, `${max} kg`];
+            });
+            doc.autoTable({
+                startY: yPos + 5,
+                head: [['Ejercicio', 'Max Peso (kg)']],
+                body: prBody,
+                theme: 'grid'
+            });
+
+            yPos = doc.lastAutoTable.finalY + 15;
+
+            // 3. Running
+            doc.setFontSize(16); doc.setTextColor(255,165,0);
+            doc.text("3. Historial de Running", 14, yPos);
+             const runBody = [...runningData].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(r => {
+                const min = Math.floor(r.pace);
+                const sec = Math.round((r.pace - min) * 60);
+                return [r.date, `${r.dist} km`, `${r.time} min`, `${min}'${sec}"`];
+            });
+            doc.autoTable({
+                startY: yPos + 5,
+                head: [['Fecha', 'Distancia', 'Tiempo', 'Ritmo Medio']],
+                body: runBody,
+                theme: 'striped'
+            });
+
+            doc.save(`Informe_Pepe_${new Date().toISOString().slice(0,10)}.pdf`);
+        }
+
+        // --- LÓGICA RUNNING ---
+        const runDistInput = document.getElementById('runDist');
+        const runTimeInput = document.getElementById('runTime');
+        const pacePreview = document.getElementById('pace-preview');
+        
+        function calcPace() {
+            const d = parseFloat(runDistInput.value), t = parseFloat(runTimeInput.value);
+            if(d && t) {
+                const p = t/d, m = Math.floor(p), s = Math.round((p-m)*60);
+                pacePreview.innerText = `Ritmo: ${m}'${s<10?'0'+s:s}" /km`;
+            } else pacePreview.innerText = "";
+        }
+        runDistInput.addEventListener('input', calcPace);
+        runTimeInput.addEventListener('input', calcPace);
+
+        document.getElementById('runForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const d = parseFloat(runDistInput.value), t = parseFloat(runTimeInput.value);
+            runningData.push({ date: document.getElementById('runDate').value, dist: d, time: t, pace: t/d });
+            localStorage.setItem('pepeRunning', JSON.stringify(runningData));
+            updateRunningUI(); e.target.reset(); pacePreview.innerText = "";
+        });
+
+        let chartRunning = null;
+        function updateRunningUI() {
+            const tbody = document.getElementById('runningTableBody');
+            const sorted = [...runningData].sort((a,b) => new Date(b.date) - new Date(a.date));
+            tbody.innerHTML = sorted.map((run, idx) => {
+                const min = Math.floor(run.pace), sec = Math.round((run.pace - min) * 60);
+                return `<tr class="border-b border-slate-800/50 hover:bg-slate-800/30"><td class="px-2 py-2 font-mono text-slate-400">${run.date.slice(5)}</td><td class="px-2 py-2 text-white font-bold">${run.dist}</td><td class="px-2 py-2 text-slate-300">${run.time}m</td><td class="px-2 py-2 text-orange-400 font-bold">${min}'${sec<10?'0'+sec:sec}"</td><td class="px-1 py-2 text-right"><button onclick="deleteRun(${runningData.indexOf(run)})" class="text-slate-600 hover:text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button></td></tr>`;
+            }).join('');
+            lucide.createIcons();
+
+            if(chartRunning) chartRunning.destroy();
+            const chartData = [...runningData].sort((a,b) => new Date(a.date) - new Date(b.date));
+            chartRunning = new Chart(document.getElementById('chartRunning').getContext('2d'), {
+                type: 'line', data: { labels: chartData.map(d=>d.date.slice(5)), datasets: [{ label: 'Ritmo', data: chartData.map(d=>d.pace), borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.1)', fill: true, tension: 0.2 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { reverse: true } }, plugins: { legend: { display: false } } }
+            });
+        }
+        
+        function deleteRun(idx) { if(confirm('¿Borrar?')) { runningData.splice(idx, 1); localStorage.setItem('pepeRunning', JSON.stringify(runningData)); updateRunningUI(); } }
+
+        // --- LÓGICA FUERZA ---
+        function saveWeight(dayId, exName, kg) {
+            if(!kg) return;
+            if(!strengthData[exName]) strengthData[exName] = [];
+            const today = new Date().toISOString().split('T')[0];
+            const existing = strengthData[exName].find(e => e.date === today);
+            if(existing) existing.weight = kg; else strengthData[exName].push({ date: today, weight: kg });
+            localStorage.setItem('pepeStrength', JSON.stringify(strengthData));
+            updatePRs();
+        }
+        
+        let strengthChart = null;
+        function renderStrengthChart() {
+            const exName = document.getElementById('exercise-select').value;
+            const data = (strengthData[exName] || []).sort((a,b) => new Date(a.date) - new Date(b.date));
+            if(strengthChart) strengthChart.destroy();
+            strengthChart = new Chart(document.getElementById('chartStrength').getContext('2d'), {
+                type: 'line', data: { labels: data.map(d=>d.date.slice(5)), datasets: [{ label: `${exName} (kg)`, data: data.map(d=>d.weight), borderColor: '#60a5fa', tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+        
+        function updatePRs() {
+            document.getElementById('pr-list').innerHTML = Object.keys(strengthData).map(key => {
+                const max = Math.max(...strengthData[key].map(d => parseFloat(d.weight)));
+                return `<div class="flex justify-between border-b border-slate-700/50 pb-1"><span>${key}</span> <span class="text-white font-bold">${max} kg</span></div>`;
+            }).join('');
+        }
+
+        // --- GALERÍA ---
+        function handlePhotoUpload(input) {
+            const file = input.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas'), ctx = canvas.getContext('2d'), maxW = 800;
+                    let w = img.width, h = img.height;
+                    if (w > maxW) { h *= maxW / w; w = maxW; }
+                    canvas.width = w; canvas.height = h; ctx.drawImage(img, 0, 0, w, h);
+                    galleryData.unshift({ date: new Date().toISOString().split('T')[0], img: canvas.toDataURL('image/jpeg', 0.8) });
+                    localStorage.setItem('pepeGallery', JSON.stringify(galleryData)); renderGallery();
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function renderGallery() {
+            const filter = document.getElementById('month-select').value;
+            let filtered = (filter === 'all') ? galleryData : galleryData.filter(d => d.date.startsWith(filter));
+            const grid = document.getElementById('gallery-grid');
+            if(!filtered.length) { grid.innerHTML = '<div class="text-slate-500 text-sm">No hay fotos.</div>'; return; }
+            grid.innerHTML = filtered.map((item, idx) => `<div class="glass p-2 rounded relative group"><img src="${item.img}" class="w-full h-48 object-cover rounded cursor-pointer" onclick="window.open('${item.img}')"><div class="text-xs text-slate-400 mt-1 flex justify-between"><span>${item.date}</span><button onclick="deletePhoto(${idx})" class="text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></div>`).join('');
+            lucide.createIcons();
+            // Update Select
+            const months = [...new Set(galleryData.map(d => d.date.slice(0, 7)))]; 
+            const select = document.getElementById('month-select');
+            if(select.children.length <= 1) select.innerHTML = '<option value="all">Todas</option>' + months.map(m => `<option value="${m}">${m}</option>`).join('');
+        }
+        function deletePhoto(idx) { if(confirm('¿Borrar?')) { galleryData.splice(idx, 1); localStorage.setItem('pepeGallery', JSON.stringify(galleryData)); renderGallery(); } }
+
+        // --- IMPORTAR / EXPORTAR ---
+        function exportData() {
+            // AÑADIDO: 'supplements: suppData' al backup
+            const backup = { plan: weeksData, progress: progressData, strength: strengthData, running: runningData, gallery: galleryData, settings: userSettings, supplements: suppData };
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup)));
+            dlAnchorElem.setAttribute("download", `pepe_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(dlAnchorElem); dlAnchorElem.click(); dlAnchorElem.remove();
+        }
+
+        function importData(input) {
+            const file = input.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if(confirm("Reemplazar datos?")) {
+                        if(data.plan) localStorage.setItem('pepePlanData', JSON.stringify(data.plan));
+                        if(data.progress) localStorage.setItem('pepeProgress', JSON.stringify(data.progress));
+                        if(data.strength) localStorage.setItem('pepeStrength', JSON.stringify(data.strength));
+                        if(data.running) localStorage.setItem('pepeRunning', JSON.stringify(data.running));
+                        if(data.gallery) localStorage.setItem('pepeGallery', JSON.stringify(data.gallery));
+                        if(data.settings) localStorage.setItem('pepeSettings', JSON.stringify(data.settings));
+                        // AÑADIDO: Importar suplementos
+                        if(data.supplements) localStorage.setItem('pepeSupplements', JSON.stringify(data.supplements));
+                        location.reload();
+                    }
+                } catch(err) { alert("Error al leer archivo."); }
+            };
+            reader.readAsText(file);
+        }
+        
+        function resetData() { if(confirm("¿Borrar TODO?")) { localStorage.clear(); location.reload(); } }
+
+        // --- PRIVACIDAD ---
+        function togglePrivacyMode() {
+            userSettings.privacyMode = document.getElementById('privacy-toggle').checked;
+            localStorage.setItem('pepeSettings', JSON.stringify(userSettings)); applyPrivacySettings();
+        }
+        function applyPrivacySettings() {
+            const isPrivate = userSettings.privacyMode;
+            document.getElementById('privacy-toggle').checked = isPrivate;
+            const btn = document.getElementById('btn-gallery');
+            const tab = document.getElementById('tab-gallery');
+            if(isPrivate) { btn.classList.add('hidden'); if(!tab.classList.contains('hidden-tab')) switchTab('plan'); } else { btn.classList.remove('hidden'); }
+        }
+        
+        // --- UTILIDADES ---
+        function toggleSettings() { document.getElementById('settings-panel').classList.toggle('hidden'); }
+        function editDay(index) {
+            const currentDays = weeksData[currentWeekIndex].days;
+            const note = prompt("Notas del día:", currentDays[index].notes);
+            if(note !== null) {
+                currentDays[index].notes = note;
+                weeksData[currentWeekIndex].days = currentDays;
+                localStorage.setItem('pepePlanData', JSON.stringify(weeksData));
+                renderPlan();
+            }
+        }
+
+        // --- CHARTS & STATS ---
+        let chartVfc=null, chartWeight=null;
+        function renderStatsCharts() {
+            const last = progressData[progressData.length - 1];
+            if(last) {
+                document.getElementById('stat-vfc').innerText = last.vfc + 'ms';
+                document.getElementById('stat-weight').innerText = last.weight + 'kg';
+                document.getElementById('stat-rhr').innerText = (last.rhr || '-') + 'ppm';
+            }
+            const sorted = [...progressData].sort((a,b) => new Date(a.date) - new Date(b.date));
+            const labels = sorted.map(d => d.date.slice(5));
+            
+            if(chartVfc) chartVfc.destroy();
+            chartVfc = new Chart(document.getElementById('chartVfc').getContext('2d'), { type: 'line', data: { labels, datasets: [{ label: 'VFC', data: sorted.map(d=>d.vfc), borderColor: '#4ade80', backgroundColor: '#4ade8020', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+
+            if(chartWeight) chartWeight.destroy();
+            chartWeight = new Chart(document.getElementById('chartWeight').getContext('2d'), { type: 'line', data: { labels, datasets: [{ label: 'Peso', data: sorted.map(d=>d.weight), borderColor: '#3b82f6', backgroundColor: '#3b82f620', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        }
+
+        document.getElementById('entryForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newData = { date: document.getElementById('inputDate').value, weight: parseFloat(document.getElementById('inputWeight').value), vfc: parseInt(document.getElementById('inputVfc').value), rhr: parseInt(document.getElementById('inputRhr').value)||0, pain: parseInt(document.getElementById('inputPain').value)||0 };
+            progressData.push(newData); localStorage.setItem('pepeProgress', JSON.stringify(progressData));
+            alert('¡Datos guardados!'); e.target.reset(); document.getElementById('inputDate').valueAsDate = new Date(); updateHistoryTable();
+        });
+        
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            const sorted = [...progressData].sort((a,b) => new Date(b.date) - new Date(a.date));
+            tbody.innerHTML = sorted.map((entry, index) => `<tr class="border-b border-slate-800 hover:bg-slate-800/30"><td class="px-2 py-3 font-mono text-slate-400">${entry.date.slice(5)}</td><td class="px-2 py-3 font-bold text-white">${entry.weight}</td><td class="px-2 py-3 text-green-400">${entry.vfc}</td><td class="px-1 py-3 text-right"><button onclick="deleteEntry(${progressData.indexOf(entry)})" class="text-slate-600 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>`).join('');
+            lucide.createIcons(); renderStatsCharts();
+        }
+        function deleteEntry(i) { if(confirm('¿Borrar?')) { progressData.splice(i,1); localStorage.setItem('pepeProgress', JSON.stringify(progressData)); updateHistoryTable(); } }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden-tab'));
+            document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('active', 'text-blue-400'); el.classList.add('text-slate-500'); });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden-tab');
+            const btn = document.getElementById(`btn-${tabName}`); if(btn) { btn.classList.remove('text-slate-500'); btn.classList.add('active', 'text-blue-400'); }
+            if(tabName === 'strength') { renderStrengthChart(); updatePRs(); }
+            if(tabName === 'gallery') { renderGallery(); }
+            if(tabName === 'stats') renderStatsCharts();
+            if(tabName === 'running') updateRunningUI();
+            if(tabName === 'supplements') renderSupplements();
+        }
+
+        window.onload = () => {
+            document.getElementById('inputDate').valueAsDate = new Date();
+            document.getElementById('runDate').valueAsDate = new Date();
+            applyPrivacySettings(); renderPlan(); lucide.createIcons(); switchTab('plan'); updateHistoryTable();
+        };
+    </script>
+</body>
+</html>
