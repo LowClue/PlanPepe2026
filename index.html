@@ -1,4 +1,3 @@
-<!-- AIzaSyCa9FJBYgHvwzT_MT-bfsOTJSOnMxhmcss -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Pepe 3.8 (Ultimate Saiyan)</title>
     
-    <!-- FAVICON: Bola de Dragón (SVG) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23fbbf24%22 stroke=%22%23b45309%22 stroke-width=%223%22/><path d=%22M50 25L55 40L70 40L58 50L63 65L50 55L37 65L42 50L30 40L45 40Z%22 fill=%22%23dc2626%22/></svg>">
 
-    <!-- LIBRERÍAS EXTERNAS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -25,7 +21,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@500;700&family=Inter:wght@300;400;600&display=swap');
         
         :root { 
-            /* FONDO MOTIVADOR: Goku Ultra Instinto */
             --anime-bg: url('https://img.asmedia.epimg.net/resizer/v2/DGT4YH6XWRETPCDYD54YIZIOXA.jpg?auth=66daaf9f308debf7a1645374b9cce9160fbcfb78d168e9bbe65833e97cc953ed&width=1472&height=828&smart=true'); 
             --saiyan-gold: #fbbf24;
             --power-blue: #3b82f6;
@@ -34,14 +29,10 @@
         }
 
         body { 
-            font-family: 'Inter', sans-serif; 
-            color: #e2e8f0; 
-            margin: 0; padding: 0;
+            font-family: 'Inter', sans-serif; color: #e2e8f0; margin: 0; padding: 0;
             background-color: #0b0f19; 
             background-image: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.92)), var(--anime-bg);
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
             min-height: 100vh;
         }
 
@@ -49,10 +40,8 @@
         .scouter-font { font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.5px; }
         
         .glass { 
-            background: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(59, 130, 246, 0.2); 
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); 
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); 
+            border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); 
         }
         
         .chart-container { position: relative; width: 100%; height: 200px; max-height: 300px; }
@@ -66,142 +55,103 @@
         .nav-btn.active { color: #fbbf24 !important; transform: scale(1.2); border-bottom: 3px solid #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); } 
         .nav-btn { transition: all 0.3s ease; border-bottom: 3px solid transparent; color: #64748b; }
         
-        .anime-border { border: 1px solid rgba(59, 130, 246, 0.3); transition: all 0.3s ease; }
-        .anime-border:hover { border-color: #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.2); transform: translateY(-2px); }
-
-        /* Calendario Visual Interactivo */
         .calendar-day { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.6rem; border-radius: 0.75rem; border: 1px solid #334155; background-color: rgba(15, 23, 42, 0.8); cursor: pointer; transition: all 0.2s; }
-        .calendar-day:hover { border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
-        .calendar-day.active { border-color: #fbbf24; background-color: rgba(251, 191, 36, 0.2); color: #fcd34d; transform: scale(1.1); box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
-        .calendar-day span:first-child { font-size: 0.6rem; text-transform: uppercase; color: #94a3b8; font-weight: 800; letter-spacing: 1px; }
-        .calendar-day span:last-child { font-size: 1.25rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
-
-        /* Selector Semanas Legible */
-        select option { background-color: #0f172a; color: white; padding: 12px; font-size: 14px; }
-        select:focus { border-color: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
-
-        /* Scrollbar Personalizado para estética Saiyan */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #fbbf24; }
+        .calendar-day.active { border-color: #fbbf24; background-color: rgba(251, 191, 36, 0.2); color: #fcd34d; transform: scale(1.1); }
     </style>
 </head>
 <body class="pb-32">
 
-    <!-- AUTH SCREEN: PANTALLA DE ACCESO -->
     <div id="auth-screen" class="bg-black/95">
         <div class="glass p-10 rounded-3xl max-w-sm w-full mx-4 text-center border-t-4 border-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.25)]">
-            <h1 class="text-6xl text-white comic-font mb-2 tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 uppercase">PEPE <span class="text-blue-500 font-sans">3.8</span></h1>
-            <p class="text-blue-300 scouter-font text-xl mb-8 uppercase tracking-[0.2em] italic">Servidor Central Namek</p>
+            <h1 class="text-6xl text-white comic-font mb-2 uppercase italic">PEPE <span class="text-blue-500 font-sans">3.8</span></h1>
+            <p class="text-blue-300 scouter-font text-xl mb-8 uppercase italic">Terminal Namek</p>
             <form id="login-form" class="space-y-5 text-left">
-                <div class="space-y-1">
-                    <label class="text-[10px] text-blue-400 ml-1 font-bold uppercase tracking-widest">Identificación de Usuario</label>
-                    <input type="email" id="auth-email" class="w-full bg-slate-900 border border-blue-900 rounded-xl p-4 text-white outline-none focus:border-yellow-400 scouter-font text-lg transition-all shadow-inner" placeholder="Email del Guerrero" required>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-blue-400 ml-1 font-bold uppercase tracking-widest">Código de Acceso</label>
-                    <input type="password" id="auth-pass" class="w-full bg-slate-900 border border-blue-900 rounded-xl p-4 text-white outline-none focus:border-yellow-400 scouter-font text-lg transition-all shadow-inner" placeholder="Contraseña" required>
-                </div>
-                <div id="register-nickname-field" class="hidden fade-in space-y-1">
-                     <label class="text-xs text-yellow-400 ml-1 scouter-font font-bold uppercase">¡Guerrero nuevo! Elige apodo:</label>
-                     <input type="text" id="auth-nickname" class="w-full bg-slate-900 border border-yellow-500 rounded-xl p-4 text-white outline-none scouter-font text-lg">
-                </div>
-                <div class="text-xs text-red-400 hidden italic font-medium bg-red-900/20 p-2 rounded border border-red-900/50" id="auth-error">Error detectado</div>
-                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-4 rounded-xl scouter-font text-2xl uppercase tracking-widest border-b-4 border-blue-900 shadow-xl transition-all transform active:scale-95">ACCEDER / REGISTRAR</button>
+                <input type="email" id="auth-email" class="w-full bg-slate-900 border border-blue-900 rounded-xl p-4 text-white outline-none focus:border-yellow-400" placeholder="Email" required>
+                <input type="password" id="auth-pass" class="w-full bg-slate-900 border border-blue-900 rounded-xl p-4 text-white outline-none focus:border-yellow-400" placeholder="Contraseña" required>
+                <div id="register-nickname-field" class="hidden"><input type="text" id="auth-nickname" class="w-full bg-slate-900 border border-yellow-500 rounded-xl p-4 text-white outline-none mb-4" placeholder="Tu Apodo Z"></div>
+                <div class="text-xs text-red-400 hidden" id="auth-error">Error</div>
+                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-4 rounded-xl scouter-font text-2xl uppercase tracking-widest transition-all">ACCEDER</button>
             </form>
         </div>
     </div>
 
-    <!-- CABECERA PRINCIPAL -->
-    <header class="p-4 pt-6 border-b border-blue-900/30 sticky top-0 z-40 shadow-2xl glass">
+    <header class="p-4 pt-6 border-b border-blue-900/30 sticky top-0 z-40 glass shadow-2xl">
         <div class="max-w-3xl mx-auto flex justify-between items-center">
-            <div onclick="switchTab('home')" class="cursor-pointer group">
-                <h1 class="text-4xl text-white tracking-tighter comic-font italic group-hover:scale-105 transition-transform leading-none uppercase">PLAN <span class="text-yellow-400">Z</span></h1>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]"></span>
-                    <p class="text-[11px] text-blue-200 scouter-font tracking-widest uppercase">Guerrero: <span id="header-username" class="text-white font-bold tracking-normal italic">...</span></p>
-                </div>
+            <div onclick="switchTab('home')" class="cursor-pointer">
+                <h1 class="text-4xl text-white comic-font italic uppercase leading-none">PLAN <span class="text-yellow-400">Z</span></h1>
+                <p class="text-[11px] text-blue-200 scouter-font uppercase italic">Guerrero: <span id="header-username">...</span></p>
             </div>
-            <div class="text-right cursor-pointer p-3 hover:bg-blue-500/10 rounded-full transition-all" onclick="toggleSettings()"><i data-lucide="settings" class="w-7 h-7 text-blue-300"></i></div>
+            <div class="cursor-pointer p-3" onclick="toggleSettings()"><i data-lucide="settings" class="w-7 h-7 text-blue-300"></i></div>
         </div>
 
-        <!-- Panel de Ajustes Desplegable -->
-        <div id="settings-panel" class="hidden mt-4 p-5 bg-slate-900/98 rounded-2xl border border-blue-800 backdrop-blur-xl max-w-2xl mx-auto space-y-5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div class="flex items-center justify-between bg-slate-800/50 p-4 rounded-xl border border-slate-700 shadow-inner">
-                <span class="text-sm font-bold text-white scouter-font italic" id="user-email-display">...</span>
-                <button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-4 py-2 rounded-lg font-bold uppercase hover:bg-red-900/20 transition-colors">Salir</button>
+        <div id="settings-panel" class="hidden mt-4 p-5 bg-slate-900 rounded-2xl border border-blue-800 max-w-2xl mx-auto space-y-5">
+            <div class="flex items-center justify-between bg-slate-800 p-4 rounded-xl">
+                <span class="text-sm font-bold text-white italic" id="user-email-display">...</span>
+                <button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-3 py-1 rounded font-bold uppercase">Salir</button>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded-lg font-bold uppercase hover:bg-slate-600 transition-all shadow-md">Modificar Apodo</button>
-                <button onclick="changeGroup()" class="bg-indigo-900 text-indigo-100 text-xs py-3 rounded-lg border border-indigo-500 font-bold uppercase hover:bg-indigo-800 transition-all shadow-md">🛡️ Gestionar Clan</button>
-                <button onclick="deleteCurrentWeek()" class="bg-red-900/40 text-red-200 text-xs py-3 rounded-lg border border-red-800 font-bold uppercase hover:bg-red-900 shadow-md">🗑️ Borrar Ciclo</button>
-                <button onclick="resetDefaultPlan()" class="bg-slate-800 text-slate-300 text-xs py-3 rounded-lg border border-slate-600 font-bold uppercase hover:bg-slate-700 shadow-md">🔄 Reset Protocolo</button>
+                <button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded font-bold uppercase">Apodo</button>
+                <button onclick="changeGroup()" class="bg-indigo-900 text-white text-xs py-3 rounded font-bold uppercase">Clan</button>
+                <button onclick="deleteCurrentWeek()" class="bg-red-900 text-white text-xs py-3 rounded font-bold uppercase">Borrar Ciclo</button>
+                <button onclick="resetDefaultPlan()" class="bg-slate-800 text-white text-xs py-3 rounded font-bold uppercase">Reset</button>
             </div>
-            <div class="pt-3 border-t border-slate-700/50 text-center">
-                <p class="text-[10px] text-slate-400 mb-3 uppercase font-bold tracking-widest italic">Protocolo de Inteligencia Artificial</p>
-                <div class="flex gap-3 mb-3">
-                     <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 px-3 py-3 rounded-xl text-white flex items-center justify-center gap-2 font-bold hover:bg-purple-600 transition-all shadow-lg"><i data-lucide="bot" class="w-4 h-4"></i> COPIAR COMANDO IA</button>
-                     <button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 px-3 py-3 rounded-xl text-white flex items-center justify-center gap-2 font-bold hover:bg-green-700 transition-all shadow-lg">IMPORTAR JSON</button>
-                </div>
-                <textarea id="import-code-area" class="w-full bg-black/70 text-[11px] text-green-400 font-mono p-4 rounded-xl border border-green-900/50 h-24 outline-none focus:border-green-500 shadow-inner" placeholder='Inserta el código JSON táctico aquí...'></textarea>
-            </div>
+	<div class="pt-3 border-t border-slate-700 text-center">
+    <p class="text-[10px] text-slate-400 mb-3 uppercase font-bold italic">Protocolo IA</p>
+    <div class="flex gap-3 mb-3">
+        <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Copiar Comando IA</button>
+        <button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Importar JSON</button>
+    </div>
+    <div class="relative">
+        <textarea id="import-code-area" class="w-full bg-black text-green-400 p-4 rounded-xl border border-green-900 h-24 text-[10px] font-mono outline-none" placeholder="Pega el código JSON aquí..."></textarea>
+        <button onclick="document.getElementById('import-code-area').value=''" class="absolute bottom-2 right-2 text-[8px] bg-red-900/50 text-red-300 px-2 py-1 rounded border border-red-800 uppercase font-bold">Limpiar</button>
+    </div>
+</div>
         </div>
     </header>
 
     <main class="max-w-2xl mx-auto p-4 space-y-6 pb-24">
         
-        <!-- PESTAÑA HOME (CENTRO DE MANDO) -->
-        <div id="tab-home" class="tab-content fade-in p-6 space-y-8 shadow-2xl border border-yellow-500/20 rounded-3xl">
-            <div class="text-center space-y-2">
-                <h2 class="text-5xl text-yellow-400 comic-font drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] uppercase tracking-tighter italic">Manual de Combate</h2>
-                <p class="text-slate-300 text-sm leading-relaxed max-w-sm mx-auto font-medium italic">
-                    Bienvenido guerrero. Sincroniza tu terminal y maximiza tu potencial con las herramientas de la base Namek.
-                </p>
-            </div>
+<div id="tab-home" class="tab-content fade-in space-y-8">
+    <div class="text-center p-6 glass rounded-3xl border-b-4 border-yellow-500 shadow-2xl">
+        <h2 class="text-5xl text-yellow-400 comic-font uppercase italic tracking-tighter">Terminal Z</h2>
+        <p class="text-slate-300 text-sm mt-2 font-medium">Guía de supervivencia y evolución para el Guerrero.</p>
+    </div>
 
-            <div class="grid gap-5">
-                <!-- Bloque 1 -->
-                <div class="bg-slate-900/90 border-l-4 border-blue-500 p-5 rounded-r-2xl shadow-xl transition-all hover:translate-x-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i data-lucide="calendar-days" class="text-blue-400 w-6 h-6"></i>
-                        <h3 class="text-white font-bold scouter-font text-xl uppercase italic">01. PLANIFICACIÓN TÁCTICA</h3>
-                    </div>
-                    <p class="text-xs text-slate-400 leading-relaxed italic">
-                        Gestiona tus ciclos de entrenamiento con el calendario interactivo. Registra cargas en tiempo real y usa el radar <strong>ESPIAR</strong> para clonar estrategias de otros maestros del clan.
-                    </p>
+    <div class="grid gap-4">
+        <div class="bg-purple-900/20 p-6 rounded-3xl border-2 border-purple-500/30 shadow-lg">
+            <h3 class="text-purple-400 scouter-font text-2xl uppercase italic mb-4 flex items-center gap-3">
+                <i data-lucide="bot" class="animate-bounce w-7 h-7"></i> ¿Cómo importar tu Plan?
+            </h3>
+            <div class="space-y-4 text-sm">
+                <div class="flex gap-4">
+                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">1</div>
+                    <p class="text-slate-200"><strong class="text-yellow-400">PERFIL:</strong> Entra al usuario. Pon tu Meta de Peso y Lesiones. En **STATS**, pon tu peso actual. La IA necesita esto para ser eficiente.</p>
                 </div>
-
-                <!-- Bloque 2 -->
-                <div class="bg-slate-900/90 border-l-4 border-purple-500 p-5 rounded-r-2xl shadow-xl transition-all hover:translate-x-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i data-lucide="bot" class="text-purple-400 w-6 h-6"></i>
-                        <h3 class="text-white font-bold scouter-font text-xl uppercase italic">02. NÚCLEO DE INTELIGENCIA</h3>
-                    </div>
-                    <p class="text-xs text-slate-400 leading-relaxed italic">
-                        Genera ciclos de entrenamiento optimizados mediante IA. Copia el comando, ejecútalo en Gemini y sincroniza el código de vuelta para actualizar tu terminal de combate al instante.
-                    </p>
+                <div class="flex gap-4">
+                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">2</div>
+                    <p class="text-slate-200"><strong class="text-yellow-400">COMANDO:</strong> Ve a Ajustes (rueda arriba) y pulsa "Copiar Comando IA".</p>
                 </div>
-
-                <!-- Bloque 3 -->
-                <div class="bg-slate-900/90 border-l-4 border-green-500 p-5 rounded-r-2xl shadow-xl transition-all hover:translate-x-1">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i data-lucide="activity" class="text-green-400 w-6 h-6"></i>
-                        <h3 class="text-white font-bold scouter-font text-xl uppercase italic">03. BIOMETRÍA Y KI</h3>
-                    </div>
-                    <p class="text-xs text-slate-400 leading-relaxed italic">
-                        Tu <strong>Ki (Energía)</strong> define tu rendimiento máximo. Registra tu fatiga, peso y VFC para evitar el sobreentrenamiento y escalar posiciones en el Torneo de Poder.
-                    </p>
+                <div class="flex gap-4">
+                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">3</div>
+                    <p class="text-slate-200"><strong class="text-yellow-400">IMPORTAR:</strong> Pega el comando en Gemini. Copia el JSON que te dé y pégalo en Ajustes.</p>
                 </div>
             </div>
-            
-            <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-5 rounded-2xl comic-font text-3xl tracking-widest shadow-[0_0_40px_rgba(234,179,8,0.4)] transition-all transform active:scale-95 uppercase italic">
-                Iniciar Secuencia Z
-            </button>
         </div>
 
-        <!-- TAB 0: RANKING (TORNEO DE PODER) -->
-        <div id="tab-ranking" class="tab-content hidden-tab fade-in">
+        <div id="ki-status-card" class="bg-slate-900/80 p-5 rounded-2xl border-l-4 border-blue-500 shadow-xl hidden">
+            <h3 class="text-white scouter-font text-lg uppercase flex items-center gap-2">
+                <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i> Estado del Ki Actual
+            </h3>
+            <p id="ki-status-text" class="text-xs text-slate-400 mt-1 italic">Calculando biometría...</p>
+        </div>
+    </div>
+
+    <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 rounded-3xl comic-font text-3xl shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all transform active:scale-95 uppercase italic">
+        ¡EMPEZAR ENTRENAMIENTO!
+    </button>
+</div>
+
+		<div id="tab-ranking" class="tab-content hidden-tab fade-in space-y-8">
             <div class="glass p-1 rounded-3xl border border-yellow-500/30 mb-8 relative overflow-hidden shadow-2xl">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 via-red-500 to-yellow-500"></div>
                 <div class="p-6">
@@ -219,346 +169,231 @@
                                     <th class="px-2 py-3 text-center">Rango</th>
                                     <th class="px-2 py-3">Guerrero</th>
                                     <th class="px-2 py-3 text-center">Evolución %</th>
-                                    <th class="px-2 py-3 text-center">Ritmo 5K</th>
-                                    <th class="px-2 py-3 text-center">Ritmo 10K</th>
                                     <th class="px-2 py-3 text-center text-yellow-200">Press Z</th>
                                     <th class="px-2 py-3 text-center text-yellow-200">Prensa Z</th>
                                 </tr>
                             </thead>
                             <tbody id="rankingTableBody" class="scouter-font text-base italic">
-                                <!-- Contenido dinámico via JS -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
             
-            <!-- TARJETA DE ESTADO INDIVIDUAL -->
             <div class="glass p-6 rounded-3xl border-l-8 border-blue-500 relative shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
                 <div class="flex items-center justify-between mb-5">
                     <h3 class="text-sm font-bold text-blue-300 uppercase tracking-widest flex items-center gap-2 scouter-font"><i data-lucide="scan-face" class="w-5 h-5 text-blue-400"></i> Firma Biométrica Actual</h3>
-                    <span class="text-[10px] bg-blue-900/50 text-blue-200 px-3 py-1 rounded-full border border-blue-700/50 font-bold uppercase tracking-tighter">Sincronizado</span>
                 </div>
-                <div class="grid grid-cols-5 gap-3 text-center">
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-xl"><p class="text-[8px] text-slate-500 uppercase font-black mb-1 tracking-widest">Cambio%</p><p id="card-weight-change" class="text-sm font-bold text-white scouter-font tracking-tight">--</p></div>
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-xl"><p class="text-[8px] text-slate-500 uppercase font-black mb-1 tracking-widest">Pace 5K</p><p id="card-best-pace" class="text-sm font-bold text-orange-400 scouter-font tracking-tight">--</p></div>
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-xl"><p class="text-[8px] text-slate-500 uppercase font-black mb-1 tracking-widest">Pace 10K</p><p id="card-best-10k" class="text-sm font-bold text-purple-400 scouter-font tracking-tight">--</p></div>
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-yellow-900/40 shadow-xl"><p class="text-[8px] text-yellow-600 uppercase font-black mb-1 tracking-widest">Press KG</p><p id="card-bench-press" class="text-sm font-bold text-yellow-400 scouter-font tracking-tight">--</p></div>
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-yellow-900/40 shadow-xl"><p class="text-[8px] text-yellow-600 uppercase font-black mb-1 tracking-widest">Leg KG</p><p id="card-leg-press" class="text-sm font-bold text-yellow-400 scouter-font tracking-tight">--</p></div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-xl"><p class="text-[8px] text-slate-500 uppercase font-black mb-1">Cambio%</p><p id="card-weight-change" class="text-sm font-bold text-white scouter-font tracking-tight">--</p></div>
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-yellow-900/40 shadow-xl"><p class="text-[8px] text-yellow-600 uppercase font-black mb-1">Press KG</p><p id="card-bench-press" class="text-sm font-bold text-yellow-400 scouter-font">--</p></div>
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-yellow-900/40 shadow-xl"><p class="text-[8px] text-yellow-600 uppercase font-black mb-1">Prensa KG</p><p id="card-leg-press" class="text-sm font-bold text-yellow-400 scouter-font">--</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 1: PLANIFICACIÓN (CALENDARIO DINÁMICO) -->
-        <div id="tab-plan" class="tab-content hidden-tab fade-in">
-            <div class="flex justify-between items-center mb-6 gap-4">
-                <div class="glass p-3 rounded-2xl flex items-center border-b-2 border-blue-500 flex-1 shadow-2xl overflow-hidden group">
-                    <div class="mr-3 text-blue-400 group-hover:scale-110 transition-transform"><i data-lucide="calendar" class="w-5 h-5"></i></div>
-                    <select id="week-selector" onchange="changeWeek()" class="bg-transparent text-white text-sm outline-none scouter-font font-bold w-full p-1 rounded-lg cursor-pointer appearance-none uppercase tracking-wider"></select>
-                    <div class="ml-2 text-slate-500"><i data-lucide="chevron-down" class="w-4 h-4"></i></div>
-                </div>
-                <button onclick="openSpyModal()" class="glass p-4 rounded-2xl border border-purple-500 text-purple-300 hover:bg-purple-900 transition-all flex items-center gap-3 font-bold text-xs uppercase shadow-xl transform active:scale-90">
-                    <i data-lucide="eye" class="w-5 h-5 text-purple-400 animate-pulse"></i> ESPIAR
-                </button>
+        <div id="tab-plan" class="tab-content hidden-tab fade-in space-y-6">
+            <div class="flex justify-between items-center gap-4">
+                <select id="week-selector" onchange="changeWeek()" class="bg-slate-900 text-white scouter-font font-bold p-3 rounded-xl flex-1 outline-none border border-slate-700"></select>
+                <button onclick="openSpyModal()" class="glass p-4 rounded-xl border border-purple-500 text-purple-300 font-bold text-xs flex items-center gap-2"><i data-lucide="eye"></i> ESPIAR</button>
             </div>
-            
-            <!-- Calendario Táctico con Fechas Reales (Placeholder) -->
-            <div class="grid grid-cols-7 gap-2 mb-10 text-center select-none shadow-2xl" id="calendar-grid">
-                <div class="calendar-day" onclick="scrollToDay(0)" id="cal-mon"><span>LUN</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(1)" id="cal-tue"><span>MAR</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(2)" id="cal-wed"><span>MIÉ</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(3)" id="cal-thu"><span>JUE</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(4)" id="cal-fri"><span>VIE</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(5)" id="cal-sat"><span>SÁB</span><span class="day-num font-mono">--</span></div>
-                <div class="calendar-day" onclick="scrollToDay(6)" id="cal-sun"><span>DOM</span><span class="day-num font-mono">--</span></div>
+            <div class="grid grid-cols-7 gap-2 text-center" id="calendar-grid">
+                <div class="calendar-day" onclick="scrollToDay(0)"><span>LUN</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(1)"><span>MAR</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(2)"><span>MIÉ</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(3)"><span>JUE</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(4)"><span>VIE</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(5)"><span>SÁB</span><span class="day-num block font-bold text-lg">--</span></div>
+                <div class="calendar-day" onclick="scrollToDay(6)"><span>DOM</span><span class="day-num block font-bold text-lg">--</span></div>
             </div>
-
-            <div id="plan-container" class="space-y-8 pb-32">
-                <!-- Rutina Inyectada via JS -->
-            </div>
+            <div id="plan-container" class="space-y-6"></div>
         </div>
 
-        <!-- TAB 2: RUNNING (RADAR DE CARRERA) -->
         <div id="tab-running" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] border border-orange-500/30 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-5 -top-5 text-orange-500/10 rotate-12"><i data-lucide="zap" class="w-40 h-40"></i></div>
-                <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-4 scouter-font uppercase tracking-widest italic border-b border-orange-900/30 pb-3"><i data-lucide="footprints" class="text-orange-400 w-8 h-8"></i> LOG DE ACTIVIDAD AERÓBICA</h3>
-                <form id="runForm" class="space-y-6 relative z-10">
-                    <div class="space-y-2">
-                        <label class="text-[10px] text-orange-400 font-bold uppercase tracking-widest ml-1 italic">Fecha del Registro</label>
-                        <input type="date" id="runDate" class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-orange-500 transition-all shadow-inner font-mono" required>
+            <div class="glass p-8 rounded-[2.5rem] border border-orange-500/30">
+                <h3 class="text-2xl font-bold text-white mb-6 scouter-font uppercase italic border-b border-orange-900/30 pb-3">Actividad Aeróbica</h3>
+                <form id="runForm" class="space-y-6">
+                    <input type="date" id="runDate" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white" required>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="number" id="runDist" step="0.01" placeholder="KM" class="bg-slate-900 border border-slate-700 p-4 rounded-xl text-3xl font-bold text-white text-center">
+                        <input type="number" id="runTime" step="1" placeholder="MIN" class="bg-slate-900 border border-slate-700 p-4 rounded-xl text-3xl font-bold text-white text-center">
                     </div>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-orange-400 font-bold uppercase tracking-widest ml-1 italic">Distancia Total (KM)</label>
-                            <input type="number" id="runDist" step="0.01" placeholder="Ej: 5.00" class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl p-5 text-white outline-none scouter-font text-3xl shadow-inner focus:border-orange-500 transition-all" required>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-orange-400 font-bold uppercase tracking-widest ml-1 italic">Tiempo Crono (MIN)</label>
-                            <input type="number" id="runTime" step="1" placeholder="Ej: 25" class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl p-5 text-white outline-none scouter-font text-3xl shadow-inner focus:border-orange-500 transition-all" required>
-                        </div>
-                    </div>
-                    <div id="pace-preview" class="text-center text-3xl font-bold scouter-font text-orange-400 h-10 italic flex items-center justify-center gap-3">
-                        <!-- Preview Dinámico -->
-                    </div>
-                    <button type="submit" class="w-full bg-orange-700 hover:bg-orange-600 text-white font-bold py-6 rounded-[1.5rem] shadow-2xl border-b-4 border-orange-900 uppercase tracking-[0.3em] transition-all transform active:scale-95 text-xl scouter-font">REGISTRAR SEÑAL TÁCTICA</button>
+                    <button type="submit" class="w-full bg-orange-700 text-white font-bold py-5 rounded-2xl uppercase scouter-font">Guardar Sesión</button>
                 </form>
             </div>
-            
-            <!-- Gráfica de Running -->
-            <div class="glass p-6 rounded-3xl shadow-2xl border border-slate-800">
-                <h3 class="text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest italic text-center">Historial de Rendimiento (Min/Km)</h3>
-                <div class="chart-container h-56"><canvas id="chartRunning"></canvas></div>
-            </div>
-
-            <!-- Tabla de Registros -->
-            <div class="glass p-4 rounded-3xl overflow-x-auto shadow-2xl border border-slate-800">
-                <table class="w-full text-sm text-left text-slate-300">
-                    <tbody id="runningTableBody" class="scouter-font text-lg italic divide-y divide-slate-800">
-                        <!-- Data via JS -->
-                    </tbody>
-                </table>
-            </div>
+            <div class="chart-container glass rounded-3xl p-4"><canvas id="chartRunning"></canvas></div>
+            <div class="glass rounded-3xl overflow-hidden"><table class="w-full text-sm text-left"><tbody id="runningTableBody"></tbody></table></div>
         </div>
 
-        <!-- TAB 3: STRENGTH (ESCÁNER DINÁMICO DE FUERZA) -->
         <div id="tab-strength" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-3xl border border-blue-500/20 shadow-2xl relative overflow-hidden">
-                <div class="absolute -left-10 -bottom-10 text-blue-500/5 rotate-[-15deg]"><i data-lucide="dumbbell" class="w-48 h-48"></i></div>
-                <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-4 scouter-font uppercase tracking-widest italic border-b border-blue-900/30 pb-3"><i data-lucide="dumbbell" class="text-blue-400 w-8 h-8"></i> ESCÁNER DE POTENCIA Z</h3>
-                <div class="space-y-2 mb-8 relative z-10">
-                    <label class="text-[10px] text-blue-400 font-bold uppercase tracking-widest ml-2 italic">Selecciona Ejercicio del Historial</label>
-                    <select id="exercise-select" onchange="renderStrengthChart()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-sm outline-none scouter-font text-2xl focus:border-blue-500 cursor-pointer shadow-2xl transition-all hover:bg-slate-800 appearance-none"></select>
-                </div>
-                <div class="chart-container bg-slate-900/50 rounded-3xl p-4 border border-blue-900/30 shadow-inner"><canvas id="chartStrength"></canvas></div>
+            <div class="glass p-8 rounded-3xl border border-blue-500/20 shadow-2xl">
+                <h3 class="text-2xl font-bold text-white mb-6 scouter-font uppercase italic">Escáner de Potencia</h3>
+                <select id="exercise-select" onchange="renderStrengthChart()" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white mb-6"></select>
+                <div class="chart-container h-64"><canvas id="chartStrength"></canvas></div>
             </div>
-
-            <div class="glass p-6 rounded-3xl border border-yellow-500/20 shadow-2xl">
-                <h4 class="text-[11px] font-bold text-yellow-400 mb-6 uppercase tracking-[0.2em] flex items-center gap-4 italic"><i data-lucide="crown" class="w-6 h-6 text-yellow-500 animate-bounce"></i> Archivos de Potencia Máxima Histórica</h4>
-                <div id="pr-list" class="space-y-4 text-sm text-blue-200 scouter-font text-2xl max-h-96 overflow-y-auto pr-4 italic custom-scrollbar">
-                    <!-- Registros dinámicos -->
-                </div>
-            </div>
+            <div id="pr-list" class="space-y-3"></div>
         </div>
 
-        <!-- TAB 4: SUPPLEMENTS (CON PROTEÍNAS Y CATEGORÍAS ESPAÑOL) -->
         <div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-10 rounded-[3rem] border border-teal-500/30 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-8 -bottom-8 text-teal-500/10"><i data-lucide="pill" class="w-56 h-56"></i></div>
-                <div class="flex justify-between items-center mb-10 relative z-10">
-                    <h3 class="text-3xl font-bold text-white flex items-center gap-4 scouter-font uppercase tracking-widest italic leading-none border-b-2 border-teal-500/20 pb-2"><i data-lucide="pill" class="text-teal-400 w-10 h-10"></i> SUMINISTROS DE KI</h3>
-                    <button onclick="openSuppModal()" id="btn-add-supp-new" class="text-xs bg-teal-700 hover:bg-teal-600 text-white px-8 py-4 rounded-2xl flex items-center gap-3 border border-teal-500 font-bold shadow-[0_10px_30px_rgba(20,184,166,0.3)] transition-all transform active:scale-95 uppercase tracking-widest">
-                        <i data-lucide="plus-circle" class="w-5 h-5 text-teal-200"></i> AÑADIR ITEM
-                    </button>
-                </div>
-                <div id="supplements-list" class="grid gap-6">
-                    <!-- Items dinámicos -->
-                </div>
+            <div class="flex justify-between items-center">
+                <h3 class="text-3xl font-bold text-white scouter-font italic">Ki Suministros</h3>
+                <button onclick="openSuppModal()" class="bg-teal-700 text-white px-5 py-2 rounded-xl font-bold uppercase text-xs">+ Añadir</button>
             </div>
-            
-            <!-- Modal de Suministros (Fijo y tradución) -->
-            <div id="supp-modal" class="hidden fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-6 backdrop-blur-2xl">
-                <div class="glass bg-slate-900 w-full max-w-lg p-10 rounded-[2.5rem] border border-teal-500/50 relative shadow-[0_0_120px_rgba(20,184,166,0.3)]">
-                    <button onclick="closeSuppModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-all transform hover:rotate-90 p-2"><i data-lucide="x" class="w-8 h-8 text-slate-500"></i></button>
-                    <h4 id="supp-modal-title" class="text-3xl font-bold text-white mb-8 scouter-font uppercase italic tracking-[0.25em] border-b border-teal-500/40 pb-3">Editar Protocolo</h4>
-                    <form id="suppForm" class="space-y-6">
-                        <input type="hidden" id="suppId">
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-teal-400 font-bold uppercase tracking-widest ml-2">Identificación del Suministro</label>
-                            <input type="text" id="suppName" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white text-base focus:border-teal-400 outline-none shadow-inner transition-all italic font-medium" placeholder="Nombre (Ej: Proteína Whey Isolate)" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-[10px] text-teal-400 font-bold uppercase tracking-widest ml-2">Dosis Operativa</label>
-                                <input type="text" id="suppDose" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white text-base focus:border-teal-400 outline-none shadow-inner transition-all" placeholder="Ej: 30g / 2 Cáps" required>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] text-teal-400 font-bold uppercase tracking-widest ml-2">Fase de Aplicación</label>
-                                <select id="suppTiming" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white text-sm focus:border-teal-400 outline-none cursor-pointer shadow-inner">
-                                    <option value="morning">Fase: Mañana</option>
-                                    <option value="workout">Fase: Entrenamiento</option>
-                                    <option value="meal">Fase: Con Comidas</option>
-                                    <option value="night">Fase: Nocturna</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-teal-400 font-bold uppercase tracking-widest ml-2">Observaciones Tácticas</label>
-                            <textarea id="suppDesc" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-5 text-white text-sm focus:border-teal-400 outline-none shadow-inner transition-all" placeholder="Efectos esperados, precauciones..."></textarea>
-                        </div>
-                        <div class="flex items-center gap-5 bg-slate-950/60 p-5 rounded-2xl border border-slate-800 shadow-inner">
-                            <div class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="suppActive" class="w-8 h-8 rounded-lg bg-slate-700 border-slate-500 text-teal-500 focus:ring-teal-500 cursor-pointer shadow-inner">
-                            </div>
-                            <label for="suppActive" class="text-xs font-black text-slate-300 cursor-pointer uppercase tracking-[0.2em] italic">Protocolo en Activo</label>
-                        </div>
-                        <div class="flex gap-4 pt-4">
-                            <button type="button" onclick="deleteCurrentSupp()" id="btn-delete-supp" class="w-1/3 bg-red-900/50 text-red-200 border border-red-800 hover:bg-red-800 p-4 rounded-2xl text-xs font-bold hidden transition-all uppercase tracking-tighter italic">Destruir Registro</button>
-                            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white p-5 rounded-2xl font-bold text-sm border border-teal-400 shadow-[0_20px_40px_rgba(20,184,166,0.4)] uppercase tracking-[0.3em] active:scale-95 transition-all scouter-font">GUARDAR ARCHIVOS</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <div id="supplements-list" class="grid gap-4"></div>
         </div>
 
-        <!-- TAB 5: ARCHIVO GALERÍA PROGRESO -->
-        <div id="tab-gallery" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] text-center border border-purple-500/30 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-5 -top-5 text-purple-500/5"><i data-lucide="eye" class="w-32 h-32"></i></div>
-                <i data-lucide="camera" class="w-12 h-12 text-purple-400 mx-auto mb-5 drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]"></i>
-                <h3 class="text-3xl font-bold text-white mb-2 scouter-font uppercase tracking-[0.15em] italic">EXPEDIENTE VISUAL Z</h3>
-                <p class="text-[11px] text-purple-300 mb-8 italic tracking-tight font-medium bg-purple-950/20 py-2 rounded-full border border-purple-800/30 mx-auto max-w-xs">Almacenamiento Local Cifrado de Alta Privacidad</p>
-                <button onclick="document.getElementById('photo-input').click()" class="bg-purple-700 hover:bg-purple-600 text-white px-10 py-5 rounded-[1.5rem] text-sm font-bold shadow-[0_15px_30px_rgba(168,85,247,0.3)] border-b-4 border-purple-900 uppercase tracking-[0.3em] transition-all transform active:scale-95 mb-2">
-                    + GENERAR CAPTURA Z
-                </button>
+        <div id="tab-gallery" class="tab-content hidden-tab fade-in space-y-8 text-center">
+            <div class="glass p-10 rounded-3xl border border-purple-500/30">
+                <h3 class="text-2xl font-bold mb-6 scouter-font uppercase italic">Expediente Visual</h3>
+                <button onclick="document.getElementById('photo-input').click()" class="bg-purple-700 text-white px-8 py-4 rounded-2xl font-bold uppercase shadow-lg">+ Generar Captura</button>
                 <input type="file" id="photo-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(this)">
             </div>
-            <div id="gallery-grid" class="grid grid-cols-2 gap-6 pb-24 px-1">
-                <!-- Fotos locales -->
-            </div>
+            <div id="gallery-grid" class="grid grid-cols-2 gap-4"></div>
         </div>
 
-        <!-- TAB 6: DIAGNÓSTICO VITAL (SALUD Y KI ⚡) -->
         <div id="tab-stats" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-10 rounded-[3rem] border border-green-500/30 relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
+            <div class="glass p-8 rounded-[2.5rem] border border-green-500/30 relative overflow-hidden shadow-2xl">
                  <div class="absolute -right-16 -top-16 text-green-500/5"><i data-lucide="activity" class="w-80 h-80"></i></div>
-                <h3 class="text-3xl font-bold text-white mb-8 relative z-10 scouter-font uppercase tracking-widest italic flex items-center gap-5 border-b border-green-900/30 pb-4"><i data-lucide="activity" class="w-10 h-10 text-green-400"></i> DIAGNÓSTICO VITAL</h3>
+                <h3 class="text-3xl font-bold text-white mb-8 relative z-10 scouter-font uppercase italic flex items-center gap-5 border-b border-green-900/30 pb-4">
+                    <i data-lucide="activity" class="text-green-400 w-8 h-8"></i> DIAGNÓSTICO VITAL
+                </h3>
                 <form id="entryForm" class="space-y-6 relative z-10">
-                    <div class="space-y-2">
-                        <label class="text-[10px] text-green-400 font-bold uppercase tracking-widest ml-2 italic">Fecha de Escaneo</label>
-                        <input type="date" id="inputDate" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 transition-all shadow-inner font-mono text-lg" required>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <label class="text-[10px] text-yellow-400 ml-2 font-bold uppercase tracking-[0.2em] italic">Meta de Peso Maestro (KG)</label>
-                        <input type="number" id="inputTargetWeight" step="0.1" class="w-full bg-slate-900/90 border border-yellow-500/20 rounded-2xl p-6 text-yellow-400 outline-none focus:border-yellow-400 scouter-font text-4xl shadow-2xl italic tracking-tighter" placeholder="Ej: 85.0">
-                    </div>
-
+                    <input type="date" id="inputDate" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 transition-all font-mono text-lg" required>
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <label class="text-[10px] text-blue-400 ml-2 font-bold uppercase tracking-widest">Peso Actual</label>
-                            <input type="number" id="inputWeight" step="0.1" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-blue-500 scouter-font text-4xl shadow-inner tracking-tighter" required>
+                            <label class="text-[10px] text-blue-400 ml-2 font-bold uppercase tracking-widest">Peso Actual (KG)</label>
+                            <input type="number" id="inputWeight" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-blue-500 scouter-font text-4xl shadow-inner" required>
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] text-green-400 ml-2 font-bold uppercase tracking-widest">VFC (Latencia)</label>
-                            <input type="number" id="inputVfc" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 scouter-font text-4xl shadow-inner tracking-tighter" required>
+                            <input type="number" id="inputVfc" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 scouter-font text-4xl shadow-inner" required>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] text-red-400 ml-2 font-bold uppercase tracking-widest">PPM Reposo</label>
-                            <input type="number" id="inputRhr" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-red-500 scouter-font text-4xl shadow-inner tracking-tighter">
+                            <input type="number" id="inputRhr" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-red-500 scouter-font text-4xl shadow-inner">
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] text-purple-400 ml-2 font-bold uppercase tracking-widest">Sueño (Horas)</label>
-                            <input type="number" id="inputSleep" step="0.5" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-purple-500 scouter-font text-4xl shadow-inner tracking-tighter">
+                            <input type="number" id="inputSleep" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-purple-500 scouter-font text-4xl shadow-inner">
                         </div>
                     </div>
-
-                    <!-- Medidor de Ki Mejorado -->
-                    <div class="bg-slate-900/80 p-7 rounded-[2rem] border border-slate-800 shadow-2xl">
-                        <div class="flex justify-between items-end mb-5">
-                            <label class="text-xs text-yellow-500 font-bold uppercase tracking-[0.3em] italic">Nivel de Energía Ki</label>
-                            <span id="ki-val-display" class="scouter-font text-4xl text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]">5<span class="text-sm">⚡</span></span>
-                        </div>
-                        <input type="range" id="inputEnergy" min="1" max="10" value="5" class="w-full h-4 bg-slate-800 rounded-full appearance-none cursor-pointer accent-yellow-400 mt-2 shadow-inner ring-2 ring-slate-700/50" oninput="document.getElementById('ki-val-display').innerHTML = this.value + '<span class=\'text-sm\'>⚡</span>'">
-                        <div class="flex justify-between text-[10px] text-slate-500 px-2 mt-4 font-black tracking-widest uppercase italic">
-                            <span class="text-red-500/60">Agotado</span>
-                            <span class="text-blue-500/60">Equilibrio</span>
-                            <span class="text-yellow-500">Super Saiyan</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-6 rounded-[1.5rem] shadow-[0_20px_40px_rgba(21,128,61,0.3)] border-b-4 border-green-900 uppercase tracking-[0.3em] transition-all transform active:scale-[0.98] text-xl scouter-font">Sincronizar Diagnóstico Vital</button>
+                    <button type="submit" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-6 rounded-3xl border-b-4 border-green-900 uppercase tracking-widest text-xl scouter-font transition-all transform active:scale-95">Sincronizar Diagnóstico</button>
                 </form>
             </div>
-            
-            <!-- Bloques de Gráficas de Salud -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="glass p-6 rounded-3xl shadow-2xl border border-blue-900/20">
-                    <h3 class="text-[10px] font-bold text-blue-300 uppercase tracking-widest mb-4 italic flex items-center gap-2"><i data-lucide="line-chart" class="w-3 h-3"></i> Trayectoria de Peso</h3>
-                    <div class="chart-container h-44"><canvas id="chartWeight"></canvas></div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass p-4 rounded-2xl border border-blue-900/20 text-center">
+                    <p class="text-[9px] text-blue-300 font-bold uppercase mb-2">Peso</p>
+                    <div class="chart-container h-32"><canvas id="chartWeight"></canvas></div>
                 </div>
-                <div class="glass p-6 rounded-3xl shadow-2xl border border-green-900/20">
-                    <h3 class="text-[10px] font-bold text-green-300 uppercase tracking-widest mb-4 italic flex items-center gap-2"><i data-lucide="heart-pulse" class="w-3 h-3"></i> Índice de Recuperación (VFC)</h3>
-                    <div class="chart-container h-44"><canvas id="chartVfc"></canvas></div>
+                <div class="glass p-4 rounded-2xl border border-green-900/20 text-center">
+                    <p class="text-[9px] text-green-300 font-bold uppercase mb-2">VFC</p>
+                    <div class="chart-container h-32"><canvas id="chartVfc"></canvas></div>
+                </div>
+                <div class="glass p-4 rounded-2xl border border-red-900/20 text-center">
+                    <p class="text-[9px] text-red-300 font-bold uppercase mb-2">PPM</p>
+                    <div class="chart-container h-32"><canvas id="chartRhr"></canvas></div>
+                </div>
+                <div class="glass p-4 rounded-2xl border border-purple-900/20 text-center">
+                    <p class="text-[9px] text-purple-300 font-bold uppercase mb-2">Sueño</p>
+                    <div class="chart-container h-32"><canvas id="chartSleep"></canvas></div>
                 </div>
             </div>
 
-            <!-- Tabla de Historial Vital (Corrección Energía) -->
             <div class="glass p-6 rounded-[2.5rem] overflow-x-auto shadow-2xl border-t-4 border-green-500/20">
                 <table class="w-full text-xs text-left text-slate-300 border-separate border-spacing-y-2">
-                    <thead class="text-[9px] text-slate-500 uppercase bg-slate-900/80 tracking-widest font-black">
+                    <thead class="text-[10px] text-blue-400 uppercase tracking-widest bg-slate-900/50 font-black italic">
                         <tr>
-                            <th class="px-4 py-4 rounded-l-xl italic">Registro Ciclo</th>
+                            <th class="px-4 py-4 rounded-l-xl">Fecha</th>
                             <th class="px-2 py-4 text-center">KG</th>
                             <th class="px-2 py-4 text-center">VFC</th>
-                            <th class="px-2 py-4 text-center">PPM</th>
-                            <th class="px-2 py-4 text-center text-yellow-500">Nivel Ki</th>
+                            <th class="px-2 py-4 text-center text-red-400">PPM</th>
                             <th class="px-4 py-4 text-right rounded-r-xl">Acción</th>
                         </tr>
                     </thead>
-                    <tbody id="historyTableBody" class="scouter-font text-lg italic">
-                        <!-- Llenado dinámico -->
-                    </tbody>
+                    <tbody id="historyTableBody" class="scouter-font text-lg italic"></tbody>
                 </table>
             </div>
         </div>
-        
-        <!-- MODALES TÁCTICOS DE ESPIONAJE (PROTOCOLO SHARINGAN) -->
-        <div id="spy-modal" class="hidden fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-6 backdrop-blur-xl">
-            <div class="glass bg-slate-900 w-full max-w-xl p-10 rounded-[3rem] border border-purple-500/50 relative h-[88vh] flex flex-col shadow-[0_0_150px_rgba(168,85,247,0.3)]">
-                <button onclick="closeSpyModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-all transform hover:rotate-90 p-2"><i data-lucide="x" class="w-10 h-10 text-slate-500"></i></button>
-                <h4 class="text-4xl font-bold text-purple-400 mb-8 scouter-font flex items-center gap-5 uppercase tracking-tighter italic border-b-2 border-purple-900/50 pb-4">
-                    <i data-lucide="eye" class="w-10 h-10 text-purple-500 animate-pulse"></i> Radar de Objetivos
-                </h4>
-                <!-- Lista de guerreros detectados -->
-                <div id="spy-user-list" class="flex gap-4 overflow-x-auto pb-6 mb-6 border-b border-slate-800 custom-scrollbar-hide">
-                    <!-- Botones de usuarios via JS -->
-                </div>
-                <!-- Contenedor de ciclos semanales -->
-                <div id="spy-weeks-container" class="flex-1 overflow-y-auto space-y-4 p-2 custom-scrollbar">
-                    <div class="flex flex-col items-center justify-center h-full opacity-30">
-                        <i data-lucide="crosshair" class="w-20 h-20 mb-4"></i>
-                        <p class="text-slate-500 text-center italic scouter-font uppercase tracking-widest text-lg">Iniciando escaneo de señal remota...</p>
+
+        <div id="tab-profile" class="tab-content hidden-tab fade-in space-y-8">
+            <div class="glass p-8 rounded-[2.5rem] border border-yellow-500/30 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 text-yellow-500/5 rotate-12"><i data-lucide="shield-check" class="w-48 h-48"></i></div>
+                <h3 class="text-3xl font-bold text-white mb-6 scouter-font uppercase italic border-b border-yellow-900/30 pb-3">Expediente de Guerrero</h3>
+                <div class="space-y-6 relative z-10">
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-yellow-400 font-bold uppercase ml-1">Meta de Peso Maestro (KG)</label>
+                        <input type="number" id="profile-target" step="0.1" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-3xl scouter-font outline-none focus:border-yellow-500 shadow-inner" placeholder="Ej: 85.0">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-red-400 font-bold uppercase ml-1 italic">Historial de Lesiones / Limitaciones</label>
+                        <textarea id="profile-injuries" rows="3" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-sm outline-none focus:border-red-500 italic shadow-inner" placeholder="Ej: Lesión lumbar L5-S1..."></textarea>
+                    </div>
+                    <div class="bg-blue-900/20 p-4 rounded-2xl border border-blue-500/20">
+                        <p class="text-[10px] text-blue-300 uppercase font-black mb-2">Sincronización IA Activa</p>
+                        <p class="text-[11px] text-slate-400 italic">Los datos del perfil se envían a Gemini automáticamente para un entrenamiento 100% seguro.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL DE PREVISUALIZACIÓN SHARINGAN -->
-        <div id="spy-preview-modal" class="hidden fixed inset-0 bg-black/99 z-[60] flex items-center justify-center p-6 backdrop-blur-3xl">
-             <div class="glass bg-slate-950 w-full max-w-lg p-10 rounded-[3rem] border-2 border-blue-500/60 relative max-h-[92vh] flex flex-col shadow-[0_0_100px_rgba(59,130,246,0.4)]">
-                 <button onclick="closeSpyPreview()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-all p-2"><i data-lucide="x" class="w-10 h-10 text-slate-500"></i></button>
-                 <div class="flex items-center gap-4 mb-6 border-b border-blue-900/50 pb-4">
-                     <div class="bg-blue-600/20 p-3 rounded-2xl"><i data-lucide="file-search" class="text-blue-400 w-8 h-8"></i></div>
-                     <div>
-                        <h4 class="text-2xl font-bold text-white scouter-font uppercase tracking-[0.25em] italic">Previsualización Táctica</h4>
-                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Protocolo de clonación listo</p>
-                     </div>
-                 </div>
-                 <div id="spy-preview-content" class="flex-1 overflow-y-auto space-y-6 p-5 bg-black/60 rounded-[2rem] mb-8 border border-slate-800 text-slate-200 text-xs shadow-inner italic leading-relaxed">
-                     <!-- Detalle de la rutina -->
-                 </div>
-                 <button id="btn-copy-preview" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-6 rounded-[2rem] uppercase tracking-[0.4em] shadow-[0_0_40px_rgba(34,197,94,0.35)] border-b-4 border-green-900 transition-all active:scale-95 text-xl scouter-font">CLONAR ESTRUCTURA Z</button>
-             </div>
-        </div>
     </main>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR (ULTRA STYLE) -->
+    <div id="spy-modal" class="hidden fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-6 backdrop-blur-xl">
+        <div class="glass bg-slate-900 w-full max-w-xl p-8 rounded-[2rem] border border-purple-500/50 relative h-[80vh] flex flex-col shadow-2xl">
+            <button onclick="closeSpyModal()" class="absolute top-4 right-4 text-slate-400 p-2"><i data-lucide="x"></i></button>
+            <h4 class="text-3xl font-bold text-purple-400 scouter-font mb-6 italic uppercase">Radar de Objetivos</h4>
+            <div id="spy-user-list" class="flex gap-4 overflow-x-auto pb-4 border-b border-slate-800 mb-4"></div>
+            <div id="spy-weeks-container" class="flex-1 overflow-y-auto space-y-4"></div>
+        </div>
+    </div>
+
+    <div id="spy-preview-modal" class="hidden fixed inset-0 bg-black/99 z-[60] flex items-center justify-center p-6 backdrop-blur-3xl">
+         <div class="glass bg-slate-950 w-full max-w-lg p-10 rounded-[2rem] border-2 border-blue-500 relative max-h-[85vh] flex flex-col shadow-2xl">
+             <button onclick="closeSpyPreview()" class="absolute top-4 right-4 text-slate-400 p-2"><i data-lucide="x"></i></button>
+             <h4 class="text-2xl font-bold text-white scouter-font mb-6 italic uppercase">Vista Previa</h4>
+             <div id="spy-preview-content" class="flex-1 overflow-y-auto space-y-4 text-slate-200 text-xs italic bg-black/50 p-4 rounded-xl shadow-inner border border-slate-800"></div>
+             <button id="btn-copy-preview" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-6 rounded-2xl uppercase mt-4 shadow-xl transition-all active:scale-95">CLONAR PLAN Z</button>
+         </div>
+    </div>
+
+    <div id="supp-modal" class="hidden fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass bg-slate-900 w-full max-w-lg p-8 rounded-3xl border border-teal-500 shadow-2xl">
+            <h4 id="supp-modal-title" class="text-2xl font-bold text-white mb-6 uppercase italic">Editar Suministro</h4>
+            <form id="suppForm" class="space-y-4">
+                <input type="hidden" id="suppId">
+                <input type="text" id="suppName" class="w-full bg-slate-800 p-4 rounded-xl text-white border border-slate-700 outline-none" placeholder="Nombre" required>
+                <input type="text" id="suppDose" class="w-full bg-slate-800 p-4 rounded-xl text-white border border-slate-700 outline-none" placeholder="Dosis" required>
+                <select id="suppTiming" class="w-full bg-slate-800 p-4 rounded-xl text-white border border-slate-700 outline-none">
+                    <option value="morning">Mañana</option>
+                    <option value="workout">Entrenamiento</option>
+                    <option value="meal">Comidas</option>
+                    <option value="night">Noche</option>
+                </select>
+                <textarea id="suppDesc" class="w-full bg-slate-800 p-4 rounded-xl text-white border border-slate-700 outline-none" placeholder="Descripción"></textarea>
+                <div class="flex items-center gap-3"><input type="checkbox" id="suppActive" class="w-5 h-5 rounded" checked> <label class="text-sm font-bold uppercase italic">Fase Activa</label></div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="deleteCurrentSupp()" id="btn-delete-supp" class="bg-red-900/50 text-red-200 border border-red-800 p-4 rounded-xl flex-1 hidden transition-all">Borrar</button>
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-xl flex-[2] font-bold uppercase transition-all shadow-lg">Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <nav class="fixed bottom-0 w-full bg-slate-900/98 backdrop-blur-3xl border-t border-slate-800 p-1 pb-10 z-50 flex justify-around shadow-[0_-20px_60px_rgba(0,0,0,0.98)]">
-        <button onclick="switchTab('home')" id="btn-home" class="nav-btn active text-yellow-400 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="home" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('ranking')" id="btn-ranking" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="trophy" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('plan')" id="btn-plan" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="calendar-days" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('running')" id="btn-running" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="footprints" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('strength')" id="btn-strength" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="dumbbell" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('supplements')" id="btn-supplements" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="pill" class="w-7 h-7"></i></button>
-        <button onclick="switchTab('stats')" id="btn-stats" class="nav-btn text-slate-500 flex flex-col items-center gap-1 p-2 w-full rounded-3xl transition-all active:scale-75"><i data-lucide="activity" class="w-7 h-7"></i></button>
+        <button onclick="switchTab('home')" id="btn-home" class="nav-btn active p-2 w-full flex flex-col items-center gap-1"><i data-lucide="home"></i></button>
+        <button onclick="switchTab('ranking')" id="btn-ranking" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="trophy"></i></button>
+        <button onclick="switchTab('plan')" id="btn-plan" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="calendar-days"></i></button>
+        <button onclick="switchTab('running')" id="btn-running" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="footprints"></i></button>
+        <button onclick="switchTab('strength')" id="btn-strength" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="dumbbell"></i></button>
+        <button onclick="switchTab('supplements')" id="btn-supplements" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="pill"></i></button>
+        <button onclick="switchTab('stats')" id="btn-stats" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="activity"></i></button>
+        <button onclick="switchTab('profile')" id="btn-profile" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="user-circle"></i></button>
     </nav>
-<!-- CONTINÚA EN PARTE 3 -->
-<!-- APP LOGIC (EL CEREBRO DEL GUERRERO Z) -->
-    <script>
+
+<script>
         // --- 🔴 CONFIGURACIÓN DE FIREBASE 🔴 ---
         const firebaseConfig = {
             apiKey: "AIzaSyCa9FJBYgHvwzT_MT-bfsOTJSOnMxhmcss", 
@@ -657,25 +492,25 @@
         }
 
         // --- CALENDARIO DINÁMICO (TIEMPO REAL) ---
-        function updateCalendarDates() {
+		function updateCalendarDates() {
             const today = new Date();
-            const dayOfWeek = today.getDay(); // 0 Dom, 1 Lun...
+            const dayOfWeek = today.getDay(); 
             const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
             const monday = new Date(new Date().setDate(diff));
 
-            const daysIds = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-            daysIds.forEach((id, i) => {
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            calendarDays.forEach((el, i) => {
                 const date = new Date(monday);
                 date.setDate(monday.getDate() + i);
-                const el = document.querySelector(`#cal-${id} .day-num`);
-                if(el) el.innerText = date.getDate();
+                const numSpan = el.querySelector('.day-num');
+                if(numSpan) numSpan.innerText = date.getDate();
+                
+                // Marcar día actual
+                el.classList.remove('active');
+                if (i === (dayOfWeek === 0 ? 6 : dayOfWeek - 1)) {
+                    el.classList.add('active');
+                }
             });
-
-            const nowDay = new Date().getDay();
-            const map = {1:'mon', 2:'tue', 3:'wed', 4:'thu', 5:'fri', 6:'sat', 0:'sun'};
-            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('active'));
-            const activeEl = document.getElementById(`cal-${map[nowDay]}`);
-            if(activeEl) activeEl.classList.add('active');
         }
 
         function scrollToDay(idx) {
@@ -696,6 +531,8 @@
             updateExerciseSelector();
             updateHomeMiniStats();
             switchTab('home');
+			document.getElementById('profile-target').value = appData.targetWeight || "";
+			document.getElementById('profile-injuries').value = appData.injuries || "";
         }
 
         function updateHomeMiniStats() {
@@ -707,6 +544,7 @@
                     el.innerText = (change >= 0 ? "+" : "") + change.toFixed(1) + "%";
                     el.className = change < 0 ? "text-xs font-bold text-green-400 scouter-font" : "text-xs font-bold text-red-400 scouter-font";
                 }
+				updateKiStatus(); // Añadimos esto aquí
             }
         }
 
@@ -737,6 +575,13 @@
                 return `<div id="day-card-${dIdx}" class="glass rounded-3xl shadow-lg border-l-4 ${color} mb-5 anime-border overflow-hidden transition-all"><div class="p-4 bg-slate-900/80 flex justify-between items-center border-b border-slate-800 shadow-sm"><h3 class="font-bold text-white text-[12px] uppercase tracking-widest italic">${day.day} | ${day.title}</h3><button onclick="editDay(${dIdx})" class="p-2 hover:bg-slate-700 rounded-xl transition-all text-slate-500 hover:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button></div><div class="p-3 bg-slate-900/20">${exHtml}${day.notes ? `<div class="mt-3 text-[10px] text-yellow-200 bg-yellow-900/30 p-3 rounded-xl border border-yellow-500/10 flex gap-2 italic"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500"></i>${day.notes}</div>` : ''}</div></div>`;
             }).join('');
             lucide.createIcons();
+        }
+		function changeWeek() {
+            const selector = document.getElementById('week-selector');
+            currentWeekIndex = parseInt(selector.value);
+            renderPlan();
+            // Esto hace que al cambiar de semana, el calendario se actualice visualmente
+            updateCalendarDates(); 
         }
 
         // --- FUERZA ---
@@ -784,50 +629,64 @@
             }).join('');
         }
 
-        // --- SALUD Y KI ---
+		// --- SALUD Y KI (CORREGIDO) ---
         document.getElementById('entryForm').addEventListener('submit', e => {
             e.preventDefault();
-            const target = parseFloat(document.getElementById('inputTargetWeight').value);
-            if (!isNaN(target)) appData.targetWeight = target;
-            appData.progress.push({
+            const newEntry = {
                 date: document.getElementById('inputDate').value,
                 weight: parseFloat(document.getElementById('inputWeight').value),
                 vfc: parseFloat(document.getElementById('inputVfc').value),
                 rhr: parseFloat(document.getElementById('inputRhr').value) || 0,
-                sleep: parseFloat(document.getElementById('inputSleep').value) || 0,
-                energy: parseInt(document.getElementById('inputEnergy').value) || 5
-            });
-            saveDataToCloud(); updateHistoryTable(); e.target.reset();
+                sleep: parseFloat(document.getElementById('inputSleep').value) || 0
+            };
+            
+            appData.progress.push(newEntry);
+            saveDataToCloud(); 
+            updateHistoryTable(); 
+            e.target.reset();
             document.getElementById('inputDate').valueAsDate = new Date();
-            if(appData.targetWeight) document.getElementById('inputTargetWeight').value = appData.targetWeight;
             alert("✅ Diagnóstico vital sincronizado.");
         });
 
-        function updateHistoryTable() {
+		function updateHistoryTable() {
             const sorted = [...appData.progress].sort((a,b) => new Date(b.date) - new Date(a.date));
-            const tbody = document.getElementById('historyTableBody'); if(!tbody) return;
+            const tbody = document.getElementById('historyTableBody'); 
+            if(!tbody) return;
+
             tbody.innerHTML = sorted.map((r, i) => `
                 <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
                     <td class="px-2 py-4 font-mono text-slate-400 text-[10px] font-bold uppercase">${r.date.slice(5)}</td>
-                    <td class="px-2 py-4 font-bold text-white text-base">${r.weight}</td>
+                    <td class="px-2 py-4 font-bold text-white text-base">${r.weight}kg</td>
                     <td class="px-2 py-4 text-green-400 font-bold">${r.vfc}</td>
                     <td class="px-2 py-4 text-red-400 font-bold">${r.rhr || '-'}</td>
-                    <td class="px-2 py-4 text-yellow-400 font-black text-xl tracking-tighter">${r.energy || 5}<span class="text-[10px] ml-0.5">⚡</span></td>
-                    <td class="px-2 py-4 text-right"><button onclick="delProg(${i})" class="text-slate-600 hover:text-red-500 transition-all transform active:scale-75"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                    <td class="px-2 py-4 text-right">
+                        <button onclick="delProg(${i})" class="text-slate-600 hover:text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
                 </tr>`).join('');
-            lucide.createIcons(); renderAllCharts(sorted);
+            
+            lucide.createIcons(); 
+            renderStatsCharts(); // Esto dibuja las 4 gráficas automáticamente
         }
 
-        function renderAllCharts(data) {
-            const rev = [...data].reverse();
-            const lbs = rev.map(d => d.date.slice(5));
-            const targetLine = rev.map(() => appData.targetWeight || null);
-            const build = (id, lab, set, col, type='line') => {
+        function renderStatsCharts() {
+            const data = [...appData.progress].sort((a,b) => new Date(a.date) - new Date(b.date));
+            const lbs = data.map(d => d.date.slice(5));
+
+            const build = (id, label, set, col) => {
                 const canvas = document.getElementById(id); if(!canvas) return;
-                const ctx = canvas.getContext('2d'); if(window[id+'Inst']) window[id+'Inst'].destroy();
-                window[id+'Inst'] = new Chart(ctx, { type: type, data: { labels: lbs, datasets: [{ label: lab, data: set, borderColor: col, backgroundColor: col+'20', tension: 0.3, fill: true }, ...(id==='chartWeight' && appData.targetWeight ? [{ label: 'META', data: targetLine, borderColor: '#fbbf24', borderDash: [5,5], pointRadius: 0, fill: false }] : [])] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false } } } });
+                const ctx = canvas.getContext('2d'); 
+                if(window[id+'Inst']) window[id+'Inst'].destroy();
+                window[id+'Inst'] = new Chart(ctx, { 
+                    type: 'line', 
+                    data: { labels: lbs, datasets: [{ label, data: set, borderColor: col, backgroundColor: col+'15', fill: true, tension: 0.3 }] }, 
+                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { ticks: { color: '#64748b', font: { size: 8 } } } } } 
+                });
             };
-            build('chartWeight', 'Peso', rev.map(d=>d.weight), '#3b82f6'); build('chartVfc', 'VFC', rev.map(d=>d.vfc), '#4ade80');
+
+            build('chartWeight', 'Peso', data.map(d=>d.weight), '#3b82f6');
+            build('chartVfc', 'VFC', data.map(d=>d.vfc), '#22c55e');
+            build('chartRhr', 'PPM', data.map(d=>d.rhr), '#ef4444');
+            build('chartSleep', 'Sueño', data.map(d=>d.sleep), '#a855f7');
         }
         function delProg(i) { if(confirm("¿Borrar?")) { const sorted=[...appData.progress].sort((a,b)=>new Date(b.date)-new Date(a.date)); const realIdx=appData.progress.indexOf(sorted[i]); if(realIdx>-1){ appData.progress.splice(realIdx,1); saveDataToCloud(); updateHistoryTable(); } } }
 
@@ -865,10 +724,30 @@
         });
 
         // --- ESPÍA (SHARINGAN) ---
-        function openSpyModal() {
+		async function openSpyModal() {
             const l = document.getElementById('spy-user-list');
-            l.innerHTML = spyUsersCache.filter(u => u.id !== currentUser.uid).map(u => `<button onclick="loadSpyPlan('${u.id}')" class="bg-slate-800 text-slate-300 border border-slate-700 px-6 py-4 rounded-2xl text-[10px] whitespace-nowrap hover:bg-purple-900 transition-all font-bold uppercase active:scale-95 shadow-xl italic tracking-widest">${u.name}</button>`).join('') || '<span class="text-xs text-slate-500 italic uppercase">Clan solitario.</span>';
+            l.innerHTML = '<span class="text-xs animate-pulse p-4">Escaneando guerreros...</span>';
             document.getElementById('spy-modal').classList.remove('hidden');
+
+            try {
+                // Buscamos a todos los usuarios en la tabla de ranking
+                const snap = await db.collection('leaderboard').get();
+                spyUsersCache = [];
+                snap.forEach(doc => { 
+                    if(doc.id !== currentUser.uid) {
+                        spyUsersCache.push({id: doc.id, name: doc.data().nickname}); 
+                    }
+                });
+                
+                l.innerHTML = spyUsersCache.map(u => `
+                    <button onclick="loadSpyPlan('${u.id}')" class="bg-slate-800 text-slate-300 border border-slate-700 px-6 py-4 rounded-2xl text-[10px] whitespace-nowrap hover:bg-purple-900 transition-all font-bold uppercase italic tracking-widest">
+                        ${u.name}
+                    </button>
+                `).join('') || '<span class="text-xs text-slate-500 italic p-4">No hay señales de otros clanes.</span>';
+            } catch(e) {
+                console.error(e);
+                l.innerHTML = '<span class="text-red-500 text-xs p-4">Fallo en el radar.</span>';
+            }
         }
         function closeSpyModal() { document.getElementById('spy-modal').classList.add('hidden'); }
 
@@ -904,33 +783,212 @@
         }
 
         // --- IA PROMPT MAESTRO ---
-        function copyPrompt() {
-            const today = new Date(); const nm = new Date(today); nm.setDate(today.getDate() + ((1+7-today.getDay())%7||7)); const ns = new Date(nm); ns.setDate(nm.getDate()+6);
-            const opt = { day: 'numeric', month: 'long' }; const dStr = `${nm.toLocaleDateString('es-ES', opt)} al ${ns.toLocaleDateString('es-ES', opt)}`;
-            const prompt = `Actúa como entrenador personal experto. Genera el código JSON para mi semana del ${dStr}.\nESTRUCTURA OBLIGATORIA (Responde SOLO con el JSON):\n{\n "id": "tactica-${Date.now()}",\n "label": "Protocolo Semana ${appData.plan.length+1} (${dStr})",\n "days": [{ "id": "d1", "day": "Lunes", "title": "Protocolo", "type": "gym", "exercises": [{ "name": "Ejercicio", "sets": "3", "reps": "12", "desc": "Técnica Maestra", "track": true }] }]\n}\nREGLAS:\n1. Solo JSON.\n2. "track":true en pesas (activa casilla kilos).\n3. Genera Lunes a Domingo completo.`;
-            navigator.clipboard.writeText(prompt).then(() => alert("✅ Comando copiado para Gemini."));
+function copyPrompt() {
+            // VALIDACIÓN: ¿Tiene meta de peso y lesiones?
+            if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
+                alert("⚠️ ¡ERROR DE PROTOCOLO!\n\nAntes de hablar con la IA, debes ir a la pestaña PERFIL (icono de usuario) y configurar tu Meta de Peso y tus Lesiones/Notas Médicas.");
+                switchTab('profile'); // Lo mandamos automáticamente a la pestaña de perfil
+                return;
+            }
+
+            const today = new Date(); 
+            const nm = new Date(today); 
+            nm.setDate(today.getDate() + ((1+7-today.getDay())%7||7)); 
+            const ns = new Date(nm); 
+            ns.setDate(nm.getDate()+6);
+            const dStr = `${nm.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} al ${ns.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`;
+            
+            const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
+            const misSupps = appData.supplements.map(s => s.name).join(", ");
+
+            const prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica. Genera el código JSON para mi próxima semana de entrenamiento: del ${dStr}.
+
+DATOS CRÍTICOS DEL ATLETA:
+- Peso Actual: ${ultimoPeso} kg.
+- Meta de Peso: ${appData.targetWeight} kg.
+- Lesiones/Limitaciones: ${appData.injuries}.
+- Suplementación: ${misSupps}.
+
+REGLAS OBLIGATORIAS: Responde SOLO con el código JSON. Genera 7 días. Usa "track": true en pesas. Adapta la rutina para NO agravar mis lesiones mencionadas.
+
+ESTRUCTURA: { "id": "tactica-${Date.now()}", "label": "Semana X: [Título]", "days": [...] }`;
+
+            navigator.clipboard.writeText(prompt).then(() => alert("✅ ¡COMANDO MAESTRO COPIADO!\n\nPégalo en Gemini ahora. Tus lesiones y metas van incluidas."));
         }
 
         // --- UTILS RESTANTES ---
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden-tab'));
+function switchTab(id) {
+            // 1. Ocultar todas las pestañas con doble seguridad (clase propia y tailwind)
+            document.querySelectorAll('.tab-content').forEach(e => {
+                e.classList.add('hidden-tab');
+                e.classList.add('hidden'); 
+            });
+            // 2. Quitar estado activo de todos los botones de navegación
             document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active')); 
-            document.getElementById(`tab-${id}`).classList.remove('hidden-tab');
-            const btn = document.getElementById(`btn-${id}`); if(btn) btn.classList.add('active'); 
+            
+            // 3. Mostrar la pestaña seleccionada
+            const target = document.getElementById(`tab-${id}`);
+            if(target) {
+                target.classList.remove('hidden-tab');
+                target.classList.remove('hidden');
+            }
+            
+            // 4. Activar el botón correspondiente en el menú
+            const btn = document.getElementById(`btn-${id}`); 
+            if(btn) btn.classList.add('active'); 
+
+            // 5. Cargas automáticas de datos al entrar en la pestaña
             if(id==='strength') { renderStrengthChart(); updatePRs(); }
             if(id==='running') updateRunningUI();
-            if(id==='stats') updateHistoryTable();
+            if(id==='stats') updateHistoryTable(); // Esto activa las 4 gráficas de salud
             if(id==='ranking') loadLeaderboard();
             if(id==='supplements') renderSupplements();
             if(id==='home') updateHomeMiniStats();
+            if(id==='profile') { 
+                document.getElementById('profile-target').value = appData.targetWeight || "";
+                document.getElementById('profile-injuries').value = appData.injuries || "";
+            }
+            lucide.createIcons();
+        }
+
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody'); 
+            if(!tbody) return;
+            const sorted = [...appData.progress].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = sorted.map((r, i) => `
+                <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
+                    <td class="px-2 py-4 font-mono text-slate-400 text-[10px] font-bold uppercase">${r.date.slice(5)}</td>
+                    <td class="px-2 py-4 font-bold text-white text-base text-center">${r.weight}kg</td>
+                    <td class="px-2 py-4 text-green-400 font-bold text-center">${r.vfc}</td>
+                    <td class="px-2 py-4 text-red-400 font-bold text-center">${r.rhr || '-'}</td>
+                    <td class="px-2 py-4 text-right">
+                        <button onclick="delProg(${i})" class="text-slate-600 hover:text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
+            
+            lucide.createIcons(); 
+            renderStatsCharts();
+        }
+
+        function renderStatsCharts() {
+            const data = [...appData.progress].sort((a,b) => new Date(a.date) - new Date(b.date));
+            if (data.length === 0) return;
+            const lbs = data.map(d => d.date.slice(5));
+
+            const build = (id, label, set, col) => {
+                const canvas = document.getElementById(id); if(!canvas) return;
+                const ctx = canvas.getContext('2d'); 
+                if(window[id+'Inst']) window[id+'Inst'].destroy();
+                window[id+'Inst'] = new Chart(ctx, { 
+                    type: 'line', 
+                    data: { labels: lbs, datasets: [{ label, data: set, borderColor: col, backgroundColor: col+'15', fill: true, tension: 0.3, pointRadius: 2 }] }, 
+                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { ticks: { color: '#64748b', font: { size: 8 } } } } } 
+                });
+            };
+
+            build('chartWeight', 'Peso', data.map(d=>d.weight), '#3b82f6');
+            build('chartVfc', 'VFC', data.map(d=>d.vfc), '#22c55e');
+            build('chartRhr', 'PPM', data.map(d=>d.rhr), '#ef4444');
+            build('chartSleep', 'Sueño', data.map(d=>d.sleep), '#a855f7');
+        }
+
+        // --- VALIDACIÓN DE SEGURIDAD PARA EL COMANDO IA ---
+        function copyPrompt() {
+            // Si el usuario no ha puesto meta o lesiones, le obligamos
+            if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
+                alert("⚠️ ¡BLOQUEO DE SEGURIDAD!\n\nAntes de generar tu comando, debes ir a la pestaña PERFIL (icono de usuario) y rellenar tu Meta de Peso y tus Lesiones (ej: esguince).");
+                switchTab('profile'); 
+                return;
+            }
+
+            const today = new Date(); 
+            const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+            const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
+            const misSupps = appData.supplements.map(s => s.name).join(", ");
+
+            const prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica. Genera el código JSON para mi próxima semana de entrenamiento a partir del ${dStr}.
+
+DATOS CRÍTICOS:
+- Peso Actual: ${ultimoPeso} kg.
+- Meta de Peso: ${appData.targetWeight} kg.
+- Lesiones: ${appData.injuries}.
+- Suplementos: ${misSupps}.
+
+REGLAS: Responde SOLO con el código JSON. Genera 7 días. Usa "track": true en pesas. Adapta la rutina para NO agravar mi lesión de ${appData.injuries}.
+
+ESTRUCTURA: { "id": "tactica-${Date.now()}", "label": "Semana de Poder", "days": [...] }`;
+
+            navigator.clipboard.writeText(prompt).then(() => alert("✅ ¡COMANDO COPIADO!\n\nPégalo en Gemini ahora. Tus datos de salud y lesiones han sido incluidos automáticamente."));
         }
         function toggleSettings() { document.getElementById('settings-panel').classList.toggle('hidden'); }
         function changeNickname() { const n=prompt("Nuevo apodo:", appData.nickname); if(n){ appData.nickname=n; document.getElementById('header-username').innerText=n; saveDataToCloud(); } }
         function changeGroup() { const g=prompt("Nuevo clan:", appData.group); if(g){ appData.group=g.trim(); saveDataToCloud(); loadLeaderboard(); } }
         function resetDefaultPlan() { if(confirm("¿Restaurar plan inicial?")){ appData.plan = [{id:"w-res-"+Date.now(), label:"Semana 1 (Inicio)", days:getDefaultPlan()}]; saveDataToCloud(); renderPlan(); } }
         function editDay(i) { const n=prompt("Notas tácticas de campo:", appData.plan[currentWeekIndex].days[i].notes); if(n!==null){ appData.plan[currentWeekIndex].days[i].notes=n; saveDataToCloud(); renderPlan(); } }
-        function importNewWeek() { try { const w=JSON.parse(document.getElementById('import-code-area').value); if(!w.id || !w.days) throw new Error(); appData.plan.push(w); saveDataToCloud(); currentWeekIndex=appData.plan.length-1; renderPlan(); toggleSettings(); alert("¡Plan importado!"); } catch(e){ alert("CÓDIGO CORRUPTO."); } }
+        
+		function editDay(i) { 
+            const n = prompt("Notas tácticas de campo:", appData.plan[currentWeekIndex].days[i].notes); 
+            if(n !== null) { 
+                appData.plan[currentWeekIndex].days[i].notes = n; 
+                saveDataToCloud(); 
+                renderPlan(); 
+            } 
+        }
+		function updateProfileData() {
+            appData.targetWeight = parseFloat(document.getElementById('profile-target').value) || 0;
+            appData.injuries = document.getElementById('profile-injuries').value || "";
+            saveDataToCloud(); // Guarda automáticamente en Firebase
+        }
+		function importNewWeek() { 
+            try { 
+                let text = document.getElementById('import-code-area').value.trim();
+                // Limpiar posibles bloques de código Markdown de la IA (```json ... ```)
+                text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+                
+                const w = JSON.parse(text); 
+                if(!w.days) throw new Error("Formato inválido"); 
+                
+                // Forzar un nombre legible para evitar el 'undefined'
+                w.label = w.label || w.title || `Ciclo Z ${appData.plan.length + 1}`;
+                w.id = w.id || "tactica-" + Date.now();
 
+                appData.plan.push(w); 
+                saveDataToCloud(); 
+                currentWeekIndex = appData.plan.length - 1; 
+                renderPlan(); 
+                toggleSettings(); 
+                document.getElementById('import-code-area').value = "";
+                alert("✅ ¡Plan Maestro Importado!"); 
+            } catch(e) { 
+                alert("❌ ERROR: El código JSON es incorrecto o está incompleto."); 
+            } 
+        }
+
+        function deleteCurrentWeek() {
+            if (appData.plan.length <= 1) {
+                alert("No puedes borrar el último protocolo. El sistema requiere al menos un plan activo.");
+                return;
+            }
+            if (confirm(`¿Eliminar permanentemente "${appData.plan[currentWeekIndex].label}"?`)) {
+                appData.plan.splice(currentWeekIndex, 1);
+                currentWeekIndex = Math.max(0, currentWeekIndex - 1);
+                saveDataToCloud();
+                renderPlan();
+                toggleSettings();
+                alert("Ciclo eliminado.");
+            }
+        }
+
+        function resetDefaultPlan() {
+            if(confirm("¿Restaurar plan inicial? Se borrarán todos tus ciclos actuales.")){ 
+                appData.plan = [{id:"w-res-"+Date.now(), label:"Semana 1 (Inicio)", days:getDefaultPlan()}]; 
+                currentWeekIndex = 0;
+                saveDataToCloud(); 
+                renderPlan(); 
+                toggleSettings();
+            } 
+        }
         function getDefaultPlan() {
             return [
                 { id: "d1", day: "Lunes", title: "Empuje (Pierna)", type: "gym", exercises: [{ name: "Prensa de Piernas", sets: "3", reps: "12", track: true }, { name: "Extensión Cuádriceps", sets: "3", reps: "15", track: true }] },
@@ -967,8 +1025,75 @@
         function handlePhotoUpload(input) { const f = input.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const max = 800; let w = img.width, h = img.height; if(w > max){ h *= max/w; w = max; } c.width = w; c.height = h; ctx.drawImage(img, 0, 0, w, h); galleryData.unshift({ date: new Date().toISOString().split('T')[0], img: c.toDataURL('image/jpeg', 0.8) }); localStorage.setItem('pepeGallery', JSON.stringify(galleryData)); renderGallery(); }; img.src = e.target.result; }; r.readAsDataURL(f); }
         function renderGallery() { const g = document.getElementById('gallery-grid'); if(!g) return; if(!galleryData.length) { g.innerHTML='<p class="text-[10px] text-slate-600 text-center col-span-2 uppercase font-black italic mt-10 opacity-40">Sin archivos visuales.</p>'; return; } g.innerHTML = galleryData.map((x,i) => `<div class="relative group overflow-hidden rounded-2xl shadow-xl"><img src="${x.img}" class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110" onclick="window.open('${x.img}')"><button onclick="delPhoto(${i})" class="absolute top-2 right-2 bg-black/60 text-white rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`).join(''); lucide.createIcons(); }
         function delPhoto(i) { if(confirm("¿Borrar?")){ galleryData.splice(i,1); localStorage.setItem('pepeGallery', JSON.stringify(galleryData)); renderGallery(); } }
+// LOGICA DE GUARDADO DE RUNNING
+        document.getElementById('runForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const dist = parseFloat(document.getElementById('runDist').value);
+            const time = parseFloat(document.getElementById('runTime').value);
+            if(isNaN(dist) || isNaN(time) || dist <= 0) return alert("Introduce datos válidos");
+            
+            const pace = time / dist; 
 
+            appData.running.push({
+                date: document.getElementById('runDate').value,
+                dist: dist,
+                time: time,
+                pace: pace
+            });
+
+            saveDataToCloud();
+            updateRunningUI();
+            e.target.reset();
+            document.getElementById('runDate').valueAsDate = new Date();
+            alert("🏃 Sesión de running registrada.");
+        });
+		function updateProfileData() {
+            appData.targetWeight = parseFloat(document.getElementById('profile-target').value) || 0;
+            appData.injuries = document.getElementById('profile-injuries').value || "";
+            saveDataToCloud();
+        }
+		function closeSpyModal() { document.getElementById('spy-modal').classList.add('hidden'); }
+        function closeSpyPreview() { document.getElementById('spy-preview-modal').classList.add('hidden'); spyPendingWeek = null; }
+        // Corregir espiar
+        async function loadSpyPlan(uid) {
+            const container = document.getElementById('spy-weeks-container');
+            container.innerHTML = '<p class="text-center animate-pulse py-10">Interceptando señal...</p>';
+            try {
+                const doc = await db.collection('users').doc(uid).get();
+                if(doc.exists && doc.data().plan) {
+                    container.innerHTML = doc.data().plan.map(w => `
+                        <div class="bg-slate-800/70 p-4 rounded-xl flex justify-between items-center mb-3 border border-slate-700">
+                            <span class="text-white font-bold text-sm">${w.label || "Protocolo"}</span>
+                            <div class="flex gap-2">
+                                <button onclick='previewSpyWeek(${JSON.stringify(w).replace(/'/g,"&apos;")})' class="bg-blue-600 px-3 py-1 rounded text-[10px] font-bold">VER</button>
+                                <button onclick='copySpyWeek(${JSON.stringify(w).replace(/'/g,"&apos;")})' class="bg-green-600 px-3 py-1 rounded text-[10px] font-bold">CLONAR</button>
+                            </div>
+                        </div>`).join('');
+                }
+            } catch(e) { container.innerHTML = '<p class="text-red-500">Error de conexión.</p>'; }
+        }
+		// Activa el botón de clonado en la previsualización
+        document.getElementById('btn-copy-preview').onclick = () => { if(spyPendingWeek) copySpyWeek(spyPendingWeek); };
         window.onload = () => { document.getElementById('inputDate').valueAsDate = new Date(); document.getElementById('runDate').valueAsDate = new Date(); lucide.createIcons(); };
+		function updateKiStatus() {
+    const card = document.getElementById('ki-status-card');
+    const text = document.getElementById('ki-status-text');
+    if (!card || !appData.progress.length) return;
+
+    card.classList.remove('hidden');
+    const lastVfc = appData.progress[appData.progress.length - 1].vfc;
+
+    if (lastVfc >= 65) {
+        card.style.borderColor = "#22c55e"; 
+        text.innerHTML = `<span class="text-green-400 font-bold font-sans">KI ALTO (${lastVfc}):</span> Tu sistema nervioso está recuperado. Es el momento de buscar un nuevo Récord Personal (PR).`;
+    } else if (lastVfc >= 45) {
+        card.style.borderColor = "#fbbf24"; 
+        text.innerHTML = `<span class="text-yellow-400 font-bold font-sans">KI ESTABLE (${lastVfc}):</span> Recuperación normal. Entrena con intensidad moderada, sin llegar al fallo extremo.`;
+    } else {
+        card.style.borderColor = "#ef4444"; 
+        text.innerHTML = `<span class="text-red-400 font-bold font-sans">KI AGOTADO (${lastVfc}):</span> Estrés alto detectado. Considera un día de descanso o una sesión muy suave para evitar lesiones.`;
+    }
+}
     </script>
 </body>
 </html>
