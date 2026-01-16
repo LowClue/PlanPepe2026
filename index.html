@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan Pepe 3.4 (Final Fix)</title>
+    <title>Plan Pepe 3.4 (Z Edition)</title>
     
-    <!-- FAVICON -->
+    <!-- FAVICON: Bola de Dragón (SVG) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23fbbf24%22 stroke=%22%23b45309%22 stroke-width=%223%22/><path d=%22M50 25L55 40L70 40L58 50L63 65L50 55L37 65L42 50L30 40L45 40Z%22 fill=%22%23dc2626%22/></svg>">
 
-    <!-- LIBRARIES -->
+    <!-- LIBRERÍAS EXTERNAS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- FIREBASE -->
+    <!-- FIREBASE SDK (COMPATIBILIDAD) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
+        /* FUENTES: Bangers (Títulos Anime) y Rajdhani (Datos Técnicos/Scouter) */
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@500;700&family=Inter:wght@300;400;600&display=swap');
         
         :root { --anime-bg: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=2670&auto=format&fit=crop'); }
 
-        body { font-family: 'Inter', sans-serif; color: #e2e8f0; margin: 0; padding: 0; background-color: #0b0f19; background-image: var(--anime-bg); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; }
+        body { 
+            font-family: 'Inter', sans-serif; color: #e2e8f0; margin: 0; padding: 0;
+            background-color: #0b0f19; background-image: var(--anime-bg);
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh;
+        }
         body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(5, 10, 20, 0.95); z-index: -1; }
 
         .comic-font { font-family: 'Bangers', cursive; letter-spacing: 2px; }
         .scouter-font { font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.5px; }
-        .glass { background: rgba(15, 23, 42, 0.90); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); }
+        
+        .glass { 
+            background: rgba(15, 23, 42, 0.90); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(59, 130, 246, 0.2); 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+        }
+        
         .chart-container { position: relative; width: 100%; height: 200px; max-height: 300px; }
         #auth-screen { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #050505; }
         .hidden { display: none !important; }
@@ -48,49 +61,49 @@
         /* Estilos Home */
         #tab-home { 
             background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://w0.peakpx.com/wallpaper/765/1004/HD-wallpaper-shenron-dragon-ball-dragon-ball-super-dragon-ball-z.jpg');
-            background-size: cover;
-            background-position: center;
-            border-radius: 1rem;
-            overflow: hidden;
-            border: 1px solid #fbbf24;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+            background-size: cover; background-position: center; border-radius: 1rem; overflow: hidden; border: 1px solid #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
         }
+        
+        .supp-card.paused { opacity: 0.6; filter: grayscale(0.8); }
+        /* Bordes brillantes */
+        .anime-border { border: 1px solid rgba(59, 130, 246, 0.3); box-shadow: 0 0 10px rgba(59, 130, 246, 0.1); transition: all 0.3s ease; }
+        .anime-border:hover { border-color: #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); transform: translateY(-2px); }
     </style>
 </head>
 <body class="pb-28">
 
-    <!-- AUTH SCREEN -->
+    <!-- PANTALLA DE AUTENTICACIÓN -->
     <div id="auth-screen" class="bg-black/95">
         <div class="glass p-8 rounded-2xl max-w-sm w-full mx-4 text-center border-t-2 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.2)]">
             <h1 class="text-5xl text-white comic-font mb-2 tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600">PEPE <span class="text-blue-500">3.4</span></h1>
             <p class="text-blue-300 scouter-font text-lg mb-6 uppercase tracking-widest">Base de Datos Namek</p>
             <form id="login-form" class="space-y-4 text-left">
                 <input type="email" id="auth-email" class="w-full bg-slate-900/80 border border-blue-900 rounded p-3 text-white outline-none focus:border-yellow-400 scouter-font text-lg" placeholder="Email" required>
-                <input type="password" id="auth-pass" class="w-full bg-slate-900/80 border border-blue-900 rounded p-3 text-white outline-none focus:border-yellow-400 scouter-font text-lg" placeholder="Password" required>
+                <input type="password" id="auth-pass" class="w-full bg-slate-900/80 border border-blue-900 rounded p-3 text-white outline-none focus:border-yellow-400 scouter-font text-lg" placeholder="Contraseña" required>
                 <div id="register-nickname-field" class="hidden">
                      <label class="text-xs text-yellow-400 ml-1 scouter-font font-bold uppercase">Apodo de Guerrero:</label>
                      <input type="text" id="auth-nickname" class="w-full bg-slate-900/80 border border-yellow-500 rounded p-3 text-white outline-none scouter-font text-lg">
                 </div>
                 <div class="text-xs text-red-400 hidden" id="auth-error">Error</div>
-                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-lg scouter-font text-xl uppercase tracking-wider border-b-4 border-blue-900">INICIAR</button>
+                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-3 rounded-lg scouter-font text-xl uppercase tracking-wider border-b-4 border-blue-900">INICIAR / REGISTRO</button>
             </form>
         </div>
     </div>
 
-    <!-- HEADER -->
+    <!-- CABECERA -->
     <header class="p-4 pt-6 border-b border-blue-900/30 sticky top-0 z-40 shadow-xl glass">
         <div class="max-w-3xl mx-auto flex justify-between items-center">
             <div onclick="switchTab('home')" class="cursor-pointer group">
                 <h1 class="text-3xl text-white tracking-wider comic-font leading-none italic group-hover:scale-105 transition-transform">PLAN <span class="text-yellow-400">Z</span></h1>
                 <div class="flex items-center gap-2 mt-1">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></span>
-                    <p class="text-xs text-blue-200 scouter-font tracking-wide uppercase">Rastreador Activo: <span id="header-username" class="text-white font-bold">...</span></p>
+                    <p class="text-xs text-blue-200 scouter-font tracking-wide uppercase">Rastreador: <span id="header-username" class="text-white font-bold">...</span></p>
                 </div>
             </div>
             <div class="text-right cursor-pointer p-2 hover:bg-blue-500/10 rounded-full" onclick="toggleSettings()"><i data-lucide="settings" class="w-6 h-6 text-blue-300"></i></div>
         </div>
 
-        <!-- Settings -->
+        <!-- Panel de Ajustes -->
         <div id="settings-panel" class="hidden mt-4 p-4 bg-slate-900/95 rounded-lg border border-blue-800 backdrop-blur-md max-w-2xl mx-auto space-y-4 shadow-2xl">
             <div class="flex items-center justify-between bg-slate-800/50 p-3 rounded border border-slate-700">
                 <span class="text-sm font-bold text-white scouter-font" id="user-email-display">...</span>
@@ -104,7 +117,7 @@
             <div class="pt-2 border-t border-slate-700">
                 <p class="text-[10px] text-slate-400 mb-1">Importar JSON (IA):</p>
                 <div class="flex gap-2 mb-2">
-                     <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 px-2 py-1 rounded text-white flex items-center justify-center gap-1"><i data-lucide="bot" class="w-3 h-3"></i> Copiar Prompt (Gemini)</button>
+                     <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 px-2 py-1 rounded text-white flex items-center justify-center gap-1"><i data-lucide="bot" class="w-3 h-3"></i> ❓ Copiar Prompt IA</button>
                      <button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 px-2 py-1 rounded text-white flex items-center justify-center gap-1 font-bold">IMPORTAR</button>
                 </div>
                 <textarea id="import-code-area" class="w-full bg-black/60 text-[10px] text-green-400 font-mono p-2 rounded border border-green-900/50 h-12" placeholder='Pega código JSON aquí...'></textarea>
@@ -114,7 +127,7 @@
 
     <main class="max-w-2xl mx-auto p-4 space-y-6 pb-24">
         
-        <!-- TAB HOME (INTRO) -->
+        <!-- PESTAÑA HOME -->
         <div id="tab-home" class="tab-content fade-in p-6 text-center space-y-6">
             <div>
                 <h2 class="text-4xl text-yellow-400 comic-font drop-shadow-lg mb-2">EL PLAN DEFINITIVO</h2>
@@ -123,23 +136,18 @@
                     <span class="text-yellow-400 font-bold">Este es el Plan Z.</span> No hay más letras. Es hora de romper tus límites.
                 </p>
             </div>
-
             <div class="bg-black/60 border border-purple-500/50 rounded-xl p-4 text-left">
-                <h3 class="text-purple-300 font-bold scouter-font text-lg mb-3 flex items-center gap-2">
-                    <i data-lucide="bot" class="w-5 h-5"></i> CÓMO CREAR TU ENTRENAMIENTO
-                </h3>
-                <p class="text-xs text-slate-400 mb-4 italic">Guía para terrícolas:</p>
-                <ol class="space-y-4 text-sm text-slate-200">
-                    <li class="flex gap-3"><span class="bg-purple-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs shrink-0">1</span><div><p class="font-bold text-white">Toca la Rueda ⚙️</p><p class="text-xs text-slate-400">Dale al botón morado <span class="text-purple-400">"Copiar Prompt"</span>.</p></div></li>
-                    <li class="flex gap-3"><span class="bg-purple-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs shrink-0">2</span><div><p class="font-bold text-white">Ve a Gemini (Google)</p><p class="text-xs text-slate-400">Pega el texto. Añade qué objetivo tienes (Fuerza, Cardio...).</p></div></li>
-                    <li class="flex gap-3"><span class="bg-purple-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-xs shrink-0">3</span><div><p class="font-bold text-white">Copia el Código y Pégalo</p><p class="text-xs text-slate-400">Copia SOLO el JSON. Pégalo en el cuadro negro de Ajustes y dale a <span class="text-green-400 font-bold">IMPORTAR</span>.</p></div></li>
+                <h3 class="text-purple-300 font-bold scouter-font text-lg mb-3 flex items-center gap-2"><i data-lucide="bot" class="w-5 h-5"></i> CÓMO CREAR RUTINAS</h3>
+                <ol class="space-y-2 text-sm text-slate-200">
+                    <li>1. Abre la Rueda ⚙️ y dale a <span class="text-purple-400">"Copiar Prompt"</span>.</li>
+                    <li>2. Pégalo en tu IA (Gemini).</li>
+                    <li>3. Copia el código que te dé y pégalo en "Importar".</li>
                 </ol>
             </div>
-            
             <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-lg comic-font text-xl tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.5)]">¡EMPEZAR!</button>
         </div>
         
-        <!-- TAB 0: RANKING -->
+        <!-- PESTAÑA RANKING -->
         <div id="tab-ranking" class="tab-content hidden-tab fade-in">
             <div class="glass p-1 rounded-xl border border-yellow-500/30 mb-6 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 via-red-500 to-yellow-500"></div>
@@ -161,6 +169,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="glass p-4 rounded-xl border-l-4 border-blue-500 relative">
                 <h3 class="text-sm font-bold text-blue-300 mb-3 uppercase tracking-widest flex items-center gap-2"><i data-lucide="scan-face" class="w-4 h-4"></i> Tus Estadísticas</h3>
                 <div class="grid grid-cols-5 gap-1 text-center">
@@ -173,20 +182,18 @@
             </div>
         </div>
 
-        <!-- TAB 1: PLAN -->
+        <!-- PESTAÑA PLAN -->
         <div id="tab-plan" class="tab-content hidden-tab fade-in">
             <div class="flex justify-between items-center mb-4">
-                <div class="glass p-2 rounded-xl flex items-center border-b-2 border-blue-500 border-glow-blue flex-1 mr-2">
+                <div class="glass p-2 rounded-xl flex items-center border-b-2 border-blue-500 flex-1 mr-2">
                     <select id="week-selector" onchange="changeWeek()" class="bg-transparent text-white text-sm outline-none scouter-font font-bold w-full"></select>
                 </div>
-                <button onclick="openSpyModal()" class="glass p-2 rounded-xl border border-purple-500 text-purple-300 hover:bg-purple-900/50 transition-colors flex items-center gap-1">
-                    <i data-lucide="eye" class="w-4 h-4"></i> Espiar
-                </button>
+                <button onclick="openSpyModal()" class="glass p-2 rounded-xl border border-purple-500 text-purple-300 hover:bg-purple-900/50 flex items-center gap-1"><i data-lucide="eye" class="w-4 h-4"></i> Espiar</button>
             </div>
             <div id="plan-container" class="space-y-6"></div>
         </div>
 
-        <!-- TAB 2: RUNNING -->
+        <!-- PESTAÑA RUNNING -->
         <div id="tab-running" class="tab-content hidden-tab fade-in space-y-6">
             <div class="glass p-6 rounded-xl border border-orange-500/30">
                 <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="footprints" class="text-orange-400"></i> Registro Carrera</h3>
@@ -207,7 +214,7 @@
             <div class="glass p-4 rounded-xl overflow-x-auto"><table class="w-full text-sm text-left text-slate-300"><tbody id="runningTableBody" class="scouter-font text-lg"></tbody></table></div>
         </div>
 
-        <!-- TAB 3: STRENGTH -->
+<!-- TAB 3: STRENGTH -->
         <div id="tab-strength" class="tab-content hidden-tab fade-in space-y-6">
             <div class="glass p-4 rounded-xl border border-blue-500/20">
                 <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="dumbbell" class="text-blue-400"></i> Análisis Fuerza</h3>
@@ -228,7 +235,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: SUPPLEMENTS (FIXED) -->
+        <!-- TAB 4: SUPPLEMENTS (FIXED & DEFAULT) -->
         <div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-6">
             <div class="glass p-6 rounded-xl border border-teal-500/30">
                 <div class="flex justify-between items-center mb-4">
@@ -378,29 +385,11 @@
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-pass').value, nick = document.getElementById('auth-nickname').value;
-            const errorMsg = document.getElementById('auth-error');
-            errorMsg.classList.add('hidden');
-
             auth.signInWithEmailAndPassword(email, pass).catch(err => {
                 if (['auth/user-not-found', 'auth/invalid-credential'].includes(err.code)) {
-                    // Si el error es credencial inválida, puede ser usuario no existe O contraseña mal.
-                    // Firebase no distingue por seguridad. 
-                    // Intentamos crear. Si falla porque existe, es contraseña mal.
-                    if (nickField.classList.contains('hidden')) { nickField.classList.remove('hidden'); errorMsg.innerText = "Usuario no detectado. Escribe apodo para Registrarte."; errorMsg.classList.remove('hidden'); return; }
-                    
-                    auth.createUserWithEmailAndPassword(email, pass).then(() => initializeNewUser(nick || "GuerreroZ"))
-                    .catch(createErr => {
-                        if (createErr.code === 'auth/email-already-in-use') {
-                            errorMsg.innerText = "Este email ya existe. Si eres tú, la contraseña es incorrecta.";
-                        } else {
-                            errorMsg.innerText = "Error: " + createErr.message;
-                        }
-                        errorMsg.classList.remove('hidden');
-                    });
-                } else {
-                    errorMsg.innerText = "Error: " + err.message;
-                    errorMsg.classList.remove('hidden');
-                }
+                    if (nickField.classList.contains('hidden')) { nickField.classList.remove('hidden'); return; }
+                    auth.createUserWithEmailAndPassword(email, pass).then(() => initializeNewUser(nick || "GuerreroZ"));
+                } else alert("Error: " + err.message);
             });
         });
 
@@ -410,6 +399,7 @@
         function changePassword() { /* ... */ }
 
         function copyPrompt() {
+            // FECHAS PROX SEMANA
             const today = new Date();
             const nextMonday = new Date(today);
             nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7 || 7));
@@ -647,10 +637,13 @@ REGLAS:
                     let inputHtml = '';
                     
                     if (ex.track) {
-                        // Detectar número de series
+                        // Detectar número de series para generar inputs
                         const setsNum = parseInt(ex.sets);
+                        // Si es un número válido (ej: 3, 4, 5) creamos inputs múltiples
                         if (!isNaN(setsNum) && setsNum > 0 && setsNum < 10) {
+                            // Recuperar valores guardados (formato "10/10/10")
                             const savedValues = (ex.weight || "").split('/');
+                            
                             let inputs = '';
                             for(let i=0; i<setsNum; i++) {
                                 const val = savedValues[i] || '';
@@ -658,6 +651,7 @@ REGLAS:
                             }
                             inputHtml = `<div class="flex flex-wrap justify-end mt-2 sm:mt-0 items-center"><span class="text-[9px] text-slate-500 mr-2">kgs:</span>${inputs}</div>`;
                         } else {
+                            // Input simple clásico
                             inputHtml = `<input type="text" placeholder="kg" value="${ex.weight || ''}" class="bg-slate-800 border-slate-600 rounded w-20 text-center text-white text-xs py-1 placeholder-gray-500" onchange="saveWeight(${dIndex}, ${eIndex}, this.value)">`;
                         }
                     }
