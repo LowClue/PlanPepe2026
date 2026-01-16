@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Pepe 2.0 (Cloud)</title>
     <!-- Chosen Palette: Slate (Dark Mode) + Blue/Teal/Orange Accents -->
-    <!-- Application Structure Plan: Single Page App with Tabbed Navigation. Authentication layer on top. Firebase Firestore for data persistence. -->
-    <!-- CONFIRMATION: NO SVG graphics used (except Lucide library handling). NO Mermaid JS used. -->
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -299,7 +297,12 @@
         const db = firebase.firestore();
         let currentUser = null;
 
-        // --- GLOBAL STATE ---
+        // --- GLOBAL VARIABLES ---
+        let runningChartInstance = null;
+        let weightChartInstance = null;
+        let vfcChartInstance = null;
+        let strengthChartInstance = null;
+
         let appData = {
             plan: [], // Array de semanas
             strength: {},
@@ -337,8 +340,6 @@
                     console.log("Login exitoso");
                 })
                 .catch(signInErr => {
-                    // Si falla, verificamos si es porque el usuario no existe o credenciales inválidas
-                    // Firebase moderno usa 'auth/invalid-credential' para proteger la privacidad
                     const codigosRegistro = ['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials'];
                     
                     if (codigosRegistro.includes(signInErr.code)) {
@@ -348,7 +349,6 @@
                                 initializeNewUser();
                             })
                             .catch(createErr => {
-                                // Si al crear dice que ya existe, es que la contraseña del Login estaba mal
                                 if (createErr.code === 'auth/email-already-in-use') {
                                     errorMsg.innerText = "Contraseña incorrecta.";
                                 } else if (createErr.code === 'auth/weak-password') {
@@ -359,7 +359,6 @@
                                 errorMsg.classList.remove('hidden');
                             });
                     } else {
-                        // Otro tipo de error (red, inhabilitado, etc)
                         errorMsg.innerText = "Error: " + signInErr.message;
                         errorMsg.classList.remove('hidden');
                     }
@@ -379,32 +378,53 @@
                     const data = doc.data();
                     
                     // --- PATCH: Arreglar plan "roto" (V1) si existe en la nube ---
-                    // Si data.plan existe y es un array, pero el primer elemento NO tiene "days" (es decir, es un array de días plano)
-                    // entonces lo convertimos al formato V2 (Array de Semanas)
                     if (data.plan && Array.isArray(data.plan) && data.plan.length > 0 && !data.plan[0].days) {
                          console.log("Detectada estructura antigua (V1) en la nube. Reparando...");
                          data.plan = [{ id: "week-1", label: "Semana Recuperada (V1)", days: data.plan }];
-                         // Guardamos la corrección en la nube inmediatamente
                          db.collection('users').doc(currentUser.uid).set(data, { merge: true });
                     }
-                    // -------------------------------------------------------------
                     
-                    appData = data;
-                    console.log("Datos cargados de la nube.");
+                    // Fusión segura
+                    appData = { ...appData, ...data };
+
+                    // SEGURIDAD
+                    if (!appData.plan || !Array.isArray(appData.plan) || appData.plan.length === 0) {
+                        console.log("Plan vacío o corrupto. Restaurando Semana 1...");
+                        appData.plan = [{ id: "week-1", label: "Semana 1 (Inicio)", days: getDefaultPlan() }];
+                        appData.supplements = getDefaultSupplements();
+                        saveDataToCloud();
+                    }
+
+                    console.log("Datos cargados correctamente.");
                 } else {
-                    console.log("Usuario nuevo, inicializando...");
+                    console.log("Usuario nuevo (sin documento), inicializando...");
                     initializeNewUser();
                 }
                 initAppUI();
             } catch (error) {
                 console.error("Error cargando datos:", error);
-                alert("Error de conexión. Revisa tu internet.");
+                
+                // FALLBACK
+                if (!appData.plan || appData.plan.length === 0) {
+                    appData.plan = [{ id: "week-1", label: "Semana 1 (Inicio)", days: getDefaultPlan() }];
+                    appData.supplements = getDefaultSupplements();
+                }
+                
+                // MENSAJE DE AYUDA ESPECÍFICO
+                if (error.code === 'permission-denied' || error.message.includes('Missing or insufficient permissions')) {
+                    alert("⛔ ERROR DE PERMISOS EN FIREBASE ⛔\n\nTu base de datos está bloqueada. Ve a la consola de Firebase -> Firestore Database -> Reglas y pega esto:\n\nrules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /users/{userId} {\n      allow read, write: if request.auth != null && request.auth.uid == userId;\n    }\n  }\n}");
+                } else if (error.code === 'unavailable') {
+                    alert("Sin conexión a internet. Modo offline.");
+                } else {
+                    alert("Error desconocido: " + error.message);
+                }
+                
+                initAppUI();
             }
         }
 
         function saveDataToCloud() {
             if (!currentUser) return;
-            // Guardamos todo el objeto appData en el documento del usuario
             db.collection('users').doc(currentUser.uid).set(appData, { merge: true })
                 .then(() => console.log("Datos guardados en nube"))
                 .catch((e) => console.error("Error guardando:", e));
@@ -412,7 +432,6 @@
 
         // --- DATA INITIALIZATION ---
         function initializeNewUser() {
-            // Cargar templates por defecto
             appData.plan = [{ id: "week-1", label: "Semana 1 (Inicio)", days: getDefaultPlan() }];
             appData.strength = {};
             appData.running = [];
@@ -502,8 +521,8 @@
         function renderStrengthChart() {
             const exName = document.getElementById('exercise-select').value;
             const data = (appData.strength[exName] || []).sort((a,b) => new Date(a.date) - new Date(b.date));
-            if(window.strengthChart) window.strengthChart.destroy();
-            window.strengthChart = new Chart(document.getElementById('chartStrength').getContext('2d'), { type: 'line', data: { labels: data.map(d=>d.date.slice(5)), datasets: [{ label: 'Kg', data: data.map(d=>d.weight), borderColor: '#60a5fa' }] }, options: { maintainAspectRatio: false } });
+            if(strengthChartInstance) strengthChartInstance.destroy();
+            strengthChartInstance = new Chart(document.getElementById('chartStrength').getContext('2d'), { type: 'line', data: { labels: data.map(d=>d.date.slice(5)), datasets: [{ label: 'Kg', data: data.map(d=>d.weight), borderColor: '#60a5fa' }] }, options: { maintainAspectRatio: false } });
         }
         function updatePRs() {
             document.getElementById('pr-list').innerHTML = Object.keys(appData.strength).map(k => `<div class="flex justify-between border-b border-slate-700/50 pb-1"><span>${k}</span><span class="text-white font-bold">${Math.max(...appData.strength[k].map(d=>parseFloat(d.weight)))} kg</span></div>`).join('');
@@ -559,8 +578,8 @@
             const sorted = [...appData.running].sort((a,b)=>new Date(b.date)-new Date(a.date));
             document.getElementById('runningTableBody').innerHTML = sorted.map((r,i)=> `<tr><td class="text-slate-400 p-2">${r.date.slice(5)}</td><td class="text-white font-bold">${r.dist}</td><td class="text-slate-300">${r.time}</td><td class="text-orange-400 font-bold">${Math.floor(r.pace)}'${Math.round((r.pace%1)*60)}</td><td><button onclick="delRun(${i})" class="text-red-500"><i data-lucide="trash-2" class="w-3"></i></button></td></tr>`).join('');
             lucide.createIcons();
-            if(window.chartRunning) window.chartRunning.destroy();
-            window.chartRunning = new Chart(document.getElementById('chartRunning').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'Ritmo', data:sorted.map(d=>d.pace), borderColor:'#f97316'}] }, options:{scales:{y:{reverse:true}}, maintainAspectRatio: false} });
+            if(runningChartInstance) runningChartInstance.destroy();
+            runningChartInstance = new Chart(document.getElementById('chartRunning').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'Ritmo', data:sorted.map(d=>d.pace), borderColor:'#f97316'}] }, options:{scales:{y:{reverse:true}}, maintainAspectRatio: false} });
         }
         function delRun(i) { if(confirm('¿Borrar?')) { appData.running.splice(i,1); saveDataToCloud(); updateRunningUI(); } }
 
@@ -573,11 +592,11 @@
             const sorted = [...appData.progress].sort((a,b)=>new Date(b.date)-new Date(a.date));
             document.getElementById('historyTableBody').innerHTML = sorted.map((r,i)=> `<tr><td class="text-slate-400 p-2">${r.date.slice(5)}</td><td class="text-white font-bold">${r.weight}</td><td class="text-green-400">${r.vfc}</td><td><button onclick="delProg(${i})" class="text-red-500"><i data-lucide="trash-2" class="w-3"></i></button></td></tr>`).join('');
             lucide.createIcons();
-            if(window.chartWeight) window.chartWeight.destroy();
-            window.chartWeight = new Chart(document.getElementById('chartWeight').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'Kg', data:sorted.map(d=>d.weight), borderColor:'#3b82f6'}] }, options: { maintainAspectRatio: false } });
+            if(weightChartInstance) weightChartInstance.destroy();
+            weightChartInstance = new Chart(document.getElementById('chartWeight').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'Kg', data:sorted.map(d=>d.weight), borderColor:'#3b82f6'}] }, options: { maintainAspectRatio: false } });
             
-            if(window.chartVfc) window.chartVfc.destroy();
-            window.chartVfc = new Chart(document.getElementById('chartVfc').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'VFC', data:sorted.map(d=>d.vfc), borderColor:'#4ade80'}] }, options: { maintainAspectRatio: false } });
+            if(vfcChartInstance) vfcChartInstance.destroy();
+            vfcChartInstance = new Chart(document.getElementById('chartVfc').getContext('2d'), { type:'line', data:{ labels: sorted.reverse().map(d=>d.date.slice(5)), datasets:[{label:'VFC', data:sorted.map(d=>d.vfc), borderColor:'#4ade80'}] }, options: { maintainAspectRatio: false } });
         }
         function delProg(i) { if(confirm('¿Borrar?')) { appData.progress.splice(i,1); saveDataToCloud(); updateHistoryTable(); } }
 
