@@ -95,72 +95,138 @@
         </div>
 
         <div id="settings-panel" class="hidden mt-4 p-5 bg-slate-900 rounded-2xl border border-blue-800 max-w-2xl mx-auto space-y-5">
-			<!-- DENTRO DE id="settings-panel" -->
-			<div class="flex items-center justify-between bg-slate-800 p-4 rounded-xl">
-				<span class="text-sm font-bold text-white italic" id="user-email-display">...</span>
-				<button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-3 py-1 rounded font-bold uppercase">Salir</button>
-			</div>
-			<div class="grid grid-cols-2 gap-3">
-				<button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded font-bold uppercase">Apodo</button>
-				<button onclick="changeGroup()" class="bg-indigo-900 text-white text-xs py-3 rounded font-bold uppercase">Clan</button>
-				<button onclick="deleteCurrentWeek()" class="bg-red-900 text-white text-xs py-3 rounded font-bold uppercase">Borrar Ciclo</button>
-				<!-- NUEVO BOTÓN: -->
-				<button onclick="exportPlanJSON()" class="bg-cyan-900 text-cyan-200 text-xs py-3 rounded font-bold uppercase border border-cyan-700/50">Exportar JSON</button>
-			</div>
-			<div class="pt-3 border-t border-slate-700 text-center">
-				<p class="text-[10px] text-slate-400 mb-3 uppercase font-bold italic">Zona de Enlace IA</p>
-				<div class="flex gap-3 mb-3">
-					<button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 p-3 rounded-xl text-white font-bold uppercase shadow-lg border-b-2 border-purple-900">1. Copiar Comando</button>
-					<button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 p-3 rounded-xl text-white font-bold uppercase shadow-lg border-b-2 border-green-900">2. Importar Respuesta</button>
-				</div>
-				<div class="relative">
-					<textarea id="import-code-area" class="w-full bg-black text-green-400 p-4 rounded-xl border border-green-900 h-24 text-[10px] font-mono outline-none" placeholder="Pega el código JSON que te dé la IA aquí..."></textarea>
-					<button onclick="document.getElementById('import-code-area').value=''" class="absolute bottom-2 right-2 text-[8px] bg-red-900/50 text-red-300 px-2 py-1 rounded border border-red-800 uppercase font-bold">Limpiar</button>
-				</div>
-			</div>
+            <div class="flex items-center justify-between bg-slate-800 p-4 rounded-xl">
+                <span class="text-sm font-bold text-white italic" id="user-email-display">...</span>
+                <button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-3 py-1 rounded font-bold uppercase">Salir</button>
+            </div>
+            
+            <!-- BLOQUE DE BOTONES CORREGIDO (5 BOTONES) -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded font-bold uppercase">Apodo</button>
+                <button onclick="changeGroup()" class="bg-indigo-900 text-white text-xs py-3 rounded font-bold uppercase">Clan</button>
+                
+                <!-- Exportar JSON (Ancho completo para destacar) -->
+                <button onclick="exportPlanJSON()" class="col-span-2 bg-cyan-900 text-cyan-200 text-xs py-3 rounded font-bold uppercase border border-cyan-700/50 shadow-lg">Exportar JSON (Para la IA)</button>
+                
+                <!-- Acciones Destructivas -->
+                <button onclick="deleteCurrentWeek()" class="bg-red-900/80 text-white text-xs py-3 rounded font-bold uppercase hover:bg-red-800">Borrar Ciclo</button>
+                <button onclick="resetDefaultPlan()" class="bg-slate-800 text-white text-xs py-3 rounded font-bold uppercase hover:bg-slate-700 border border-slate-600">Reset Total</button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-700 text-center">
+                <p class="text-[10px] text-slate-400 mb-3 uppercase font-bold italic">Protocolo IA</p>
+                <div class="flex gap-3 mb-3">
+                    <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Copiar Comando IA</button>
+                    <button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Importar JSON</button>
+                </div>
+                <div class="relative">
+                    <textarea id="import-code-area" class="w-full bg-black text-green-400 p-4 rounded-xl border border-green-900 h-24 text-[10px] font-mono outline-none" placeholder="Pega el código JSON aquí..."></textarea>
+                    <button onclick="document.getElementById('import-code-area').value=''" class="absolute bottom-2 right-2 text-[8px] bg-red-900/50 text-red-300 px-2 py-1 rounded border border-red-800 uppercase font-bold">Limpiar</button>
+                </div>
+            </div>
         </div>
     </header>
 
     <main class="max-w-2xl mx-auto p-4 space-y-6 pb-24">
         
-<div id="tab-home" class="tab-content fade-in space-y-8">
-    <div class="text-center p-6 glass rounded-3xl border-b-4 border-yellow-500 shadow-2xl">
-        <h2 class="text-5xl text-yellow-400 comic-font uppercase italic tracking-tighter">Terminal Z</h2>
-        <p class="text-slate-300 text-sm mt-2 font-medium">Guía de supervivencia y evolución para el Guerrero.</p>
-    </div>
+<!-- SECTOR: HOME (DASHBOARD) -->
+        <div id="tab-home" class="tab-content fade-in space-y-6">
+            
+            <!-- CABECERA -->
+            <div class="text-center p-8 glass rounded-[2rem] border-b-4 border-yellow-500 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none"></div>
+                <h2 class="text-6xl text-yellow-400 comic-font uppercase italic tracking-tighter relative z-10 text-shadow-lg">PLAN PEPE <span class="text-white">4.3</span></h2>
+                <p class="text-blue-200 text-sm mt-2 font-medium scouter-font tracking-widest uppercase">Protocolo de Evolución Asistida</p>
+            </div>
 
-    <div class="grid gap-4">
-        <div class="bg-purple-900/20 p-6 rounded-3xl border-2 border-purple-500/30 shadow-lg">
-            <h3 class="text-purple-400 scouter-font text-2xl uppercase italic mb-4 flex items-center gap-3">
-                <i data-lucide="bot" class="animate-bounce w-7 h-7"></i> ¿Cómo importar tu Plan?
-            </h3>
-            <div class="space-y-4 text-sm">
-                <div class="flex gap-4">
-                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">1</div>
-                    <p class="text-slate-200"><strong class="text-yellow-400">PERFIL:</strong> Entra al usuario. Pon tu Meta de Peso y Lesiones. En **STATS**, pon tu peso actual. La IA necesita esto para ser eficiente.</p>
+            <!-- GUÍA OPERATIVA DETALLADA -->
+            <div class="grid gap-4">
+                
+                <!-- FASE 1: LA ESTRATEGIA (Origen del Plan) -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-blue-500 flex gap-4 items-start">
+                    <div class="bg-blue-900/50 p-3 rounded-xl flex-shrink-0 mt-1">
+                        <i data-lucide="map" class="text-blue-400 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 1: Define tu Origen</h3>
+                        <div class="text-xs text-slate-300 leading-relaxed space-y-3">
+                            <p>Tienes cargado un <strong>Plan Maestro 360º</strong> de ejemplo (con vídeos). <strong>No es obligatorio usarlo.</strong> Tienes 3 caminos para empezar:</p>
+                            <ul class="list-disc list-inside space-y-1 ml-1 text-slate-400">
+                                <li><strong class="text-white">Ruta A (Ejemplo):</strong> Revisa el plan actual. Si te gusta la distribución, úsalo tal cual.</li>
+                                <li><strong class="text-white">Ruta B (Generar):</strong> ¿Quieres algo diferente? (Ej: 3 días, solo mancuernas...). Ve a <em class="text-purple-400">Ajustes > Copiar Comando</em> y pídele a la IA un plan nuevo desde cero con tus requisitos.</li>
+                                <li><strong class="text-white">Ruta C (Clan):</strong> Ve a la copa <em class="text-yellow-400">(Ranking)</em>. Si estás en un Clan, puedes <strong>espiar</strong> a tus compañeros y <strong>clonar</strong> sus rutinas para competir en igualdad.</li>
+                            </ul>
+                            <div class="bg-blue-950/50 p-2 rounded border border-blue-800/50 mt-2">
+                                <p class="text-[10px] text-blue-200 italic">
+                                    🚀 <strong>Vital:</strong> Antes de nada, ve a <strong class="text-white">PERFIL</strong> y pon tu Meta de Peso y Lesiones. La IA necesita esto para no romperte.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex gap-4">
-                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">2</div>
-                    <p class="text-slate-200"><strong class="text-yellow-400">COMANDO:</strong> Ve a Ajustes (rueda arriba) y pulsa "Copiar Comando IA".</p>
+
+                <!-- FASE 2: EL COMBATE (Ejecución) -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-yellow-500 flex gap-4 items-start">
+                    <div class="bg-yellow-900/30 p-3 rounded-xl flex-shrink-0 mt-1">
+                        <i data-lucide="dumbbell" class="text-yellow-500 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 2: Ejecución Real</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Una vez tengas tu plan (sea el de ejemplo o uno nuevo), ve a la pestaña <strong>PLAN</strong>.
+                            <br><br>
+                            Tu misión es registrar los <strong>pesos reales</strong>.
+                            <ul class="list-disc list-inside mt-2 space-y-1 text-slate-400">
+                                <li><strong>¿Máquina ocupada?</strong> Activa el <strong class="text-white">"Modo Editor"</strong> (interruptor arriba) y cambia el ejercicio sobre la marcha.</li>
+                                <li><strong>¿Error de dedo?</strong> Si metes mal un peso, ve a la pestaña <strong>FUERZA</strong>, busca el ejercicio y borra el registro en la tabla historial.</li>
+                            </ul>
+                        </p>
+                    </div>
                 </div>
-                <div class="flex gap-4">
-                    <div class="bg-purple-600 text-white font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center">3</div>
-                    <p class="text-slate-200"><strong class="text-yellow-400">IMPORTAR:</strong> Pega el comando en Gemini. Copia el JSON que te dé y pégalo en Ajustes.</p>
+
+                <!-- FASE 3: EVOLUCIÓN (Ingeniería Inversa) -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-purple-500 flex gap-4 items-start relative overflow-hidden">
+                    <div class="absolute right-0 top-0 p-16 bg-purple-600/10 blur-3xl rounded-full"></div>
+                    <div class="bg-purple-900/50 p-3 rounded-xl flex-shrink-0 relative z-10 mt-1">
+                        <i data-lucide="brain-circuit" class="text-purple-400 w-6 h-6"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 3: Ingeniería Inversa</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Aquí está la magia. Al terminar tu semana, no repitas lo mismo. <strong>Evoluciona.</strong>
+                        </p>
+                        <ol class="list-decimal list-inside mt-3 space-y-2 text-xs text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
+                            <li>Ve a <strong class="text-white">Ajustes</strong> y pulsa <strong class="text-cyan-300">"Exportar JSON"</strong>. Esto copia tu semana exacta (con tus pesos y notas).</li>
+                            <li>Pégalo en Gemini. La IA leerá tu rendimiento real.</li>
+                            <li>Pídele: <em>"Genera la Semana 2 aplicando sobrecarga progresiva a este JSON"</em>.</li>
+                            <li>Importa el nuevo código con <strong class="text-green-400">"Importar"</strong>.</li>
+                        </ol>
+                        <p class="text-[10px] text-purple-300 italic mt-2">
+                            *La IA usará tus datos de peso y lesiones del Perfil para ajustar la intensidad automáticamente.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+    <!-- BOTÓN DE ACCIÓN -->
+    <div class="grid grid-cols-1 gap-4 mt-4">
+        <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 rounded-3xl comic-font text-3xl shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all transform active:scale-95 uppercase italic">
+            ¡IR AL GIMNASIO!
+        </button>
+        
+        <!-- VISUALIZADOR DE KI (MINI) -->
+        <div id="ki-status-card" class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 shadow-xl hidden flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i data-lucide="zap" class="w-5 h-5 text-yellow-400 animate-pulse"></i>
+                <div>
+                    <h3 class="text-white text-[10px] font-bold uppercase tracking-widest">Diagnóstico Vital</h3>
+                    <p id="ki-status-text" class="text-xs text-slate-400 italic">Calculando...</p>
                 </div>
             </div>
-        </div>
-
-        <div id="ki-status-card" class="bg-slate-900/80 p-5 rounded-2xl border-l-4 border-blue-500 shadow-xl hidden">
-            <h3 class="text-white scouter-font text-lg uppercase flex items-center gap-2">
-                <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i> Estado del Ki Actual
-            </h3>
-            <p id="ki-status-text" class="text-xs text-slate-400 mt-1 italic">Calculando biometría...</p>
+            <button onclick="switchTab('stats')" class="text-[10px] bg-slate-800 text-white px-3 py-1 rounded border border-slate-600 uppercase">Ver Datos</button>
         </div>
     </div>
-
-    <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 rounded-3xl comic-font text-3xl shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all transform active:scale-95 uppercase italic">
-        ¡EMPEZAR ENTRENAMIENTO!
-    </button>
 </div>
 
 		<div id="tab-ranking" class="tab-content hidden-tab fade-in space-y-8">
@@ -1078,18 +1144,366 @@ function switchTab(id) {
                 toggleSettings();
             } 
         }
+		function resetDefaultPlan() { if(confirm("¿Restaurar plan inicial?")){ appData.plan = [{id:"w-res-"+Date.now(), label:"Semana 1 (Inicio)", days:getDefaultPlan()}]; currentWeekIndex = 0; saveDataToCloud(); renderPlan(); toggleSettings(); } }
+				
+				/* --- TU PLAN ORIGINAL CON VÍDEOS AÑADIDOS --- */
+				        /* --- TU PLAN MAESTRO 360º (MODIFICADO) --- */
         function getDefaultPlan() {
             return [
-                { id: "d1", day: "Lunes", title: "Empuje (Pierna)", type: "gym", exercises: [{ name: "Prensa de Piernas", sets: "3", reps: "12", track: true }, { name: "Extensión Cuádriceps", sets: "3", reps: "15", track: true }] },
-                { id: "d2", day: "Martes", title: "Cardio Z2", type: "cardio", exercises: [{ name: "Bici Estática", sets: "45min", reps: "Z2", track: false }] },
-                { id: "d3", day: "Miércoles", title: "Torso Maestro", type: "gym", exercises: [{ name: "Jalón al Pecho", sets: "3", reps: "12", track: true }, { name: "Press Pecho Máquina", sets: "3", reps: "12", track: true }] },
-                { id: "d4", day: "Jueves", title: "Reparación Activa", type: "rest", exercises: [{ name: "Caminar", sets: "30min", reps: "Suave", track: false }] },
-                { id: "d5", day: "Viernes", title: "Protocolo Ca-Co", type: "run", exercises: [{ name: "Trote Z", sets: "20min", reps: "Bloque", track: false, desc: "1' trote / 2' camina." }] },
-                { id: "d6", day: "Sábado", title: "Movilidad Cadera", type: "rest", exercises: [{ name: "Estiramientos", sets: "20min", reps: "Total", track: false }] },
-                { id: "d7", day: "Domingo", title: "Auditoría Vital", type: "rest", exercises: [{ name: "Peso + VFC", sets: "-", reps: "-", track: false }] }
+                {
+                  "day": "Lunes",
+                  "title": "Torso + Higiene Postural",
+                  "notes": "Desayuno: Avena+Prote (07:00). Comida: Omega3 (15:30). Cena: Magnesio.",
+                  "type": "gym",
+                  "id": "d1-lun",
+                  "exercises": [
+                    {
+                      "name": "☀️ TRABAJO: El Flamenco",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Cada hora: Levántate, ponte a la pata coja 10 seg/lado. Activa glúteo y despierta el equilibrio.",
+                      "vid": "https://www.youtube.com/results?search_query=ejercicio+equilibrio+unipodal"
+                    },
+                    {
+                      "name": "☀️ TRABAJO: Abrazo al Mundo",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Sentado: Encorva la espalda estirando brazos al frente, luego abre brazos y saca pecho. 3 veces.",
+                      "vid": "https://www.youtube.com/results?search_query=movilidad+toracica+sentado"
+                    },
+                    {
+                      "name": "🔥 CALENTAMIENTO GYM",
+                      "sets": "5", "reps": "min", "track": false,
+                      "desc": "Elíptica ritmo suave. Sube la temperatura corporal.",
+                      "vid": "https://www.youtube.com/results?search_query=calentamiento+eliptica"
+                    },
+                    {
+                      "name": "Movilidad: Libro Abierto",
+                      "sets": "1", "reps": "10/lado", "track": false,
+                      "desc": "Tumbado de lado, gira el torso. Desbloquea tu dolor de escápula.",
+                      "vid": "https://www.youtube.com/results?search_query=ejercicio+libro+abierto+movilidad"
+                    },
+                    {
+                      "name": "Remo en Máquina (Apoyo Pecho)",
+                      "sets": "3", "reps": "12", "track": true, "weight": "47/47/47",
+                      "desc": "Haz 1 serie sin peso antes. Luego pon tu peso. El apoyo protege tu lumbar.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+remo+maquina+pecho+apoyado"
+                    },
+                    {
+                      "name": "Press Banca Multipower",
+                      "sets": "3", "reps": "10-12", "track": true, "weight": "40/50/50",
+                      "desc": "Baja controlando hasta el pecho. Pies clavados en el suelo.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+press+banca+multipower"
+                    },
+                    {
+                      "name": "Jalón al Pecho",
+                      "sets": "3", "reps": "12", "track": true, "weight": "41/41/41",
+                      "desc": "Lleva la barra a la clavícula. Espalda recta.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+jalon+al+pecho"
+                    },
+                    {
+                      "name": "Press Hombros Sentado",
+                      "sets": "3", "reps": "12", "track": true, "weight": "23/23/23",
+                      "desc": "Espalda pegada al respaldo. Sube sin chocar mancuernas.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+press+hombros+mancuernas"
+                    },
+                    {
+                      "name": "Face Pull",
+                      "sets": "3", "reps": "15", "track": true, "weight": "23/23/23",
+                      "desc": "Tira a la frente. Corrige postura de ordenador.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+face+pull"
+                    },
+                    {
+                      "name": "Cardio: Elíptica",
+                      "sets": "20", "reps": "min", "track": false,
+                      "desc": "Ritmo medio. Sin impacto."
+                    },
+                    {
+                      "name": "🌙 NOCHE: Cadera 90/90",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Sentado en suelo, piernas 90º. Lado a lado suavemente.",
+                      "vid": "https://www.youtube.com/results?search_query=movilidad+cadera+90+90"
+                    }
+                  ]
+                },
+                {
+                  "day": "Martes",
+                  "title": "Pierna Segura + Psoas",
+                  "notes": "Foco hoy: Espalda NEUTRA (ni arqueada ni chepa).",
+                  "type": "gym",
+                  "id": "d2-mar",
+                  "exercises": [
+                    {
+                      "name": "☀️ TRABAJO: Estiramiento Psoas",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Zancada atrás, aprieta culo. Siente tirón en la ingle.",
+                      "vid": "https://www.youtube.com/results?search_query=estiramiento+psoas+de+pie"
+                    },
+                    {
+                      "name": "🔥 CALENTAMIENTO GYM",
+                      "sets": "5", "reps": "min", "track": false,
+                      "desc": "Elíptica o Bici suave."
+                    },
+                    {
+                      "name": "Movilidad: Gato-Camello",
+                      "sets": "1", "reps": "10", "track": false,
+                      "desc": "Cuadrupedia. Arquea y redondea espalda.",
+                      "vid": "https://www.youtube.com/results?search_query=ejercicio+gato+camello"
+                    },
+                    {
+                      "name": "Plancha Abdominal",
+                      "sets": "3", "reps": "30seg", "track": false,
+                      "desc": "Activa cinturón natural. Para si duele lumbar.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+plancha+abdominal"
+                    },
+                    {
+                      "name": "Prensa de Piernas",
+                      "sets": "3", "reps": "12-15", "track": true,
+                      "desc": "Pies altos en plataforma. Calienta con mitad de peso.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+prensa+45+grados"
+                    },
+                    {
+                      "name": "Goblet Squat",
+                      "sets": "3", "reps": "10", "track": true,
+                      "desc": "Mancuerna al pecho. Baja lento abriendo rodillas.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+goblet+squat"
+                    },
+                    {
+                      "name": "Extensión Cuádriceps",
+                      "sets": "3", "reps": "15", "track": true,
+                      "desc": "Sin patadas bruscas. Aguanta 1s arriba.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+extension+cuadriceps"
+                    },
+                    {
+                      "name": "Curl Femoral Tumbado",
+                      "sets": "3", "reps": "12-15", "track": true,
+                      "desc": "Cadera pegada al banco. Vital rodilla.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+curl+femoral+tumbado"
+                    },
+                    {
+                      "name": "Gemelo (Talones)",
+                      "sets": "3", "reps": "20", "track": true,
+                      "desc": "Pausas abajo. Estira bien (periostitis).",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+gemelo+maquina"
+                    },
+                    {
+                      "name": "🌙 NOCHE: La Rana",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Rodillas al suelo separadas. Culo atrás.",
+                      "vid": "https://www.youtube.com/results?search_query=estiramiento+rana+yoga"
+                    }
+                  ]
+                },
+                {
+                  "day": "Miércoles",
+                  "title": "Descanso Activo",
+                  "type": "rest",
+                  "id": "d3-mie",
+                  "notes": "Día sin pesas. Cumple los snacks de trabajo.",
+                  "exercises": [
+                    {
+                      "name": "☀️ TRABAJO: Cuello y Hombros",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Mueve cuello suave. Rota hombros atrás 10 veces.",
+                      "vid": "https://www.youtube.com/results?search_query=ejercicios+movilidad+cuello+oficina"
+                    },
+                    {
+                      "name": "Caminata Aire Libre",
+                      "sets": "45", "reps": "min", "track": false,
+                      "desc": "Camina ligero. Sin impacto."
+                    },
+                    {
+                      "name": "Estiramiento Pectoral (Marco)",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Antebrazo en marco puerta, gira cuerpo. Abre pecho.",
+                      "vid": "https://www.youtube.com/results?search_query=estiramiento+pectoral+marco+puerta"
+                    },
+                    {
+                      "name": "🌙 NOCHE: Respiración 4-7-8",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Inhala 4s, aguanta 7s, exhala 8s.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+respiracion+4-7-8"
+                    }
+                  ]
+                },
+                {
+                  "day": "Jueves",
+                  "title": "Torso + Postura",
+                  "type": "gym",
+                  "id": "d4-jue",
+                  "notes": "Revisa Omega 3. Mejora técnica de Remo.",
+                  "exercises": [
+                    {
+                      "name": "☀️ TRABAJO: Sentadilla Silla",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Al ir al baño, 5 sentadillas al aire antes de sentarte.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+sentadilla+aire"
+                    },
+                    {
+                      "name": "🔥 CALENTAMIENTO GYM",
+                      "sets": "5", "reps": "min", "track": false
+                    },
+                    {
+                      "name": "Movilidad: Libro Abierto",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Lado derecho e izquierdo.",
+                      "vid": "https://www.youtube.com/results?search_query=ejercicio+libro+abierto"
+                    },
+                    {
+                      "name": "Jalón al Pecho",
+                      "sets": "3", "reps": "12", "track": true,
+                      "desc": "Serie aprox primero.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+jalon+al+pecho"
+                    },
+                    {
+                      "name": "Press Banca Mancuernas",
+                      "sets": "3", "reps": "10-12", "track": true,
+                      "desc": "Control total. Baja peso si tiemblas.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+press+banca+mancuernas"
+                    },
+                    {
+                      "name": "Remo en Máquina",
+                      "sets": "3", "reps": "12", "track": true,
+                      "desc": "Codos pegados al cuerpo.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+remo+maquina"
+                    },
+                    {
+                      "name": "Press Hombros",
+                      "sets": "3", "reps": "12", "track": true,
+                      "desc": "Mantén tensión.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+press+hombros+maquina"
+                    },
+                    {
+                      "name": "Face Pull",
+                      "sets": "3", "reps": "15", "track": true,
+                      "desc": "Rompe la cuerda hacia la cara.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+face+pull"
+                    },
+                    {
+                      "name": "🌙 NOCHE: Niño (Yoga)",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Culo a talones, brazos delante. Relaja lumbar.",
+                      "vid": "https://www.youtube.com/results?search_query=postura+nino+yoga"
+                    }
+                  ]
+                },
+                {
+                  "day": "Viernes",
+                  "title": "Pierna + Fin de Semana",
+                  "type": "gym",
+                  "id": "d5-vie",
+                  "notes": "Último esfuerzo. Cumple aunque bajes peso.",
+                  "exercises": [
+                    {
+                      "name": "☀️ TRABAJO: Psoas de Pie",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Zancada atrás, aprieta culo.",
+                      "vid": "https://www.youtube.com/results?search_query=estiramiento+psoas+pie"
+                    },
+                    {
+                      "name": "Activación Glúteo",
+                      "sets": "2", "reps": "15", "track": false,
+                      "desc": "Puente de glúteo en suelo.",
+                      "vid": "https://www.youtube.com/results?search_query=puente+gluteo+suelo"
+                    },
+                    {
+                      "name": "Prensa de Piernas",
+                      "sets": "3", "reps": "12-15", "track": true,
+                      "desc": "Pies bien colocados.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+prensa+piernas"
+                    },
+                    {
+                      "name": "Goblet Squat",
+                      "sets": "3", "reps": "10", "track": true,
+                      "desc": "Si duele espalda, haz Sentadilla Cajón.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+goblet+squat"
+                    },
+                    {
+                      "name": "Curl Femoral",
+                      "sets": "3", "reps": "15", "track": true,
+                      "desc": "Lento. 2 seg bajada.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+curl+femoral"
+                    },
+                    {
+                      "name": "Extensión Cuádriceps",
+                      "sets": "3", "reps": "15", "track": true,
+                      "desc": "Aguanta el quemazón.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+extension+cuadriceps"
+                    },
+                    {
+                      "name": "Gemelo",
+                      "sets": "3", "reps": "20", "track": true,
+                      "desc": "Rango completo.",
+                      "vid": "https://www.youtube.com/results?search_query=tecnica+gemelo+maquina"
+                    },
+                    {
+                      "name": "🌙 NOCHE: Piernas en Alto",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Piernas en pared 5 min. Circulación.",
+                      "vid": "https://www.youtube.com/results?search_query=beneficios+piernas+arriba"
+                    }
+                  ]
+                },
+                {
+                  "day": "Sábado",
+                  "title": "Test CA-CO (Tibia)",
+                  "type": "run",
+                  "id": "d6-sab",
+                  "notes": "Vitamina D. Escucha a tus tibias.",
+                  "exercises": [
+                    {
+                      "name": "Caminar Rápido",
+                      "sets": "5", "reps": "min", "track": false,
+                      "desc": "Calentamiento tobillos."
+                    },
+                    {
+                      "name": "Bloque CA-CO x8",
+                      "sets": "40", "reps": "min", "track": false,
+                      "desc": "4 min Caminar / 1 min Trote suave. Repite 8 veces.",
+                      "vid": "https://www.youtube.com/results?search_query=metodo+caco+correr"
+                    },
+                    {
+                      "name": "⚠️ SEMÁFORO PERIOSTITIS",
+                      "sets": "1", "reps": "Info", "track": false,
+                      "desc": "Dolor=ROJO (Para). Molestia=AMARILLO. Nada=VERDE.",
+                      "vid": "https://www.youtube.com/results?search_query=sintomas+periostitis+tibial"
+                    },
+                    {
+                      "name": "🌙 NOCHE: Masaje Plantar",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Masajea planta con pelota tenis.",
+                      "vid": "https://www.youtube.com/results?search_query=masaje+miofascial+pie+pelota"
+                    }
+                  ]
+                },
+                {
+                  "day": "Domingo",
+                  "title": "Descanso & Prep",
+                  "type": "rest",
+                  "id": "d7-dom",
+                  "notes": "Prepara tuppers de Avena+Proteína.",
+                  "exercises": [
+                    {
+                      "name": "Meal Prep (Avenas)",
+                      "sets": "1", "reps": "Check", "track": false,
+                      "desc": "Deja listos desayunos Lunes-Miércoles.",
+                      "vid": "https://www.youtube.com/results?search_query=receta+avena+nocturna+proteica"
+                    },
+                    {
+                      "name": "Movilidad: 90/90",
+                      "sets": "10", "reps": "reps", "track": false,
+                      "desc": "Suave en el salón.",
+                      "vid": "https://www.youtube.com/results?search_query=movilidad+cadera+90+90"
+                    },
+                    {
+                      "name": "🌙 NOCHE: Respiración Relax",
+                      "sets": "5", "reps": "min", "track": false,
+                      "desc": "Desconexión para el lunes.",
+                      "vid": "https://www.youtube.com/results?search_query=respiracion+para+dormir"
+                    }
+                  ]
+                }
             ];
         }
-        function getDefaultSupplements() { return [{ id: '1', name: 'Proteína Whey Isolate', dose: '1 Scoop (30g)', timing: 'workout', active: true, desc: 'Reparación de Ki.' }, { id: '2', name: 'Omega 3 EPA/DHA', dose: '2 Perlas', timing: 'meal', active: true, desc: 'Salud cardiovascular.' }, { id: '3', name: 'Magnesio Bisglicinato', dose: '2 Cápsulas', timing: 'night', active: true, desc: 'Reparación profunda.' }]; }
+		function getDefaultSupplements() { return [{ id: '1', name: 'Proteína Whey Isolate', dose: '1 Scoop (30g)', timing: 'workout', active: true, desc: 'Reparación de Ki.' }, { id: '2', name: 'Omega 3 EPA/DHA', dose: '2 Perlas', timing: 'meal', active: true, desc: 'Salud cardiovascular.' }, { id: '3', name: 'Magnesio Bisglicinato', dose: '2 Cápsulas', timing: 'night', active: true, desc: 'Reparación profunda.' }]; }
 
         async function loadLeaderboard() { 
             try { 
