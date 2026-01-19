@@ -57,6 +57,16 @@
         
         .calendar-day { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.6rem; border-radius: 0.75rem; border: 1px solid #334155; background-color: rgba(15, 23, 42, 0.8); cursor: pointer; transition: all 0.2s; }
         .calendar-day.active { border-color: #fbbf24; background-color: rgba(251, 191, 36, 0.2); color: #fcd34d; transform: scale(1.1); }
+		/* --- AÑADIR ESTO AL FINAL DEL CSS --- */
+		/* --- BORRA LO QUE TENGAS DE TOGGLE Y PEGA ESTO --- */
+		.toggle-checkbox:checked { 
+			transform: translateX(100%); 
+			border-color: #22c55e; 
+		}
+		.toggle-checkbox:checked + .toggle-label { 
+			background-color: #22c55e; 
+		}
+		.toggle-checkbox { transition: transform 0.3s ease-in-out; }
     </style>
 </head>
 <body class="pb-32">
@@ -85,27 +95,29 @@
         </div>
 
         <div id="settings-panel" class="hidden mt-4 p-5 bg-slate-900 rounded-2xl border border-blue-800 max-w-2xl mx-auto space-y-5">
-            <div class="flex items-center justify-between bg-slate-800 p-4 rounded-xl">
-                <span class="text-sm font-bold text-white italic" id="user-email-display">...</span>
-                <button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-3 py-1 rounded font-bold uppercase">Salir</button>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded font-bold uppercase">Apodo</button>
-                <button onclick="changeGroup()" class="bg-indigo-900 text-white text-xs py-3 rounded font-bold uppercase">Clan</button>
-                <button onclick="deleteCurrentWeek()" class="bg-red-900 text-white text-xs py-3 rounded font-bold uppercase">Borrar Ciclo</button>
-                <button onclick="resetDefaultPlan()" class="bg-slate-800 text-white text-xs py-3 rounded font-bold uppercase">Reset</button>
-            </div>
-	<div class="pt-3 border-t border-slate-700 text-center">
-    <p class="text-[10px] text-slate-400 mb-3 uppercase font-bold italic">Protocolo IA</p>
-    <div class="flex gap-3 mb-3">
-        <button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Copiar Comando IA</button>
-        <button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 p-3 rounded-xl text-white font-bold uppercase shadow-lg">Importar JSON</button>
-    </div>
-    <div class="relative">
-        <textarea id="import-code-area" class="w-full bg-black text-green-400 p-4 rounded-xl border border-green-900 h-24 text-[10px] font-mono outline-none" placeholder="Pega el código JSON aquí..."></textarea>
-        <button onclick="document.getElementById('import-code-area').value=''" class="absolute bottom-2 right-2 text-[8px] bg-red-900/50 text-red-300 px-2 py-1 rounded border border-red-800 uppercase font-bold">Limpiar</button>
-    </div>
-</div>
+			<!-- DENTRO DE id="settings-panel" -->
+			<div class="flex items-center justify-between bg-slate-800 p-4 rounded-xl">
+				<span class="text-sm font-bold text-white italic" id="user-email-display">...</span>
+				<button onclick="logout()" class="text-xs text-red-400 border border-red-400/50 px-3 py-1 rounded font-bold uppercase">Salir</button>
+			</div>
+			<div class="grid grid-cols-2 gap-3">
+				<button onclick="changeNickname()" class="bg-slate-700 text-white text-xs py-3 rounded font-bold uppercase">Apodo</button>
+				<button onclick="changeGroup()" class="bg-indigo-900 text-white text-xs py-3 rounded font-bold uppercase">Clan</button>
+				<button onclick="deleteCurrentWeek()" class="bg-red-900 text-white text-xs py-3 rounded font-bold uppercase">Borrar Ciclo</button>
+				<!-- NUEVO BOTÓN: -->
+				<button onclick="exportPlanJSON()" class="bg-cyan-900 text-cyan-200 text-xs py-3 rounded font-bold uppercase border border-cyan-700/50">Exportar JSON</button>
+			</div>
+			<div class="pt-3 border-t border-slate-700 text-center">
+				<p class="text-[10px] text-slate-400 mb-3 uppercase font-bold italic">Zona de Enlace IA</p>
+				<div class="flex gap-3 mb-3">
+					<button onclick="copyPrompt()" class="flex-1 text-[10px] bg-purple-700 p-3 rounded-xl text-white font-bold uppercase shadow-lg border-b-2 border-purple-900">1. Copiar Comando</button>
+					<button onclick="importNewWeek()" class="flex-1 text-[10px] bg-green-800 p-3 rounded-xl text-white font-bold uppercase shadow-lg border-b-2 border-green-900">2. Importar Respuesta</button>
+				</div>
+				<div class="relative">
+					<textarea id="import-code-area" class="w-full bg-black text-green-400 p-4 rounded-xl border border-green-900 h-24 text-[10px] font-mono outline-none" placeholder="Pega el código JSON que te dé la IA aquí..."></textarea>
+					<button onclick="document.getElementById('import-code-area').value=''" class="absolute bottom-2 right-2 text-[8px] bg-red-900/50 text-red-300 px-2 py-1 rounded border border-red-800 uppercase font-bold">Limpiar</button>
+				</div>
+			</div>
         </div>
     </header>
 
@@ -193,10 +205,26 @@
         </div>
 
         <div id="tab-plan" class="tab-content hidden-tab fade-in space-y-6">
-            <div class="flex justify-between items-center gap-4">
-                <select id="week-selector" onchange="changeWeek()" class="bg-slate-900 text-white scouter-font font-bold p-3 rounded-xl flex-1 outline-none border border-slate-700"></select>
-                <button onclick="openSpyModal()" class="glass p-4 rounded-xl border border-purple-500 text-purple-300 font-bold text-xs flex items-center gap-2"><i data-lucide="eye"></i> ESPIAR</button>
-            </div>
+		<!-- REEMPLAZAR EL DIV DE CONTROLES DE "tab-plan" POR ESTE BLOQUE: -->
+		<div class="glass p-4 rounded-2xl border border-slate-700 flex flex-col gap-4 mb-4">
+			<div class="flex justify-between items-center gap-4">
+				<select id="week-selector" onchange="changeWeek()" class="bg-slate-900 text-white scouter-font font-bold p-3 rounded-xl flex-1 outline-none border border-slate-700"></select>
+				<button onclick="openSpyModal()" class="glass p-3 rounded-xl border border-purple-500 text-purple-300 font-bold text-xs flex items-center gap-2"><i data-lucide="eye"></i> ESPIAR</button>
+			</div>
+			
+			<!-- NUEVO: Toggle de Edición -->
+			<div class="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl">
+				<span class="text-xs text-slate-300 uppercase font-bold tracking-widest flex items-center gap-2">
+					<i data-lucide="edit-3" class="w-4 h-4 text-yellow-500"></i> Modo Editor
+				</span>
+				<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+					<input type="checkbox" name="toggle" id="edit-mode-toggle" onchange="renderPlan()" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-600 left-0 transition-all duration-300"/>
+					<label for="edit-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-700 cursor-pointer"></label>
+				</div>
+			</div>
+		</div>
+			
+
             <div class="grid grid-cols-7 gap-2 text-center" id="calendar-grid">
                 <div class="calendar-day" onclick="scrollToDay(0)"><span>LUN</span><span class="day-num block font-bold text-lg">--</span></div>
                 <div class="calendar-day" onclick="scrollToDay(1)"><span>MAR</span><span class="day-num block font-bold text-lg">--</span></div>
@@ -226,12 +254,36 @@
         </div>
 
         <div id="tab-strength" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-3xl border border-blue-500/20 shadow-2xl">
-                <h3 class="text-2xl font-bold text-white mb-6 scouter-font uppercase italic">Escáner de Potencia</h3>
-                <select id="exercise-select" onchange="renderStrengthChart()" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white mb-6"></select>
-                <div class="chart-container h-64"><canvas id="chartStrength"></canvas></div>
-            </div>
-            <div id="pr-list" class="space-y-3"></div>
+			<!-- CONTENIDO DE id="tab-strength" -->
+			<div class="glass p-8 rounded-3xl border border-blue-500/20 shadow-2xl">
+				<h3 class="text-2xl font-bold text-white mb-6 scouter-font uppercase italic">Escáner de Potencia</h3>
+				<!-- OJO AQUI: onchange="handleStrengthSelectChange()" ES CRÍTICO -->
+				<select id="exercise-select" onchange="handleStrengthSelectChange()" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white mb-6"></select>
+				<div class="chart-container h-64"><canvas id="chartStrength"></canvas></div>
+			</div>
+
+			<!-- NUEVA TABLA DE HISTORIAL -->
+			<div class="glass rounded-3xl overflow-hidden mt-6 border border-slate-800">
+				<div class="p-4 bg-slate-900/50 border-b border-slate-800 flex justify-between items-center">
+					<h4 class="text-sm font-bold text-slate-300 uppercase italic">Historial de Registros</h4>
+					<span class="text-[10px] text-slate-500 italic">Borra errores aquí</span>
+				</div>
+				<div class="max-h-60 overflow-y-auto">
+					<table class="w-full text-sm text-left">
+						<thead class="text-[10px] text-slate-500 uppercase bg-slate-900/50 sticky top-0 backdrop-blur-sm">
+							<tr>
+								<th class="p-3">Fecha</th>
+								<th class="p-3">Peso (KG)</th>
+								<th class="p-3 text-right">Acción</th>
+							</tr>
+						</thead>
+						<tbody id="strengthHistoryBody"></tbody>
+					</table>
+				</div>
+			</div>
+
+			<h4 class="text-lg font-bold text-white scouter-font uppercase italic mt-8 border-b border-slate-800 pb-2">Récords Personales (PR)</h4>
+			<div id="pr-list" class="space-y-3"></div>
         </div>
 
         <div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-8">
@@ -548,34 +600,67 @@
             }
         }
 
-        function renderPlan() {
-            const s = document.getElementById('week-selector');
-            if(appData.plan.length === 0) return;
-            s.innerHTML = appData.plan.map((w, i) => `<option value="${i}" ${i === currentWeekIndex ? 'selected' : ''}>${w.label || "Protocolo"}</option>`).join('');
-            
-            if(!appData.plan[currentWeekIndex]) return;
-            document.getElementById('plan-container').innerHTML = appData.plan[currentWeekIndex].days.map((day, dIdx) => {
-                let color = day.type === 'gym' ? 'border-blue-500' : day.type === 'cardio' ? 'border-green-500' : 'border-purple-500';
-                const exHtml = day.exercises.map((ex, eIdx) => {
-                    const vid = ex.vid ? `<a href="${ex.vid}" target="_blank" class="text-pink-400 text-[10px] ml-2 border border-pink-500/30 rounded px-2 py-0.5 font-bold uppercase italic">Video</a>` : '';
-                    let inputHtml = '';
-                    if (ex.track) {
-                        const sets = parseInt(ex.sets);
-                        if (!isNaN(sets) && sets > 1 && sets < 10) {
-                            const saved = (ex.weight || "").toString().split('/');
-                            let boxes = '';
-                            for(let i=0; i<sets; i++) boxes += `<input type="number" placeholder="kg" value="${saved[i]||''}" class="bg-slate-800 border-slate-600 rounded-lg w-10 text-center text-white text-xs py-1.5 mx-0.5 focus:border-yellow-400 outline-none" onchange="saveMultiSetWeight(${dIdx}, ${eIdx}, ${sets}, this)">`;
-                            inputHtml = `<div class="flex flex-wrap justify-end items-center mt-2"><span class="text-[8px] text-slate-500 mr-2 font-bold italic uppercase">Kilos:</span>${boxes}</div>`;
-                        } else {
-                            inputHtml = `<input type="text" placeholder="KG" value="${ex.weight || ''}" class="bg-slate-800 border-slate-600 rounded-lg w-16 text-center text-white text-xs py-2 focus:border-yellow-500 outline-none" onchange="saveWeight(${dIdx}, ${eIdx}, this.value)">`;
-                        }
-                    }
-                    return `<div class="py-3 border-b border-slate-800/50 flex flex-col sm:flex-row sm:items-start justify-between group hover:bg-slate-800/10 rounded-xl px-1 transition-colors"><div class="flex-1"><div><span class="text-white font-bold text-sm uppercase italic">${ex.name}</span>${vid}</div><div class="text-[11px] text-blue-300 font-mono mt-0.5">${ex.sets} x ${ex.reps}</div><div class="text-[10px] text-slate-500 italic mt-1 leading-tight">${ex.desc || ''}</div></div>${inputHtml}</div>`;
-                }).join('');
-                return `<div id="day-card-${dIdx}" class="glass rounded-3xl shadow-lg border-l-4 ${color} mb-5 anime-border overflow-hidden transition-all"><div class="p-4 bg-slate-900/80 flex justify-between items-center border-b border-slate-800 shadow-sm"><h3 class="font-bold text-white text-[12px] uppercase tracking-widest italic">${day.day} | ${day.title}</h3><button onclick="editDay(${dIdx})" class="p-2 hover:bg-slate-700 rounded-xl transition-all text-slate-500 hover:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button></div><div class="p-3 bg-slate-900/20">${exHtml}${day.notes ? `<div class="mt-3 text-[10px] text-yellow-200 bg-yellow-900/30 p-3 rounded-xl border border-yellow-500/10 flex gap-2 italic"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500"></i>${day.notes}</div>` : ''}</div></div>`;
-            }).join('');
-            lucide.createIcons();
-        }
+		function renderPlan() {
+			const isEditMode = document.getElementById('edit-mode-toggle')?.checked; // Detecta si el modo editor está activo
+			const s = document.getElementById('week-selector');
+			
+			if(appData.plan.length === 0) return;
+			s.innerHTML = appData.plan.map((w, i) => `<option value="${i}" ${i === currentWeekIndex ? 'selected' : ''}>${w.label || "Protocolo"}</option>`).join('');
+			
+			if(!appData.plan[currentWeekIndex]) return;
+
+			document.getElementById('plan-container').innerHTML = appData.plan[currentWeekIndex].days.map((day, dIdx) => {
+				let color = day.type === 'gym' ? 'border-blue-500' : day.type === 'cardio' ? 'border-green-500' : 'border-purple-500';
+				
+				const exHtml = day.exercises.map((ex, eIdx) => {
+					// MODO EDICIÓN: Muestra inputs para cambiar nombre, series y reps
+					if (isEditMode) {
+							return `
+							<div class="py-4 border-b border-slate-700/50 bg-slate-800/30 p-2 rounded mb-2">
+								<div class="grid grid-cols-12 gap-2 mb-2">
+									<div class="col-span-12">
+										<label class="text-[9px] text-yellow-500 font-bold uppercase">Nombre Ejercicio</label>
+										<input type="text" value="${ex.name}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'name', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-sm font-bold">
+									</div>
+									<div class="col-span-4">
+										<label class="text-[9px] text-blue-300 font-bold uppercase">Series</label>
+										<input type="text" value="${ex.sets}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'sets', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center">
+									</div>
+									<div class="col-span-4">
+										<label class="text-[9px] text-blue-300 font-bold uppercase">Reps</label>
+										<input type="text" value="${ex.reps}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'reps', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center">
+									</div>
+									<div class="col-span-4 flex items-end">
+										<button onclick="deleteExercise(${dIdx}, ${eIdx})" class="w-full bg-red-900/50 text-red-300 border border-red-800 rounded py-1 text-[10px] uppercase font-bold hover:bg-red-800">Borrar</button>
+									</div>
+								</div>
+							</div>`;
+					} 
+					// MODO NORMAL: Muestra lo de siempre
+					else {
+						const vid = ex.vid ? `<a href="${ex.vid}" target="_blank" class="text-pink-400 text-[10px] ml-2 border border-pink-500/30 rounded px-2 py-0.5 font-bold uppercase italic">Video</a>` : '';
+						let inputHtml = '';
+						if (ex.track) {
+							const sets = parseInt(ex.sets);
+							if (!isNaN(sets) && sets > 1 && sets < 10) {
+								const saved = (ex.weight || "").toString().split('/');
+								let boxes = '';
+								for(let i=0; i<sets; i++) boxes += `<input type="number" placeholder="kg" value="${saved[i]||''}" class="bg-slate-800 border-slate-600 rounded-lg w-10 text-center text-white text-xs py-1.5 mx-0.5 focus:border-yellow-400 outline-none transition-colors" onchange="saveMultiSetWeight(${dIdx}, ${eIdx}, ${sets}, this)">`;
+								inputHtml = `<div class="flex flex-wrap justify-end items-center mt-2"><span class="text-[8px] text-slate-500 mr-2 font-bold italic uppercase">Cargas:</span>${boxes}</div>`;
+							} else {
+								inputHtml = `<input type="text" placeholder="KG" value="${ex.weight || ''}" class="bg-slate-800 border-slate-600 rounded-lg w-16 text-center text-white text-xs py-2 focus:border-yellow-500 outline-none transition-colors" onchange="saveWeight(${dIdx}, ${eIdx}, this.value)">`;
+							}
+						}
+						return `<div class="py-3 border-b border-slate-800/50 flex flex-col sm:flex-row sm:items-start justify-between group hover:bg-slate-800/10 rounded-xl px-1 transition-colors"><div class="flex-1"><div><span class="text-white font-bold text-sm uppercase italic">${ex.name}</span>${vid}</div><div class="text-[11px] text-blue-300 font-mono mt-0.5">${ex.sets} x ${ex.reps}</div><div class="text-[10px] text-slate-500 italic mt-1 leading-tight">${ex.desc || ''}</div></div>${inputHtml}</div>`;
+					}
+				}).join('');
+
+				const addBtn = isEditMode ? `<button onclick="addNewExercise(${dIdx})" class="w-full mt-2 py-2 bg-green-900/30 text-green-400 border border-green-800 border-dashed rounded-xl text-xs font-bold uppercase hover:bg-green-900/50 transition-all">+ Añadir Ejercicio</button>` : '';
+
+				return `<div id="day-card-${dIdx}" class="glass rounded-3xl shadow-lg border-l-4 ${color} mb-5 anime-border overflow-hidden transition-all"><div class="p-4 bg-slate-900/80 flex justify-between items-center border-b border-slate-800 shadow-sm"><h3 class="font-bold text-white text-[12px] uppercase tracking-widest italic">${day.day} | ${day.title}</h3><button onclick="editDay(${dIdx})" class="p-2 hover:bg-slate-700 rounded-xl transition-all text-slate-500 hover:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button></div><div class="p-3 bg-slate-900/20">${exHtml}${addBtn}${day.notes ? `<div class="mt-3 text-[10px] text-yellow-200 bg-yellow-900/30 p-3 rounded-xl border border-yellow-500/10 flex gap-2 italic"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500"></i>${day.notes}</div>` : ''}</div></div>`;
+			}).join('');
+			lucide.createIcons();
+		}
 		function changeWeek() {
             const selector = document.getElementById('week-selector');
             currentWeekIndex = parseInt(selector.value);
@@ -605,15 +690,20 @@
             if(existing) existing.weight = w; else appData.strength[n].push({ date: today, weight: w });
             updateExerciseSelector(); updatePRs();
         }
-        function updateExerciseSelector() {
-            const select = document.getElementById('exercise-select'); if(!select) return;
-            const keys = Object.keys(appData.strength).sort();
-            const defaults = ["Prensa de Piernas", "Jalón al Pecho", "Press Pecho Máquina", "Extensión Cuádriceps", "Curl Femoral", "Face Pull"];
-            const all = [...new Set([...defaults, ...keys])];
-            const curr = select.value;
-            select.innerHTML = all.map(k => `<option value="${k}" ${k===curr?'selected':''}>${k}</option>`).join('');
-            if(!curr) renderStrengthChart();
-        }
+		function updateExerciseSelector() {
+			const select = document.getElementById('exercise-select'); 
+			if(!select) return;
+			
+			const keys = Object.keys(appData.strength).sort();
+			const defaults = ["Prensa de Piernas", "Jalón al Pecho", "Press Pecho Máquina", "Extensión Cuádriceps", "Curl Femoral", "Face Pull"];
+			const all = [...new Set([...defaults, ...keys])];
+			const curr = select.value;
+			
+			select.innerHTML = all.map(k => `<option value="${k}" ${k===curr?'selected':''}>${k}</option>`).join('');
+			
+			// IMPORTANTE: Forzamos la actualización de la tabla y gráfica al cargar el selector
+			handleStrengthSelectChange();
+		}
         function renderStrengthChart() {
             const select = document.getElementById('exercise-select'); if(!select) return;
             const data = (appData.strength[select.value] || []).sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -894,33 +984,32 @@ function switchTab(id) {
         }
 
         // --- VALIDACIÓN DE SEGURIDAD PARA EL COMANDO IA ---
-        function copyPrompt() {
-            // Si el usuario no ha puesto meta o lesiones, le obligamos
-            if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
-                alert("⚠️ ¡BLOQUEO DE SEGURIDAD!\n\nAntes de generar tu comando, debes ir a la pestaña PERFIL (icono de usuario) y rellenar tu Meta de Peso y tus Lesiones (ej: esguince).");
-                switchTab('profile'); 
-                return;
-            }
+		function copyPrompt() {
+			if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
+				alert("⚠️ ¡ERROR!\nConfigura Meta y Lesiones en PERFIL primero.");
+				switchTab('profile'); return;
+			}
+			
+			const today = new Date(); 
+			const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+			const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
+			const misSupps = appData.supplements.map(s => s.name).join(", ");
+			
+			// INGENIERÍA INVERSA: Le damos el plan actual
+			const planActual = JSON.stringify(appData.plan[currentWeekIndex] || {}, null, 2);
 
-            const today = new Date(); 
-            const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-            const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
-            const misSupps = appData.supplements.map(s => s.name).join(", ");
+			const prompt = `Actúa como entrenador Saiyan. Tengo este plan actual (JSON abajo).
+		DATOS: Peso: ${ultimoPeso}kg. Meta: ${appData.targetWeight}kg. Lesiones: ${appData.injuries}. Suplementos: ${misSupps}.
+		TAREA: Genera el JSON de la SIGUIENTE semana de entrenamiento empezando el ${dStr}. Basa la progresión en el plan actual que te adjunto, pero aplica sobrecarga progresiva.
+		REGLAS: Responde SOLO el JSON. Usa "track": true en pesas.
 
-            const prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica. Genera el código JSON para mi próxima semana de entrenamiento a partir del ${dStr}.
+		PLAN ACTUAL (BASE):
+		${planActual}
 
-DATOS CRÍTICOS:
-- Peso Actual: ${ultimoPeso} kg.
-- Meta de Peso: ${appData.targetWeight} kg.
-- Lesiones: ${appData.injuries}.
-- Suplementos: ${misSupps}.
+		ESTRUCTURA RESPUESTA: { "id": "tactic-${Date.now()}", "label": "Semana X", "days": [...] }`;
 
-REGLAS: Responde SOLO con el código JSON. Genera 7 días. Usa "track": true en pesas. Adapta la rutina para NO agravar mi lesión de ${appData.injuries}.
-
-ESTRUCTURA: { "id": "tactica-${Date.now()}", "label": "Semana de Poder", "days": [...] }`;
-
-            navigator.clipboard.writeText(prompt).then(() => alert("✅ ¡COMANDO COPIADO!\n\nPégalo en Gemini ahora. Tus datos de salud y lesiones han sido incluidos automáticamente."));
-        }
+			navigator.clipboard.writeText(prompt).then(() => alert("✅ COMANDO INTELIGENTE COPIADO.\nIncluye tu plan actual para que la IA sepa qué ejercicios haces."));
+		}
         function toggleSettings() { document.getElementById('settings-panel').classList.toggle('hidden'); }
         function changeNickname() { const n=prompt("Nuevo apodo:", appData.nickname); if(n){ appData.nickname=n; document.getElementById('header-username').innerText=n; saveDataToCloud(); } }
         function changeGroup() { const g=prompt("Nuevo clan:", appData.group); if(g){ appData.group=g.trim(); saveDataToCloud(); loadLeaderboard(); } }
@@ -1094,6 +1183,179 @@ ESTRUCTURA: { "id": "tactica-${Date.now()}", "label": "Semana de Poder", "days":
         text.innerHTML = `<span class="text-red-400 font-bold font-sans">KI AGOTADO (${lastVfc}):</span> Estrés alto detectado. Considera un día de descanso o una sesión muy suave para evitar lesiones.`;
     }
 }
+	// --- FUNCIONES NUEVAS DE EDICIÓN DEL PLAN ---
+	function updateExerciseData(dayIdx, exIdx, field, value) {
+		appData.plan[currentWeekIndex].days[dayIdx].exercises[exIdx][field] = value;
+		saveDataToCloud();
+	}
+
+	function deleteExercise(dayIdx, exIdx) {
+		if(confirm("¿Eliminar este ejercicio?")) {
+			appData.plan[currentWeekIndex].days[dayIdx].exercises.splice(exIdx, 1);
+			saveDataToCloud(); renderPlan();
+		}
+	}
+
+	function addNewExercise(dayIdx) {
+		appData.plan[currentWeekIndex].days[dayIdx].exercises.push({ name: "Nuevo Ejercicio", sets: "3", reps: "10", track: true, weight: "" });
+		saveDataToCloud(); renderPlan();
+	}
+
+	// --- FUNCIONES MEJORADAS DE FUERZA (Para borrar si el input está vacío) ---
+	function saveWeight(d, e, v) {
+		appData.plan[currentWeekIndex].days[d].exercises[e].weight = v;
+		const n = parseFloat(v);
+		if (!isNaN(n) && n > 0) {
+			saveStrengthRecord(appData.plan[currentWeekIndex].days[d].exercises[e].name, n);
+		} else if (v === "") {
+			// Lógica opcional: Si borras el peso hoy, ¿quieres borrar el record de hoy?
+			// Por seguridad, mejor usar la tabla de historial para borrar.
+		}
+		saveDataToCloud();
+	}
+
+	// --- GESTOR DE HISTORIAL Y SELECTOR ---
+	function handleStrengthSelectChange() {
+		renderStrengthChart();
+		renderStrengthHistory();
+	}
+
+	function renderStrengthHistory() {
+		const select = document.getElementById('exercise-select');
+		const tbody = document.getElementById('strengthHistoryBody');
+		if (!select || !tbody) return;
+
+		const exerciseName = select.value;
+		const data = (appData.strength[exerciseName] || []).sort((a,b) => new Date(b.date) - new Date(a.date)); // Ordenar por más reciente
+
+		tbody.innerHTML = data.map((record, index) => `
+			<tr class="border-b border-slate-800 hover:bg-slate-800/30">
+				<td class="p-3 text-slate-400 font-mono text-xs">${record.date}</td>
+				<td class="p-3 text-white font-bold">${record.weight} kg</td>
+				<td class="p-3 text-right">
+					<button onclick="deleteHistoryEntry('${exerciseName}', ${index})" class="text-red-500 hover:text-red-400 p-1 hover:bg-red-900/20 rounded">
+						<i data-lucide="trash-2" class="w-4 h-4"></i>
+					</button>
+				</td>
+			</tr>
+		`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-600 italic text-xs">Sin registros.</td></tr>';
+		lucide.createIcons();
+	}
+
+	function deleteHistoryEntry(exerciseName, index) {
+		// Nota: El index viene del array ordenado (más reciente primero), necesitamos encontrar el real
+		// O simplificar: trabajar sobre el array ordenado y guardar.
+		if(confirm("¿Borrar este registro histórico?")) {
+			// Recuperamos el array original
+			let data = appData.strength[exerciseName] || [];
+			// Lo ordenamos igual que en la vista para coincidir índices
+			data.sort((a,b) => new Date(b.date) - new Date(a.date));
+			
+			// Eliminamos el elemento
+			data.splice(index, 1);
+			
+			// Guardamos el array modificado de vuelta
+			appData.strength[exerciseName] = data;
+			saveDataToCloud();
+			
+			// Actualizamos UI
+			renderStrengthChart();
+			renderStrengthHistory();
+			updatePRs();
+		}
+	}
+
+	// MODIFICACIÓN DE "saveStrengthRecord" PARA QUE ACTUALICE LA TABLA AL INSTANTE
+	function saveStrengthRecord(n, w) {
+		const cleanName = n.trim();
+		if(!appData.strength[cleanName]) appData.strength[cleanName] = [];
+		const today = new Date().toISOString().split('T')[0];
+		const existingIndex = appData.strength[cleanName].findIndex(e => e.date === today);
+		
+		if(existingIndex > -1) {
+			appData.strength[cleanName][existingIndex].weight = w; // Actualiza si ya existe hoy
+		} else {
+			appData.strength[cleanName].push({ date: today, weight: w }); // Crea nuevo
+		}
+		
+		updateExerciseSelector(); 
+		updatePRs();
+		// Si estamos viendo ese ejercicio, actualizar gráfica y tabla
+		const currentSelect = document.getElementById('exercise-select');
+		if(currentSelect && currentSelect.value === cleanName) {
+			renderStrengthChart();
+			renderStrengthHistory();
+		}
+	}
+		function exportPlanJSON() {
+		if(!appData.plan || appData.plan.length === 0) return alert("No hay plan para exportar.");
+		// Exportamos el plan actual (la semana que estás viendo)
+		const currentPlan = appData.plan[currentWeekIndex];
+		// Convertimos a texto bonito
+		const jsonString = JSON.stringify(currentPlan, null, 2);
+		
+		// Lo copiamos al portapapeles o lo mostramos
+		navigator.clipboard.writeText(jsonString).then(() => {
+			alert("✅ JSON de tu plan copiado al portapapeles.\n\nPuedes pegárselo a la IA para que lo use de base.");
+		}).catch(err => {
+			prompt("Copia este código manualmente:", jsonString);
+		});
+	}
+	// --- GESTIÓN DE HISTORIAL DE FUERZA ---
+
+		// Esta función se llama al cambiar el desplegable
+		function handleStrengthSelectChange() {
+			renderStrengthChart();
+			renderStrengthHistory(); // ¡Esto faltaba o fallaba antes!
+		}
+
+		// Dibuja la tabla debajo de la gráfica
+		function renderStrengthHistory() {
+			const select = document.getElementById('exercise-select');
+			const tbody = document.getElementById('strengthHistoryBody');
+			
+			// Si no existen los elementos en el DOM, paramos para no dar error
+			if (!select || !tbody) return;
+
+			const exerciseName = select.value;
+			// Obtenemos datos, si no hay (ejercicio nuevo), array vacío
+			const data = (appData.strength[exerciseName] || []).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+			tbody.innerHTML = data.map((record, index) => `
+				<tr class="border-b border-slate-800 hover:bg-slate-800/30 transition-colors">
+					<td class="p-3 text-slate-400 font-mono text-xs">${record.date}</td>
+					<td class="p-3 text-white font-bold">${record.weight} kg</td>
+					<td class="p-3 text-right">
+						<button onclick="deleteHistoryEntry('${exerciseName}', ${index})" class="text-red-500 hover:text-red-400 p-2 hover:bg-red-900/20 rounded-lg transition-all">
+							<i data-lucide="trash-2" class="w-4 h-4"></i>
+						</button>
+					</td>
+				</tr>
+			`).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-600 italic text-xs">Sin registros aún.</td></tr>';
+			
+			lucide.createIcons();
+		}
+
+		// Borra una entrada específica y actualiza todo
+		function deleteHistoryEntry(exerciseName, index) {
+			if(confirm("¿Borrar este registro histórico? Se recalculará tu gráfica.")) {
+				// Trabajamos con el array ordenado para coincidir con lo que ve el usuario
+				let data = appData.strength[exerciseName] || [];
+				data.sort((a,b) => new Date(b.date) - new Date(a.date));
+				
+				// Borramos
+				data.splice(index, 1);
+				
+				// Guardamos
+				appData.strength[exerciseName] = data;
+				saveDataToCloud();
+				
+				// Refrescamos UI
+				renderStrengthChart();
+				renderStrengthHistory();
+				updatePRs();
+			}
+		}
     </script>
 </body>
 </html>
