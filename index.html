@@ -12,12 +12,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
+	
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rajdhani:wght@500;700&family=Inter:wght@300;400;600&display=swap');
         
         :root { 
@@ -339,20 +342,50 @@
             <div id="plan-container" class="space-y-6"></div>
         </div>
 
-        <div id="tab-running" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] border border-orange-500/30">
-                <h3 class="text-2xl font-bold text-white mb-6 scouter-font uppercase italic border-b border-orange-900/30 pb-3">Actividad Aeróbica</h3>
-                <form id="runForm" class="space-y-6">
-                    <input type="date" id="runDate" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl text-white" required>
+<!-- SECTOR: CARDIO (RUNNING) - DOBLE GRÁFICA -->
+        <div id="tab-running" class="tab-content hidden-tab fade-in space-y-6">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-4 rounded-2xl border border-orange-500/20 flex flex-col items-center justify-center">
+                    <span class="text-[10px] text-orange-300 uppercase tracking-widest font-bold">Total Acumulado</span>
+                    <span id="run-total-dist" class="text-2xl font-bold text-white comic-font mt-1">0.0 KM</span>
+                </div>
+                <div class="glass p-4 rounded-2xl border border-orange-500/20 flex flex-col items-center justify-center">
+                    <span class="text-[10px] text-orange-300 uppercase tracking-widest font-bold">Mejor Ritmo</span>
+                    <span id="run-best-pace" class="text-2xl font-bold text-white comic-font mt-1">--'--"</span>
+                </div>
+            </div>
+
+            <!-- Formulario -->
+            <div class="glass p-6 rounded-[2rem] border-l-4 border-orange-500 relative overflow-hidden shadow-xl">
+                <div class="absolute right-0 top-0 p-10 bg-orange-600/10 blur-2xl rounded-full"></div>
+                <h3 class="text-xl font-bold text-white mb-4 scouter-font uppercase italic flex items-center gap-2 relative z-10">
+                    <i data-lucide="footprints" class="w-5 h-5 text-orange-400"></i> Nueva Sesión
+                </h3>
+                <form id="runForm" class="space-y-4 relative z-10">
+                    <div class="flex gap-4"><input type="date" id="runDate" class="bg-slate-900/80 border border-slate-700 p-3 rounded-xl text-white text-sm w-full outline-none focus:border-orange-500" required></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="number" id="runDist" step="0.01" placeholder="KM" class="bg-slate-900 border border-slate-700 p-4 rounded-xl text-3xl font-bold text-white text-center">
-                        <input type="number" id="runTime" step="1" placeholder="MIN" class="bg-slate-900 border border-slate-700 p-4 rounded-xl text-3xl font-bold text-white text-center">
+                        <div class="relative"><input type="number" id="runDist" step="0.01" placeholder="0.0" class="w-full bg-slate-900/80 border border-slate-700 p-4 rounded-xl text-2xl font-bold text-white text-center outline-none focus:border-orange-500"><span class="absolute right-3 bottom-2 text-[9px] text-slate-500 uppercase font-bold">KM</span></div>
+                        <div class="relative"><input type="number" id="runTime" step="1" placeholder="00" class="w-full bg-slate-900/80 border border-slate-700 p-4 rounded-xl text-2xl font-bold text-white text-center outline-none focus:border-orange-500"><span class="absolute right-3 bottom-2 text-[9px] text-slate-500 uppercase font-bold">MIN</span></div>
                     </div>
-                    <button type="submit" class="w-full bg-orange-700 text-white font-bold py-5 rounded-2xl uppercase scouter-font">Guardar Sesión</button>
+                    <button type="submit" class="w-full bg-gradient-to-r from-orange-700 to-orange-600 hover:from-orange-600 text-white font-bold py-4 rounded-xl uppercase scouter-font text-lg shadow-lg tracking-widest transition-all active:scale-95">Registrar Carrera</button>
                 </form>
             </div>
-            <div class="chart-container glass rounded-3xl p-4"><canvas id="chartRunning"></canvas></div>
-            <div class="glass rounded-3xl overflow-hidden"><table class="w-full text-sm text-left"><tbody id="runningTableBody"></tbody></table></div>
+
+            <!-- GRÁFICA 1: VOLUMEN SEMANAL -->
+            <div class="glass p-4 rounded-3xl border border-slate-800">
+                <h4 class="text-[10px] text-slate-400 uppercase font-bold mb-2 ml-2">Volumen Semanal (KM)</h4>
+                <div class="chart-container h-40"><canvas id="chartRunningVolume"></canvas></div>
+            </div>
+
+            <!-- GRÁFICA 2: RITMO -->
+            <div class="glass p-4 rounded-3xl border border-slate-800">
+                <h4 class="text-[10px] text-slate-400 uppercase font-bold mb-2 ml-2">Evolución de Ritmo (min/km)</h4>
+                <div class="chart-container h-40"><canvas id="chartRunningPace"></canvas></div>
+            </div>
+
+            <!-- Lista -->
+            <div class="space-y-3" id="runningListContainer"></div>
         </div>
 
         <div id="tab-strength" class="tab-content hidden-tab fade-in space-y-8">
@@ -472,6 +505,7 @@
             </div>
         </div>
 
+<!-- SECTOR: PERFIL (PROFILE) -->
         <div id="tab-profile" class="tab-content hidden-tab fade-in space-y-8">
             <div class="glass p-8 rounded-[2.5rem] border border-yellow-500/30 shadow-2xl relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 text-yellow-500/5 rotate-12"><i data-lucide="shield-check" class="w-48 h-48"></i></div>
@@ -485,10 +519,12 @@
                         <label class="text-[10px] text-red-400 font-bold uppercase ml-1 italic">Historial de Lesiones / Limitaciones</label>
                         <textarea id="profile-injuries" rows="3" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-sm outline-none focus:border-red-500 italic shadow-inner" placeholder="Ej: Lesión lumbar L5-S1..."></textarea>
                     </div>
-                    <div class="bg-blue-900/20 p-4 rounded-2xl border border-blue-500/20">
-                        <p class="text-[10px] text-blue-300 uppercase font-black mb-2">Sincronización IA Activa</p>
-                        <p class="text-[11px] text-slate-400 italic">Los datos del perfil se envían a Gemini automáticamente para un entrenamiento 100% seguro.</p>
-                    </div>
+                    
+                    <!-- NUEVO BOTÓN PDF -->
+                    <button onclick="generatePDF()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all mt-4">
+                        <i data-lucide="file-down" class="text-yellow-400"></i>
+                        <span class="uppercase text-xs tracking-widest">Descargar Informe Oficial (PDF)</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -564,6 +600,55 @@
         <i data-lucide="timer" class="w-6 h-6"></i>
     </button>
 </div>
+<!-- WIDGET SPOTIFY (MUSICAL) MEJORADO -->
+    <div id="spotify-widget" class="fixed bottom-24 left-4 z-[60] flex flex-col items-start pointer-events-none">
+        <!-- Contenedor del Reproductor -->
+        <div id="spotify-controls" class="hidden mb-4 bg-black/90 p-4 rounded-2xl border-2 border-[#1DB954] shadow-[0_0_30px_rgba(29,185,84,0.3)] backdrop-blur-xl transform transition-all origin-bottom-left w-80 max-w-[85vw] pointer-events-auto">
+            
+            <div class="flex justify-between items-center mb-3">
+                <label class="text-[10px] text-[#1DB954] font-black uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="radio" class="w-3 h-3 animate-pulse"></i> Frecuencia Z
+                </label>
+                <!-- ENLACE AL WEB PLAYER (Ayuda a refrescar la cookie) -->
+                <a href="https://open.spotify.com" target="_blank" class="text-[9px] text-slate-400 hover:text-white border border-slate-600 hover:border-[#1DB954] rounded px-2 py-1 transition-colors flex items-center gap-1">
+                    <i data-lucide="external-link" class="w-2 h-2"></i> Abrir Spotify Web
+                </a>
+            </div>
+            
+            <!-- SELECTOR DE LISTAS -->
+            <select id="spotify-selector" onchange="changeSpotifyPlaylist(this.value)" class="w-full bg-slate-800 text-white text-xs font-bold p-3 rounded-xl mb-4 outline-none border border-slate-700 focus:border-[#1DB954] transition-colors appearance-none">
+                <!-- TU LISTA PERSONALIZADA AHORA ES LA PRIMERA -->
+                <option value="37i9dQZF1E8NUfUW0nHIT7">🎧 Mi Selección</option>
+                <option value="37i9dQZF1DX76Wlfdnj7AP">💪 Beast Mode (Phonk/Gym)</option>
+                <option value="37i9dQZF1DX0XUsuxWHRQd">🔥 Reggaeton Duro</option>
+                <option value="37i9dQZF1DWTXx3N4W0hP7">🎸 Rock Entrenamiento</option>
+                <option value="37i9dQZF1DX5c9ae2b7pYv">💃 Rumba & Fiesta</option>
+            </select>
+            
+            <!-- REPRODUCTOR -->
+            <iframe id="spotify-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1E8NUfUW0nHIT7?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="shadow-lg"></iframe>
+            
+            <!-- AVISO TÉCNICO -->
+            <div class="mt-2 p-2 bg-yellow-900/30 border border-yellow-700/50 rounded-lg text-center">
+                <p class="text-[8px] text-yellow-500 leading-tight">
+                    <strong>¿Solo oyes 30 segundos?</strong><br>
+                    Tu navegador bloquea las cookies de terceros.<br>
+                    <span class="text-slate-400">Solución: Habilita cookies para spotify.com en la configuración de tu navegador.</span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- BOTÓN ACTIVADOR -->
+        <button onclick="toggleSpotify()" class="pointer-events-auto bg-[#1DB954] hover:bg-[#1ed760] text-black p-4 rounded-full shadow-[0_0_20px_rgba(29,185,84,0.6)] transition-all transform active:scale-95 hover:scale-110 flex items-center justify-center border-4 border-black/20 z-50">
+            <i data-lucide="music" class="w-7 h-7"></i>
+        </button>
+    </div>
+        
+        <!-- BOTÓN ACTIVADOR -->
+        <button onclick="toggleSpotify()" class="pointer-events-auto bg-[#1DB954] hover:bg-[#1ed760] text-black p-4 rounded-full shadow-[0_0_20px_rgba(29,185,84,0.6)] transition-all transform active:scale-95 hover:scale-110 flex items-center justify-center border-4 border-black/20 z-50">
+            <i data-lucide="music" class="w-7 h-7"></i>
+        </button>
+    </div>
     <nav class="fixed bottom-0 w-full bg-slate-900/98 backdrop-blur-3xl border-t border-slate-800 p-1 pb-10 z-50 flex justify-around shadow-[0_-20px_60px_rgba(0,0,0,0.98)]">
         <button onclick="switchTab('home')" id="btn-home" class="nav-btn active p-2 w-full flex flex-col items-center gap-1"><i data-lucide="home"></i></button>
         <button onclick="switchTab('ranking')" id="btn-ranking" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="trophy"></i></button>
@@ -574,7 +659,10 @@
         <button onclick="switchTab('stats')" id="btn-stats" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="activity"></i></button>
         <button onclick="switchTab('profile')" id="btn-profile" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="user-circle"></i></button>
     </nav>
-
+<!-- CANVAS OCULTO PARA GENERAR GRÁFICAS DEL PDF -->
+    <div style="position: absolute; left: -9999px; top: -9999px;">
+        <canvas id="pdfHiddenCanvas" width="800" height="400"></canvas>
+    </div>
 <script>
         // --- 🔴 CONFIGURACIÓN DE FIREBASE 🔴 ---
         const firebaseConfig = {
@@ -1579,14 +1667,169 @@ function switchTab(id) {
             } catch(e) {}
         }
         function updateLeaderboardEntry() { if(!currentUser)return; let c=0; let mb=0; let ml=0; if(appData.progress.length>1){ const s=[...appData.progress].sort((a,b)=>new Date(a.date)-new Date(b.date)); c=((s[s.length-1].weight-s[0].weight)/s[0].weight)*100; } if(appData.strength["Press Pecho Máquina"]) mb = Math.max(...appData.strength["Press Pecho Máquina"].map(x=>parseFloat(x.weight)||0)); if(appData.strength["Prensa de Piernas"]) ml = Math.max(...appData.strength["Prensa de Piernas"].map(x=>parseFloat(x.weight)||0)); db.collection('leaderboard').doc(currentUser.uid).set({ nickname: appData.nickname, group: appData.group, weightChange: c.toFixed(1), maxBench: mb, maxLegPress: ml, lastUpdate: new Date() }, {merge:true}); }
+        // --- NUEVA LÓGICA VISUAL DE RUNNING ---
+/// --- LÓGICA DE RUNNING MEJORADA (VOLUMEN SEMANAL VISIBLE) ---
+        let runningVolumeChartInstance = null;
+
         function updateRunningUI() {
-            const s = [...appData.running].sort((a,b)=>new Date(b.date)-new Date(a.date));
-            document.getElementById('runningTableBody').innerHTML = s.map((r,i)=>`<tr class="border-b border-slate-800"><td class="text-slate-400 p-2 text-[10px] font-black italic uppercase">${r.date.slice(5)}</td><td class="text-white font-bold">${r.dist}km</td><td class="text-slate-400 text-xs">${r.time}min</td><td class="text-orange-400 font-bold">${Math.floor(r.pace)}'${Math.round((r.pace%1)*60)}"</td><td class="text-right p-2"><button onclick="delRun(${i})" class="text-red-900"><i data-lucide="trash-2" class="w-3"></i></button></td></tr>`).join('');
+            // 1. Ordenar por fecha (Más antiguo primero)
+            const s = [...appData.running].sort((a,b)=>new Date(a.date)-new Date(b.date));
+            const container = document.getElementById('runningListContainer');
+            
+            // Stats
+            const totalKm = s.reduce((sum, r) => sum + (parseFloat(r.dist)||0), 0);
+            const bestPaceVal = s.length ? Math.min(...s.map(r => r.pace)) : 0;
+            const formatPace = (val) => {
+                if(!val) return "--'--\"";
+                const mins = Math.floor(val);
+                const secs = Math.round((val % 1) * 60).toString().padStart(2, '0');
+                return `${mins}'${secs}"`;
+            };
+
+            if(document.getElementById('run-total-dist')) document.getElementById('run-total-dist').innerText = totalKm.toFixed(1) + " KM";
+            if(document.getElementById('run-best-pace')) document.getElementById('run-best-pace').innerText = formatPace(bestPaceVal);
+
+            // Lista Tarjetas (Mostramos primero la más reciente, invertimos visualmente la lista)
+            container.innerHTML = [...s].reverse().map((r,i) => `
+                <div class="glass p-3 rounded-xl border-l-4 border-orange-500/30 flex justify-between items-center relative overflow-hidden group">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[9px] text-slate-400 font-mono font-bold uppercase">${r.date.slice(5)}</span>
+                            <span class="text-[9px] bg-orange-900/40 text-orange-200 px-2 rounded-full border border-orange-500/20 font-mono">${formatPace(r.pace)}/km</span>
+                        </div>
+                        <div class="text-white font-bold text-sm">
+                            <span class="text-lg">${r.dist}</span> <span class="text-[9px] text-orange-400 uppercase font-bold">KM</span> 
+                            <span class="text-slate-600 mx-2">|</span> 
+                            ${r.time} <span class="text-[9px] text-slate-500 uppercase">MIN</span>
+                        </div>
+                    </div>
+                    <button onclick="delRun(${s.length - 1 - i})" class="relative z-10 text-slate-500 hover:text-red-500 p-2 hover:bg-red-900/20 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+            `).join('');
             lucide.createIcons();
-            const rev = [...s].reverse(); if(rev.length && document.getElementById('chartRunning')) {
-                if(runningChartInstance) runningChartInstance.destroy();
-                runningChartInstance = new Chart(document.getElementById('chartRunning').getContext('2d'), {type:'line', data:{labels:rev.map(d=>d.date.slice(5)), datasets:[{label:'RITMO', data:rev.map(d=>d.pace), borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)'}]}, options:{maintainAspectRatio:false, scales:{y:{reverse:true, grid:{color:'rgba(255,255,255,0.05)'}}, x:{grid:{display:false}}}}});
+            
+            // --- GRÁFICA 1: RITMO (Línea) ---
+            const rev = [...s].reverse(); // Para la línea de ritmo usamos el inverso si queremos (o normal)
+            // Usaremos 's' (orden cronológico) para que la gráfica avance hacia la derecha (Lógica temporal correcta)
+            if(document.getElementById('chartRunningPace') && s.length > 0) { 
+                const ctxPace = document.getElementById('chartRunningPace').getContext('2d');
+                let gradient = ctxPace.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(249, 115, 22, 0.5)'); gradient.addColorStop(1, 'rgba(249, 115, 22, 0.0)');
+                if(runningChartInstance) runningChartInstance.destroy(); 
+                runningChartInstance = new Chart(ctxPace, {
+                    type: 'line', 
+                    data: { labels: s.map(d => d.date.slice(5)), datasets: [{ label: 'RITMO', data: s.map(d => d.pace), borderColor: '#f97316', borderWidth: 3, tension: 0.4, pointBackgroundColor: '#1e293b', pointBorderColor: '#f97316', pointBorderWidth: 2, pointRadius: 4, fill: true, backgroundColor: gradient }] }, 
+                    options: { maintainAspectRatio: false, scales: { y: { reverse: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 }, callback: function(value) { return formatPace(value); } } }, x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleColor: '#94a3b8', bodyColor: '#fbbf24', bodyFont: { weight: 'bold', size: 14 }, displayColors: false, callbacks: { label: function(context) { return "Ritmo: " + formatPace(context.raw) + "/km"; } } } } }
+                }); 
             }
+
+            // --- GRÁFICA 2: VOLUMEN SEMANAL (Barras) ---
+            // Agrupamos usando 's' (cronológico) para que las semanas se pinten de izquierda a derecha
+            const weeks = {};
+            s.forEach(r => {
+                const d = new Date(r.date);
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day == 0 ? -6 : 1); 
+                const monday = new Date(d.setDate(diff)).toISOString().split('T')[0].slice(5); // MM-DD
+                if(!weeks[monday]) weeks[monday] = 0;
+                weeks[monday] += parseFloat(r.dist);
+            });
+
+            if(document.getElementById('chartRunningVolume') && Object.keys(weeks).length > 0) {
+                if(runningVolumeChartInstance) runningVolumeChartInstance.destroy();
+                runningVolumeChartInstance = new Chart(document.getElementById('chartRunningVolume').getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: Object.keys(weeks), datasets: [{ label: 'KM', data: Object.values(weeks), backgroundColor: '#fbbf24', borderRadius: 6, barThickness: 20 }] },
+                    options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } }, x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
+                });
+            }
+        }
+        function delRun(i) { if(confirm("¿Borrar carrera?")){ const s=[...appData.running].sort((a,b)=>new Date(b.date)-new Date(a.date)); const realIdx=appData.running.indexOf(s[i]); if(realIdx>-1){appData.running.splice(realIdx,1); saveDataToCloud(); updateRunningUI();} } }
+
+        // --- GENERADOR DE PDF (ZENKAI REPORT) ---
+        async function generatePDF() {
+            if (!window.jspdf) return alert("Error: Librería PDF no cargada. Refresca.");
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Estilos Base
+            const gold = [251, 191, 36];
+            const blue = [59, 130, 246];
+            
+            // CABECERA
+            doc.setFillColor(15, 23, 42); // Fondo oscuro cabecera
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            doc.setFontSize(22);
+            doc.setTextColor(...gold);
+            doc.setFont("helvetica", "bold");
+            doc.text("ZENKAI Z: INFORME DE COMBATE", 105, 20, null, null, "center");
+            
+            doc.setFontSize(10);
+            doc.setTextColor(200, 200, 200);
+            doc.text(`Guerrero: ${appData.nickname || 'Anónimo'}  |  Clan: ${appData.group || 'Sin Clan'}`, 105, 30, null, null, "center");
+            doc.text(`Fecha del Informe: ${new Date().toLocaleDateString()}`, 105, 35, null, null, "center");
+
+            let yPos = 50;
+
+            // 1. BIOMETRÍA (Salud)
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text("1. Diagnóstico Vital (Peso & Salud)", 14, yPos);
+            yPos += 3;
+            
+            const statsData = appData.progress.map(p => [p.date, p.weight + " kg", p.vfc + " ms", p.rhr + " ppm", p.sleep + " h"]);
+            doc.autoTable({
+                startY: yPos,
+                head: [['Fecha', 'Peso', 'VFC', 'PPM Reposo', 'Sueño']],
+                body: statsData,
+                theme: 'striped',
+                headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' }, // Azul
+                styles: { fontSize: 9 }
+            });
+            yPos = doc.lastAutoTable.finalY + 15;
+
+            // 2. RUNNING (Cardio)
+            doc.text("2. Registro Aeróbico (Running)", 14, yPos);
+            yPos += 3;
+            const runData = appData.running.map(r => [r.date, r.dist + " km", r.time + " min", Math.floor(r.pace) + "'" + Math.round((r.pace % 1) * 60) + '"/km']);
+            doc.autoTable({
+                startY: yPos,
+                head: [['Fecha', 'Distancia', 'Tiempo', 'Ritmo Medio']],
+                body: runData,
+                theme: 'striped',
+                headStyles: { fillColor: [249, 115, 22], fontStyle: 'bold' }, // Naranja
+                styles: { fontSize: 9 }
+            });
+            yPos = doc.lastAutoTable.finalY + 15;
+
+            // 3. FUERZA (Récords)
+            doc.text("3. Récords de Poder (PRs)", 14, yPos);
+            yPos += 3;
+            const strengthData = Object.keys(appData.strength).map(k => {
+                const max = Math.max(...appData.strength[k].map(d => parseFloat(d.weight) || 0));
+                return [k, max + " kg"];
+            });
+            doc.autoTable({
+                startY: yPos,
+                head: [['Ejercicio', 'Carga Máxima Histórica']],
+                body: strengthData,
+                theme: 'grid',
+                headStyles: { fillColor: [34, 197, 94], fontStyle: 'bold' }, // Verde
+                styles: { fontSize: 10, fontStyle: 'bold' }
+            });
+
+            // PIE DE PÁGINA
+            const pageCount = doc.internal.getNumberOfPages();
+            for(let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text('Generado por Plan Pepe System - Final Form', 105, 290, null, null, 'center');
+            }
+
+            // Descargar
+            doc.save(`Informe_Zenkai_${new Date().toISOString().split('T')[0]}.pdf`);
         }
         function delRun(i) { if(confirm("¿Borrar?")){ const s=[...appData.running].sort((a,b)=>new Date(b.date)-new Date(a.date)); const realIdx=appData.running.indexOf(s[i]); if(realIdx>-1){appData.running.splice(realIdx,1); saveDataToCloud(); updateRunningUI();} } }
         function handlePhotoUpload(input) { const f = input.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const max = 800; let w = img.width, h = img.height; if(w > max){ h *= max/w; w = max; } c.width = w; c.height = h; ctx.drawImage(img, 0, 0, w, h); galleryData.unshift({ date: new Date().toISOString().split('T')[0], img: c.toDataURL('image/jpeg', 0.8) }); localStorage.setItem('pepeGallery', JSON.stringify(galleryData)); renderGallery(); }; img.src = e.target.result; }; r.readAsDataURL(f); }
@@ -1638,6 +1881,17 @@ function switchTab(id) {
                         </div>`).join('');
                 }
             } catch(e) { container.innerHTML = '<p class="text-red-500">Error de conexión.</p>'; }
+        }
+		
+		
+		// --- SPOTIFY LOGIC ---
+        function toggleSpotify() {
+            document.getElementById('spotify-controls').classList.toggle('hidden');
+        }
+
+        function changeSpotifyPlaylist(id) {
+            // Cambia el 'src' del iframe manteniendo la estructura de embed
+            document.getElementById('spotify-iframe').src = `https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0`;
         }
 		// Activa el botón de clonado en la previsualización
         document.getElementById('btn-copy-preview').onclick = () => { if(spyPendingWeek) copySpyWeek(spyPendingWeek); };
@@ -1906,6 +2160,10 @@ function switchTab(id) {
 			osc.start();
 			osc.stop(audioContext.currentTime + 0.5);
 		}
+		
+        
+
+
     </script>
 </body>
 </html>
