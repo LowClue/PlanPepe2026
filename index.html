@@ -1473,38 +1473,36 @@ function renderPlan() {
         // --- IA PROMPT MAESTRO ---
 		function copyPrompt() {
 			// 1. SEGURIDAD: Comprobar Datos Obligatorios
-			// Meta de Peso y Lesiones ahora están en esta misma pestaña (Perfil), así que es fácil ver si faltan.
 			if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
-				alert("⚠️ ¡FALTAN DATOS!\n\nPor favor, rellena tu META DE PESO y tus LESIONES en la sección 'Objetivos & Limitaciones' de esta pantalla.");
-				// No hace falta switchTab porque ya estamos en Profile/Stats unificado
+				alert("⚠️ ¡FALTAN DATOS!\n\nPor favor, rellena tu META DE PESO y tus LESIONES en la sección 'Objetivos & Limitaciones' (Perfil).");
 				document.getElementById('profile-target').focus();
 				return;
 			}
 
-			const today = new Date(); 
+			const today = new Date();
 			const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-			const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
-			const misSupps = appData.supplements.map(s => s.name).join(", ");
 			
-			// DETECCIÓN ROBUSTA: ¿Es el plan de ejemplo?
-			// Miramos si hay planes, y si el primero es el de inicio (por ID o por Nombre)
-			let isExamplePlan = true;
-			if (appData.plan.length > 0) {
-				const first = appData.plan[0];
-				// Si el plan NO es el w-init y NO se llama "Protocolo Inicial", entonces NO es ejemplo (es evolución)
-				if (first.id !== 'w-init' && !first.label.includes('Protocolo Inicial') && !first.label.includes('Semana 1')) {
-					isExamplePlan = false;
-				}
+			// Obtener datos reales
+			const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
+			const misSupps = appData.supplements.length > 0 ? appData.supplements.map(s => s.name).join(", ") : "Ninguna";
+			
+			// --- LÓGICA CORREGIDA ---
+			// Si NO hay planes (array vacío), es modo GÉNESIS (Semana 1).
+			// Si HAY algún plan (aunque sea la Semana 1), es modo EVOLUCIÓN (Semana 2+).
+			let isGenesisMode = false;
+			
+			if (appData.plan.length === 0) {
+				isGenesisMode = true;
 			}
 
 			let prompt = "";
 
-			if (isExamplePlan) {
-				// --- MODO GÉNESIS ---
+			if (isGenesisMode) {
+				// --- MODO GÉNESIS (Principiante / Reset total) ---
 				prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica.
 		Genera el código JSON para mi SEMANA 1 de entrenamiento.
 
-		DATOS DEL GUERRERO (Ya cargados):
+		DATOS DEL GUERRERO:
 		- Peso Actual: ${ultimoPeso} kg.
 		- Meta de Peso: ${appData.targetWeight} kg.
 		- Lesiones (CRÍTICO): ${appData.injuries}.
@@ -1514,7 +1512,7 @@ function renderPlan() {
 		1. Responde SOLO con el código JSON.
 		2. Estructura de 7 días.
 		3. Usa "track": true para ejercicios de pesas.
-		4. Basa el diseño en los OBJETIVOS que escribo al final de este mensaje.
+		4. Basa el diseño en los OBJETIVOS que escribo abajo.
 
 		ESTRUCTURA JSON REQUERIDA:
 		{
@@ -1525,38 +1523,43 @@ function renderPlan() {
 
 		👇 EL USUARIO DEBE COMPLETAR ESTO AQUÍ ABAJO 👇
 		-------------------------------------------------------
-		OBJETIVO PRINCIPAL: [ESCRIBE AQUÍ: Hipertrofia / Fuerza / Perder Grasa / Resistencia]
-		DÍAS DE ENTRENO DISPONIBLES: [ESCRIBE AQUÍ: Ej. 3 días, 4 días, 5 días...]
-		PREFERENCIAS: [ESCRIBE AQUÍ: Ej. Enfasis en glúteo, Solo mancuernas, Odio correr...]
+		OBJETIVO PRINCIPAL: [ESCRIBE AQUÍ]
+		DÍAS DISPONIBLES: [ESCRIBE AQUÍ]
+		PREFERENCIAS: [ESCRIBE AQUÍ]
 		-------------------------------------------------------`;
 				
-				alert("✅ PROMPT DE INICIO COPIADO.\n\nEl sistema ha detectado que es tu primera vez.\nPega el texto en la IA y RELLENA tus objetivos al final.");
+				alert("📋 MODO GÉNESIS COPIADO (No se detectaron planes previos).");
 
 			} else {
-				// --- MODO EVOLUCIÓN ---
+				// --- MODO EVOLUCIÓN (Siguiente Nivel) ---
+				// Cogemos el plan que tienes seleccionado actualmente en pantalla
 				const planActual = JSON.stringify(appData.plan[currentWeekIndex] || {}, null, 2);
-				
-				prompt = `Actúa como entrenador Saiyan. Tengo este plan actual (JSON abajo) que acabo de terminar.
-		DATOS: Peso: ${ultimoPeso}kg. Meta: ${appData.targetWeight}kg. Lesiones: ${appData.injuries}.
-		TAREA: Genera el JSON de la SIGUIENTE semana de entrenamiento empezando el ${dStr}.
+				const nombrePlan = appData.plan[currentWeekIndex].label;
 
-		REGLAS DE PROGRESIÓN:
-		1. Aplica sobrecarga progresiva (sube peso, reps o series) sobre lo que ya hago.
-		2. Mantén la estructura si funciona, cambia ejercicios si hay estancamiento.
-		3. Respeta mis lesiones.
-		4. **PRIORIDAD:** Aplica cualquier cambio solicitado en la sección "MODIFICACIONES TÁCTICAS" al final de este mensaje.
+				prompt = `Actúa como entrenador Saiyan. He completado el ciclo: "${nombrePlan}".
+		DATOS ACTUALIZADOS:
+		- Peso: ${ultimoPeso}kg.
+		- Meta: ${appData.targetWeight}kg.
+		- Lesiones: ${appData.injuries}.
 
-		PLAN BASE (SEMANA ANTERIOR):
+		TAREA: Genera el JSON de la SIGUIENTE semana (Evolución) empezando el ${dStr}.
+
+		REGLAS DE PROGRESIÓN (SOBRECARGA PROGRESIVA):
+		1. Aumenta la dificultad respecto al JSON que te pego abajo (sube peso, reps, o cambia a ejercicios más complejos).
+		2. Mantén la estructura de días si funciona, pero optimiza el volumen.
+		3. Respeta estrictamente mis lesiones.
+
+		PLAN ANTERIOR (BASE):
 		${planActual}
 
-		ESTRUCTURA RESPUESTA: Solo el JSON válido.
+		ESTRUCTURA RESPUESTA: Solo el JSON válido. Usa IDs nuevos.
 
-		👇 MODIFICACIONES TÁCTICAS (Rellenar si es necesario) 👇
+		👇 MODIFICACIONES TÁCTICAS (Opcional) 👇
 		-------------------------------------------------------
-		CAMBIOS DESEADOS: [ESCRIBE AQUÍ: Ej. "Quita las zancadas que me duelen", "Solo tengo 3 días esta semana", "Quiero priorizar hombros"... Si no hay cambios, déjalo en blanco.]
+		CAMBIOS DESEADOS: [Escribe aquí si quieres cambiar algo específico, ej: "Quiero entrenar 5 días en vez de 4" o "Me duele la rodilla con las zancadas". Si no, déjalo en blanco.]
 		-------------------------------------------------------`;
 				
-				alert("✅ PROMPT DE EVOLUCIÓN COPIADO.\n\nEl sistema ha leído tu plan actual para mejorarlo.\nPuedes pedir cambios específicos al final del texto copiado.");
+				alert("🔥 MODO EVOLUCIÓN COPIADO.\n\nEl sistema usará tu semana actual como base para crear una más dura.");
 			}
 
 			navigator.clipboard.writeText(prompt);
@@ -2375,23 +2378,144 @@ function updateRunningUI() {
     renderRunCharts(s); // He extraído las gráficas a una función auxiliar para limpiar código
 }
 
-// Función auxiliar para las gráficas (pégala también)
-function renderRunCharts(s) {
-    const paceData = s.filter(r => r.dist > 0 && r.pace > 0);
-    if(document.getElementById('chartRunningPace')) { 
-        const ctxPace = document.getElementById('chartRunningPace').getContext('2d');
-        if(runningPaceChartInstance) runningPaceChartInstance.destroy();
-        runningPaceChartInstance = new Chart(ctxPace, { type: 'line', data: { labels: paceData.map(d => d.date.slice(5)), datasets: [{ label: 'Ritmo', data: paceData.map(d => d.pace), borderColor: '#f97316', borderWidth: 2, tension: 0.3, pointBackgroundColor: '#1e293b', pointBorderColor: '#f97316', fill: true, backgroundColor: 'rgba(249, 115, 22, 0.1)' }] }, options: { maintainAspectRatio: false, scales: { y: { reverse: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: {size: 9} } }, x: { display: false } }, plugins: { legend: { display: false } } } });
-    }
-    const weeksMap = {}; 
-    s.forEach(r => { if(r.dist > 0) { const d = new Date(r.date); const day = d.getDay(); const diff = d.getDate() - day + (day == 0 ? -6 : 1); const monday = new Date(d.setDate(diff)).toISOString().split('T')[0]; if(!weeksMap[monday]) weeksMap[monday] = { label: monday.slice(5), total: 0 }; weeksMap[monday].total += parseFloat(r.dist); } });
-    const sortedWeeks = Object.keys(weeksMap).sort();
-    if(document.getElementById('chartRunningVolume')) {
-        const ctxVol = document.getElementById('chartRunningVolume').getContext('2d');
-        if(runningVolumeChartInstance) runningVolumeChartInstance.destroy();
-        runningVolumeChartInstance = new Chart(ctxVol, { type: 'bar', data: { labels: sortedWeeks.map(k => weeksMap[k].label), datasets: [{ label: 'KM', data: sortedWeeks.map(k => weeksMap[k].total), backgroundColor: '#fbbf24', borderRadius: 4, barThickness: 15 }] }, options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: {size: 9} } }, x: { grid: { display: false }, ticks: { color: '#94a3b8', font: {size: 8} } } }, plugins: { legend: { display: false } } } });
-    }
-}
+		// --- GRÁFICA DE RUNNING: VERSIÓN ESTABILIZADA ---
+		function renderRunCharts(s) {
+			// 1. Filtrar y ordenar datos
+			const paceData = s
+				.filter(r => r.dist > 0 && r.pace > 0)
+				.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+			// Función auxiliar: Convierte decimal a formato corredor (9'12")
+			const formatPace = (decimal) => {
+				const mins = Math.floor(decimal);
+				const secs = Math.round((decimal % 1) * 60); 
+				return `${mins}'${secs.toString().padStart(2, '0')}"`;
+			};
+
+			// --- GRÁFICA 1: RITMO ---
+			if(document.getElementById('chartRunningPace')) { 
+				const ctxPace = document.getElementById('chartRunningPace').getContext('2d');
+				
+				if(runningPaceChartInstance) runningPaceChartInstance.destroy();
+				
+				runningPaceChartInstance = new Chart(ctxPace, { 
+					type: 'line', 
+					data: { 
+						labels: paceData.map(d => d.date.slice(5)), 
+						datasets: [{ 
+							label: 'Ritmo', 
+							data: paceData.map(d => d.pace), 
+							borderColor: '#f97316', 
+							borderWidth: 3, 
+							tension: 0.3, 
+							pointBackgroundColor: '#1e293b', 
+							pointBorderColor: '#f97316',
+							pointRadius: 5,
+							fill: true, 
+							backgroundColor: 'rgba(249, 115, 22, 0.1)' 
+						}] 
+					}, 
+					options: { 
+						maintainAspectRatio: false, 
+						interaction: {
+							intersect: false,
+							mode: 'index',
+						},
+						scales: { 
+							y: { 
+								reverse: true, // Arriba es más rápido
+								beginAtZero: false,
+								grace: '20%', // Mucho margen arriba y abajo para que no toque los bordes
+								grid: { color: 'rgba(255,255,255,0.1)' }, 
+								ticks: { 
+									color: '#fbbf24', 
+									font: {size: 10, weight: 'bold'},
+									maxTicksLimit: 6, // MÁXIMO 6 LÍNEAS (Evita saturación)
+									autoSkip: true,   // Salta etiquetas si no caben
+									callback: function(value, index, values) { 
+										const label = formatPace(value);
+										
+										// Lógica Anti-Duplicados Visuales
+										if (index > 0) {
+											const prevValue = values[index - 1].value;
+											const prevLabel = formatPace(prevValue);
+											// Si este tick visualmente es igual al anterior, lo ocultamos
+											if (label === prevLabel) return null;
+										}
+										return label + "/km";
+									}
+								} 
+							}, 
+							x: { 
+								display: true, 
+								grid: { display: false },
+								ticks: { color: '#94a3b8', font: {size: 9} } 
+							} 
+						}, 
+						plugins: { 
+							legend: { display: false },
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										return `Ritmo: ${formatPace(context.raw)}/km`;
+									}
+								}
+							}
+						} 
+					} 
+				});
+			}
+
+			// --- GRÁFICA 2: VOLUMEN (Sin cambios) ---
+			const weeksMap = {}; 
+			s.forEach(r => { 
+				if(r.dist > 0) { 
+					const d = new Date(r.date); 
+					const day = d.getDay(); 
+					const diff = d.getDate() - day + (day == 0 ? -6 : 1); 
+					const monday = new Date(d.setDate(diff)).toISOString().split('T')[0]; 
+					
+					if(!weeksMap[monday]) weeksMap[monday] = { label: monday.slice(5), total: 0 }; 
+					weeksMap[monday].total += parseFloat(r.dist); 
+				} 
+			});
+			
+			const sortedWeeks = Object.keys(weeksMap).sort();
+			
+			if(document.getElementById('chartRunningVolume')) {
+				const ctxVol = document.getElementById('chartRunningVolume').getContext('2d');
+				if(runningVolumeChartInstance) runningVolumeChartInstance.destroy();
+				
+				runningVolumeChartInstance = new Chart(ctxVol, { 
+					type: 'bar', 
+					data: { 
+						labels: sortedWeeks.map(k => weeksMap[k].label), 
+						datasets: [{ 
+							label: 'KM', 
+							data: sortedWeeks.map(k => weeksMap[k].total), 
+							backgroundColor: '#fbbf24', 
+							borderRadius: 4, 
+							barThickness: 20 
+						}] 
+					}, 
+					options: { 
+						maintainAspectRatio: false, 
+						scales: { 
+							y: { 
+								beginAtZero: true, 
+								grid: { color: 'rgba(255,255,255,0.05)' }, 
+								ticks: { color: '#94a3b8', font: {size: 9} } 
+							}, 
+							x: { 
+								grid: { display: false }, 
+								ticks: { color: '#94a3b8', font: {size: 9} } 
+							} 
+						}, 
+						plugins: { legend: { display: false } } 
+					} 
+				});
+			}
+		}
 
 // --- FUNCIÓN DE BORRADO DEFINITIVA ---
 // La asignamos a window para asegurarnos de que el HTML la encuentre siempre
