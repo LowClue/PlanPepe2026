@@ -2917,38 +2917,48 @@ window.delRun = function(idToDelete) {
         }
         
         function playAlarm() { /* (Mismo código de sonido beep de antes) */ if (audioContext.state === 'suspended') audioContext.resume(); const osc = audioContext.createOscillator(); const gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'square'; osc.frequency.setValueAtTime(880, audioContext.currentTime); osc.frequency.setValueAtTime(440, audioContext.currentTime + 0.1); gain.gain.setValueAtTime(0.1, audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5); osc.start(); osc.stop(audioContext.currentTime + 0.5); }
-// --- FUNCIÓN DEL CHECK CON GUARDADO EN NUBE ---
-        function toggleSetCheck(dayIdx, exIdx, setIdx, btn) {
-            // Accedemos al ejercicio concreto
-            const exercise = appData.plan[currentWeekIndex].days[dayIdx].exercises[exIdx];
-            
-            // Inicializamos el array de checks si no existe
-            if (!exercise.checks) exercise.checks = [];
-            
-            // Cambiamos el estado (True <-> False)
-            const newState = !exercise.checks[setIdx];
-            exercise.checks[setIdx] = newState;
-
-            // Actualizamos visualmente al instante (para que se sienta rápido)
-            const wrapper = btn.parentElement;
-            const input = wrapper.querySelector('input');
-            
-            if (newState) {
-                // MARCADO
-                if(input) input.classList.add('completed-set');
-                btn.classList.remove('bg-slate-700/50', 'text-slate-400', 'border-slate-600');
-                btn.classList.add('bg-green-600', 'text-white', 'border-green-500');
-                triggerAutoTimer(); // Lanzar crono
-            } else {
-                // DESMARCADO
-                if(input) input.classList.remove('completed-set');
-                btn.classList.remove('bg-green-600', 'text-white', 'border-green-500');
-                btn.classList.add('bg-slate-700/50', 'text-slate-400', 'border-slate-600');
-            }
-
-            // Guardar en Firebase y recalcular Ranking
-            saveDataToCloud();
-        }
+		// --- FUNCIÓN DEL CHECK (CORREGIDA PARA MÓVIL) ---
+		function toggleSetCheck(dayIdx, exIdx, setIdx, btn) {
+		    // 1. TRUCO ANTI-STICKY: Quitamos el foco al botón inmediatamente
+		    // Esto evita que se quede "oscuro" o seleccionado en el móvil
+		    btn.blur(); 
+		
+		    // Accedemos al ejercicio concreto
+		    const exercise = appData.plan[currentWeekIndex].days[dayIdx].exercises[exIdx];
+		    
+		    // Inicializamos el array de checks si no existe
+		    if (!exercise.checks) exercise.checks = [];
+		    
+		    // Cambiamos el estado (True <-> False)
+		    const newState = !exercise.checks[setIdx];
+		    exercise.checks[setIdx] = newState;
+		
+		    // Actualizamos visualmente al instante
+		    const wrapper = btn.parentElement;
+		    const input = wrapper.querySelector('input');
+		    
+		    // Definimos las clases exactas para evitar conflictos
+		    const baseClasses = "w-12 h-6 rounded text-[10px] transition-all border flex items-center justify-center";
+		    
+		    if (newState) {
+		        // --- ESTADO: COMPLETADO (VERDE) ---
+		        if(input) input.classList.add('completed-set');
+		        
+		        // Borramos clases viejas y ponemos las nuevas de golpe
+		        btn.className = `${baseClasses} bg-green-600 text-white border-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] scale-110`;
+		        
+		        triggerAutoTimer(); // Lanzar crono
+		    } else {
+		        // --- ESTADO: PENDIENTE (GRIS) ---
+		        if(input) input.classList.remove('completed-set');
+		        
+		        // Volvemos al estado gris
+		        btn.className = `${baseClasses} bg-slate-700/50 text-slate-400 border-slate-600 hover:bg-slate-600`;
+		    }
+		
+		    // Guardar en Firebase
+		    saveDataToCloud();
+		}
 		// --- RENDERIZADOR DE SUPLEMENTOS BLINDADO ---
 		function renderSupplements() {
 			const container = document.getElementById('supplements-list'); 
