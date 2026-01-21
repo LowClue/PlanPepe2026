@@ -170,110 +170,68 @@
     <main class="max-w-2xl mx-auto p-4 space-y-6 pb-24">
         
 <!-- SECTOR: HOME (DASHBOARD) -->
-        <div id="tab-home" class="tab-content fade-in space-y-6">
-            
-            <!-- CABECERA -->
-				<div class="text-center p-8 glass rounded-[2rem] border-b-4 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.2)] relative overflow-hidden">
-					<div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
-					
-					<h2 class="text-6xl final-form-text comic-font uppercase italic tracking-tighter relative z-10">PLAN Z</h2>
-					<div class="inline-block bg-yellow-500/20 border border-yellow-500/50 px-4 py-1 rounded-full mt-2 backdrop-blur-sm">
-						<p class="text-yellow-100 text-xs font-bold scouter-font tracking-[0.3em] uppercase shadow-black drop-shadow-md">FINAL FORM DETECTED</p>
-					</div>
-					
-					<div class="mt-6 text-left max-w-sm mx-auto lore-text text-xs">
-						<p>"Has agotado todas las letras anteriores. Ya no hay vuelta atrás. Aquí es donde rompes tus límites y alcanzas la perfección."</p>
+	<div id="tab-home" class="tab-content fade-in space-y-6">
+
+		<div class="text-center p-8 glass rounded-[2rem] border-b-4 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.2)] relative overflow-hidden">
+			<div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
+			<h2 class="text-6xl final-form-text comic-font uppercase italic tracking-tighter relative z-10">PLAN Z</h2>
+			<div class="inline-block bg-yellow-500/20 border border-yellow-500/50 px-4 py-1 rounded-full mt-2 backdrop-blur-sm">
+				<p class="text-yellow-100 text-xs font-bold scouter-font tracking-[0.3em] uppercase shadow-black drop-shadow-md">SISTEMA DE ENTRENAMIENTO IA</p>
+			</div>
+		</div>
+
+		<div class="glass border border-blue-500/30 rounded-3xl overflow-hidden shadow-2xl">
+			<div class="bg-blue-900/40 p-4 border-b border-blue-500/20 flex justify-between items-center">
+				<h3 class="text-white font-bold uppercase italic tracking-widest text-sm flex items-center gap-2">
+					<i data-lucide="book-open" class="text-blue-400 w-5 h-5"></i> Protocolo de Inicio
+				</h3>
+				<span class="text-[9px] text-blue-300 bg-blue-900/50 px-2 py-1 rounded border border-blue-500/30">LEER OBLIGATORIO</span>
+			</div>
+
+			<div class="p-6 space-y-8">
+				<div class="relative pl-8 border-l-2 border-slate-700">
+					<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-red-500"></div>
+					<h4 class="text-red-400 font-bold uppercase text-xs tracking-widest mb-1">Paso 1: Define tu ADN</h4>
+					<p class="text-xs text-slate-300 leading-relaxed mb-3">La IA necesita tus límites. Ve a <strong>PERFIL</strong> y define Meta y Lesiones.</p>
+					<button onclick="switchTab('profile')" class="bg-red-900/30 hover:bg-red-900/50 text-red-200 border border-red-800/50 px-4 py-2 rounded-xl text-[10px] uppercase font-bold transition-all">Ir a Perfil</button>
+				</div>
+				<div class="relative pl-8 border-l-2 border-slate-700">
+					<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-purple-500"></div>
+					<h4 class="text-purple-400 font-bold uppercase text-xs tracking-widest mb-1">Paso 2: Generar Semana 1</h4>
+					<div class="bg-black/30 p-3 rounded-xl border border-white/5 space-y-2">
+						<p class="text-[10px] text-slate-400">1. Toca <i data-lucide="settings" class="w-3 h-3 inline"></i> y pulsa <strong class="text-purple-400">COPIAR COMANDO</strong>.</p>
+						<div class="text-[10px] text-yellow-200/80 bg-yellow-900/20 p-2 rounded border-l-2 border-yellow-500 italic"><strong>⚠️ IMPORTANTE:</strong> Rellena tus objetivos al final del texto que pegues en la IA.</div>
+						<p class="text-[10px] text-slate-400">2. Pega el JSON de la IA en Ajustes > <strong class="text-green-400">IMPORTAR</strong>.</p>
 					</div>
 				</div>
+				<div class="relative pl-8 border-l-2 border-yellow-500">
+					<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-yellow-500 animate-pulse"></div>
+					<h4 class="text-yellow-400 font-bold uppercase text-xs tracking-widest mb-1">Paso 3: Evolución (Domingos)</h4>
+					<p class="text-[10px] text-slate-400 italic">Repite el proceso de Copiar Comando cada domingo. El sistema leerá tus progresos y le pedirá a la IA una semana más dura.</p>
+				</div>
+			</div>
+		</div>
 
-            <!-- GUÍA OPERATIVA DETALLADA -->
-            <div class="grid gap-4">
-                
-                <!-- FASE 1: LA ESTRATEGIA (Origen del Plan) -->
-                <div class="glass p-6 rounded-2xl border-l-4 border-blue-500 flex gap-4 items-start">
-                    <div class="bg-blue-900/50 p-3 rounded-xl flex-shrink-0 mt-1">
-                        <i data-lucide="map" class="text-blue-400 w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 1: Define tu Origen</h3>
-                        <div class="text-xs text-slate-300 leading-relaxed space-y-3">
-                            <p>Tienes cargado un <strong>Plan Maestro 360º</strong> de ejemplo (con vídeos). <strong>No es obligatorio usarlo.</strong> Tienes 3 caminos para empezar:</p>
-                            <ul class="list-disc list-inside space-y-1 ml-1 text-slate-400">
-                                <li><strong class="text-white">Ruta A (Ejemplo):</strong> Revisa el plan actual. Si te gusta la distribución, úsalo tal cual.</li>
-                                <li><strong class="text-white">Ruta B (Generar):</strong> ¿Quieres algo diferente? (Ej: 3 días, solo mancuernas...). Ve a <em class="text-purple-400">Ajustes > Copiar Comando</em> y pídele a la IA un plan nuevo desde cero con tus requisitos.</li>
-                                <li><strong class="text-white">Ruta C (Clan):</strong> Ve a la copa <em class="text-yellow-400">(Ranking)</em>. Si estás en un Clan, puedes <strong>espiar</strong> a tus compañeros y <strong>clonar</strong> sus rutinas para competir en igualdad.</li>
-                            </ul>
-                            <div class="bg-blue-950/50 p-2 rounded border border-blue-800/50 mt-2">
-                                <p class="text-[10px] text-blue-200 italic">
-                                    🚀 <strong>Vital:</strong> Antes de nada, ve a <strong class="text-white">PERFIL</strong> y pon tu Meta de Peso y Lesiones. La IA necesita esto para no romperte.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+		<div class="grid grid-cols-1 gap-4 mt-4">
+			<button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 rounded-3xl comic-font text-3xl shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all transform active:scale-95 uppercase italic border-4 border-yellow-600/20">
+				¡INICIAR ENTRENAMIENTO!
+			</button>
+			
+			<div id="ki-status-card" class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 shadow-xl hidden flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<i data-lucide="zap" class="w-5 h-5 text-yellow-400 animate-pulse"></i>
+					<div>
+						<h3 class="text-white text-[10px] font-bold uppercase tracking-widest">Diagnóstico Vital</h3>
+						<p id="ki-status-text" class="text-xs text-slate-400 italic">Calculando...</p>
+					</div>
+				</div>
+				<button onclick="switchTab('profile')" class="text-[10px] bg-slate-800 text-white px-3 py-1 rounded border border-slate-600 uppercase">Ver Datos</button>
+			</div>
+		</div>
 
-                <!-- FASE 2: EL COMBATE (Ejecución) -->
-                <div class="glass p-6 rounded-2xl border-l-4 border-yellow-500 flex gap-4 items-start">
-                    <div class="bg-yellow-900/30 p-3 rounded-xl flex-shrink-0 mt-1">
-                        <i data-lucide="dumbbell" class="text-yellow-500 w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 2: Ejecución Real</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Una vez tengas tu plan (sea el de ejemplo o uno nuevo), ve a la pestaña <strong>PLAN</strong>.
-                            <br><br>
-                            Tu misión es registrar los <strong>pesos reales</strong>.
-                            <ul class="list-disc list-inside mt-2 space-y-1 text-slate-400">
-                                <li><strong>¿Máquina ocupada?</strong> Activa el <strong class="text-white">"Modo Editor"</strong> (interruptor arriba) y cambia el ejercicio sobre la marcha.</li>
-                                <li><strong>¿Error de dedo?</strong> Si metes mal un peso, ve a la pestaña <strong>FUERZA</strong>, busca el ejercicio y borra el registro en la tabla historial.</li>
-                            </ul>
-                        </p>
-                    </div>
-                </div>
+	</div>
 
-                <!-- FASE 3: EVOLUCIÓN (Ingeniería Inversa) -->
-                <div class="glass p-6 rounded-2xl border-l-4 border-purple-500 flex gap-4 items-start relative overflow-hidden">
-                    <div class="absolute right-0 top-0 p-16 bg-purple-600/10 blur-3xl rounded-full"></div>
-                    <div class="bg-purple-900/50 p-3 rounded-xl flex-shrink-0 relative z-10 mt-1">
-                        <i data-lucide="brain-circuit" class="text-purple-400 w-6 h-6"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <h3 class="text-white font-bold text-sm uppercase italic mb-2 tracking-wide">Fase 3: Ingeniería Inversa</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Aquí está la magia. Al terminar tu semana, no repitas lo mismo. <strong>Evoluciona.</strong>
-                        </p>
-                        <ol class="list-decimal list-inside mt-3 space-y-2 text-xs text-slate-400 bg-black/20 p-3 rounded-xl border border-white/5">
-                            <li>Ve a <strong class="text-white">Ajustes</strong> y pulsa <strong class="text-cyan-300">"Exportar JSON"</strong>. Esto copia tu semana exacta (con tus pesos y notas).</li>
-                            <li>Pégalo en Gemini. La IA leerá tu rendimiento real.</li>
-                            <li>Pídele: <em>"Genera la Semana 2 aplicando sobrecarga progresiva a este JSON"</em>.</li>
-                            <li>Importa el nuevo código con <strong class="text-green-400">"Importar"</strong>.</li>
-                        </ol>
-                        <p class="text-[10px] text-purple-300 italic mt-2">
-                            *La IA usará tus datos de peso y lesiones del Perfil para ajustar la intensidad automáticamente.
-                        </p>
-                    </div>
-                </div>
 
-            </div>
-
-    <!-- BOTÓN DE ACCIÓN -->
-    <div class="grid grid-cols-1 gap-4 mt-4">
-        <button onclick="switchTab('plan')" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-6 rounded-3xl comic-font text-3xl shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all transform active:scale-95 uppercase italic">
-            ¡IR AL GIMNASIO!
-        </button>
-        
-        <!-- VISUALIZADOR DE KI (MINI) -->
-        <div id="ki-status-card" class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 shadow-xl hidden flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i data-lucide="zap" class="w-5 h-5 text-yellow-400 animate-pulse"></i>
-                <div>
-                    <h3 class="text-white text-[10px] font-bold uppercase tracking-widest">Diagnóstico Vital</h3>
-                    <p id="ki-status-text" class="text-xs text-slate-400 italic">Calculando...</p>
-                </div>
-            </div>
-            <button onclick="switchTab('stats')" class="text-[10px] bg-slate-800 text-white px-3 py-1 rounded border border-slate-600 uppercase">Ver Datos</button>
-        </div>
-    </div>
 </div>
 
 <!-- SECTOR: RANKING (GENKIDAMA + HISTORIAL) -->
@@ -519,37 +477,27 @@
 				<div class="chart-container h-64"><canvas id="chartStrength"></canvas></div>
 			</div>
 
-			<!-- NUEVA TABLA DE HISTORIAL -->
-			<div class="glass rounded-3xl overflow-hidden mt-6 border border-slate-800">
-				<div class="p-4 bg-slate-900/50 border-b border-slate-800 flex justify-between items-center">
-					<h4 class="text-sm font-bold text-slate-300 uppercase italic">Historial de Registros</h4>
-					<span class="text-[10px] text-slate-500 italic">Borra errores aquí</span>
-				</div>
-				<div class="max-h-60 overflow-y-auto">
-					<table class="w-full text-sm text-left">
-						<thead class="text-[10px] text-slate-500 uppercase bg-slate-900/50 sticky top-0 backdrop-blur-sm">
-							<tr>
-								<th class="p-3">Fecha</th>
-								<th class="p-3">Peso (KG)</th>
-								<th class="p-3 text-right">Acción</th>
-							</tr>
-						</thead>
-						<tbody id="strengthHistoryBody"></tbody>
-					</table>
-				</div>
-			</div>
 
 			<h4 class="text-lg font-bold text-white scouter-font uppercase italic mt-8 border-b border-slate-800 pb-2">Récords Personales (PR)</h4>
 			<div id="pr-list" class="space-y-3"></div>
         </div>
 
-        <div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="flex justify-between items-center">
-                <h3 class="text-3xl font-bold text-white scouter-font italic">Ki Suministros</h3>
-                <button onclick="openSuppModal()" class="bg-teal-700 text-white px-5 py-2 rounded-xl font-bold uppercase text-xs">+ Añadir</button>
-            </div>
-            <div id="supplements-list" class="grid gap-4"></div>
-        </div>
+		<div id="tab-supplements" class="tab-content hidden-tab fade-in space-y-6">
+			
+			<div class="flex justify-between items-end border-b border-teal-500/30 pb-4">
+				<div>
+					<h3 class="text-3xl font-bold text-white scouter-font italic uppercase">Ki Suministros</h3>
+					<p class="text-[10px] text-teal-400 font-bold uppercase tracking-widest">Arsenal Químico</p>
+				</div>
+				<button onclick="openSuppModal()" class="bg-teal-700 hover:bg-teal-600 text-white px-5 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg border border-teal-500/50 transition-all active:scale-95">
+					+ Añadir Item
+				</button>
+			</div>
+
+			<div id="supplements-list" class="grid gap-4">
+				</div>
+
+		</div>
 
         <div id="tab-gallery" class="tab-content hidden-tab fade-in space-y-8 text-center">
             <div class="glass p-10 rounded-3xl border border-purple-500/30">
@@ -560,96 +508,135 @@
             <div id="gallery-grid" class="grid grid-cols-2 gap-4"></div>
         </div>
 
-        <div id="tab-stats" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] border border-green-500/30 relative overflow-hidden shadow-2xl">
-                 <div class="absolute -right-16 -top-16 text-green-500/5"><i data-lucide="activity" class="w-80 h-80"></i></div>
-                <h3 class="text-3xl font-bold text-white mb-8 relative z-10 scouter-font uppercase italic flex items-center gap-5 border-b border-green-900/30 pb-4">
-                    <i data-lucide="activity" class="text-green-400 w-8 h-8"></i> DIAGNÓSTICO VITAL
-                </h3>
-                <form id="entryForm" class="space-y-6 relative z-10">
-                    <input type="date" id="inputDate" class="w-full bg-slate-900/95 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 transition-all font-mono text-lg" required>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-blue-400 ml-2 font-bold uppercase tracking-widest">Peso Actual (KG)</label>
-                            <input type="number" id="inputWeight" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-blue-500 scouter-font text-4xl shadow-inner" required>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-green-400 ml-2 font-bold uppercase tracking-widest">VFC (Latencia)</label>
-                            <input type="number" id="inputVfc" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-green-500 scouter-font text-4xl shadow-inner" required>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-red-400 ml-2 font-bold uppercase tracking-widest">PPM Reposo</label>
-                            <input type="number" id="inputRhr" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-red-500 scouter-font text-4xl shadow-inner">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] text-purple-400 ml-2 font-bold uppercase tracking-widest">Sueño (Horas)</label>
-                            <input type="number" id="inputSleep" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white outline-none focus:border-purple-500 scouter-font text-4xl shadow-inner">
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-6 rounded-3xl border-b-4 border-green-900 uppercase tracking-widest text-xl scouter-font transition-all transform active:scale-95">Sincronizar Diagnóstico</button>
-                </form>
-            </div>
-
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glass p-4 rounded-2xl border border-blue-900/20 text-center">
-                    <p class="text-[9px] text-blue-300 font-bold uppercase mb-2">Peso</p>
-                    <div class="chart-container h-32"><canvas id="chartWeight"></canvas></div>
-                </div>
-                <div class="glass p-4 rounded-2xl border border-green-900/20 text-center">
-                    <p class="text-[9px] text-green-300 font-bold uppercase mb-2">VFC</p>
-                    <div class="chart-container h-32"><canvas id="chartVfc"></canvas></div>
-                </div>
-                <div class="glass p-4 rounded-2xl border border-red-900/20 text-center">
-                    <p class="text-[9px] text-red-300 font-bold uppercase mb-2">PPM</p>
-                    <div class="chart-container h-32"><canvas id="chartRhr"></canvas></div>
-                </div>
-                <div class="glass p-4 rounded-2xl border border-purple-900/20 text-center">
-                    <p class="text-[9px] text-purple-300 font-bold uppercase mb-2">Sueño</p>
-                    <div class="chart-container h-32"><canvas id="chartSleep"></canvas></div>
-                </div>
-            </div>
-
-            <div class="glass p-6 rounded-[2.5rem] overflow-x-auto shadow-2xl border-t-4 border-green-500/20">
-                <table class="w-full text-xs text-left text-slate-300 border-separate border-spacing-y-2">
-                    <thead class="text-[10px] text-blue-400 uppercase tracking-widest bg-slate-900/50 font-black italic">
-                        <tr>
-                            <th class="px-4 py-4 rounded-l-xl">Fecha</th>
-                            <th class="px-2 py-4 text-center">KG</th>
-                            <th class="px-2 py-4 text-center">VFC</th>
-                            <th class="px-2 py-4 text-center text-red-400">PPM</th>
-                            <th class="px-4 py-4 text-right rounded-r-xl">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody" class="scouter-font text-lg italic"></tbody>
-                </table>
-            </div>
-        </div>
-
-<!-- SECTOR: PERFIL (PROFILE) -->
         <div id="tab-profile" class="tab-content hidden-tab fade-in space-y-8">
-            <div class="glass p-8 rounded-[2.5rem] border border-yellow-500/30 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 text-yellow-500/5 rotate-12"><i data-lucide="shield-check" class="w-48 h-48"></i></div>
-                <h3 class="text-3xl font-bold text-white mb-6 scouter-font uppercase italic border-b border-yellow-900/30 pb-3">Expediente de Guerrero</h3>
-                <div class="space-y-6 relative z-10">
-                    <div class="space-y-2">
-                        <label class="text-[10px] text-yellow-400 font-bold uppercase ml-1">Meta de Peso Maestro (KG)</label>
-                        <input type="number" id="profile-target" step="0.1" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-3xl scouter-font outline-none focus:border-yellow-500 shadow-inner" placeholder="Ej: 85.0">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] text-red-400 font-bold uppercase ml-1 italic">Historial de Lesiones / Limitaciones</label>
-                        <textarea id="profile-injuries" rows="3" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-white text-sm outline-none focus:border-red-500 italic shadow-inner" placeholder="Ej: Lesión lumbar L5-S1..."></textarea>
-                    </div>
-                    
-                    <!-- NUEVO BOTÓN PDF -->
-                    <button onclick="generatePDF()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all mt-4">
-                        <i data-lucide="file-down" class="text-yellow-400"></i>
-                        <span class="uppercase text-xs tracking-widest">Descargar Informe Oficial (PDF)</span>
-                    </button>
-                </div>
+    
+    <div class="glass p-6 rounded-[2rem] border border-blue-500/30 flex items-center gap-4 shadow-xl">
+        <div class="bg-blue-900/50 p-4 rounded-full border border-blue-400/30">
+            <i data-lucide="user" class="w-8 h-8 text-blue-200"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-bold text-white scouter-font uppercase italic">Expediente Z</h2>
+            <p class="text-xs text-slate-400">Configuración Biológica y Táctica</p>
+        </div>
+    </div>
+
+    <div class="glass p-6 rounded-3xl border-l-4 border-yellow-500 relative">
+        <h3 class="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <i data-lucide="crosshair" class="w-4 h-4"></i> Objetivos & Limitaciones
+        </h3>
+        <div class="space-y-4">
+            <div class="space-y-1">
+                <label class="text-[10px] text-slate-400 font-bold uppercase ml-1">Meta de Peso (KG) <span class="text-red-400">*</span></label>
+                <input type="number" id="profile-target" step="0.1" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white text-xl font-bold outline-none focus:border-yellow-500 transition-colors" placeholder="Ej: 80.0">
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] text-slate-400 font-bold uppercase ml-1">Lesiones / Notas Médicas <span class="text-red-400">*</span></label>
+                <textarea id="profile-injuries" rows="2" onchange="updateProfileData()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white text-sm outline-none focus:border-red-500 transition-colors placeholder-slate-600" placeholder="Ej: Dolor lumbar, rodilla derecha delicada..."></textarea>
             </div>
         </div>
+    </div>
+
+    <div class="glass p-6 rounded-3xl border-l-4 border-green-500 relative shadow-2xl">
+        <div class="absolute -right-6 -top-6 text-green-500/5 rotate-12 pointer-events-none"><i data-lucide="activity" class="w-40 h-40"></i></div>
+        
+        <h3 class="text-sm font-bold text-green-400 uppercase tracking-widest mb-4 flex items-center gap-2 relative z-10">
+            <i data-lucide="clipboard-pulse" class="w-4 h-4"></i> Registro Diario de Batalla
+        </h3>
+        
+        <form id="entryForm" class="space-y-4 relative z-10">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-[9px] text-slate-500 font-bold uppercase">Fecha</label>
+                    <input type="date" id="inputDate" class="w-full bg-slate-900/80 border border-slate-600 rounded-xl p-3 text-white text-xs outline-none focus:border-green-500" required>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[9px] text-blue-400 font-bold uppercase">Peso Hoy (KG) <span class="text-red-500">*</span></label>
+                    <input type="number" id="inputWeight" step="0.1" class="w-full bg-slate-900/80 border border-blue-500/50 rounded-xl p-3 text-white text-lg font-bold outline-none focus:border-blue-400" placeholder="00.0" required>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/5">
+                <p class="text-[9px] text-slate-500 uppercase font-bold mb-2 italic">Biometría Avanzada (Opcional)</p>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="space-y-1">
+                        <label class="text-[8px] text-purple-400 font-bold uppercase">Sueño (h)</label>
+                        <input type="number" id="inputSleep" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm text-center outline-none focus:border-purple-500">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[8px] text-green-400 font-bold uppercase">VFC (ms)</label>
+                        <input type="number" id="inputVfc" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm text-center outline-none focus:border-green-500">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[8px] text-red-400 font-bold uppercase">PPM</label>
+                        <input type="number" id="inputRhr" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white text-sm text-center outline-none focus:border-red-500">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-4 rounded-xl uppercase tracking-widest text-xs shadow-lg transition-all active:scale-95 mt-2">
+                Guardar Estado Físico
+            </button>
+        </form>
+    </div>
+
+	<div class="space-y-4">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-2">Tendencias Biométricas</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div id="container-weight" class="glass p-4 rounded-2xl border border-blue-900/20 text-center h-48 flex flex-col">
+                <p class="text-[10px] text-blue-300 font-bold uppercase mb-1">Peso Corporal</p>
+                <div class="chart-container flex-1 w-full"><canvas id="chartWeight"></canvas></div>
+            </div>
+
+            <div id="container-vfc" class="glass p-4 rounded-2xl border border-green-900/20 text-center h-48 flex flex-col">
+                <p class="text-[10px] text-green-300 font-bold uppercase mb-1">VFC (Recuperación)</p>
+                <div class="chart-container flex-1 w-full"><canvas id="chartVfc"></canvas></div>
+            </div>
+
+            <div id="container-rhr" class="glass p-4 rounded-2xl border border-red-900/20 text-center h-48 flex flex-col">
+                <p class="text-[10px] text-red-300 font-bold uppercase mb-1">PPM Reposo</p>
+                <div class="chart-container flex-1 w-full"><canvas id="chartRhr"></canvas></div>
+            </div>
+
+            <div id="container-sleep" class="glass p-4 rounded-2xl border border-purple-900/20 text-center h-48 flex flex-col">
+                <p class="text-[10px] text-purple-300 font-bold uppercase mb-1">Horas de Sueño</p>
+                <div class="chart-container flex-1 w-full"><canvas id="chartSleep"></canvas></div>
+            </div>
+
+        </div>
+    </div>
+
+<div class="glass rounded-3xl overflow-hidden border border-slate-800 mt-6">
+        <div class="bg-slate-900/50 p-4 border-b border-slate-800">
+            <h4 class="text-xs font-bold text-slate-300 uppercase italic">Bitácora de Salud</h4>
+        </div>
+        <div class="overflow-x-auto max-h-60 overflow-y-auto">
+            <table class="w-full text-xs text-left text-slate-400 table-fixed">
+                <thead class="text-[9px] text-slate-500 uppercase bg-slate-950 sticky top-0 z-10">
+                    <tr>
+                        <th class="px-2 py-3 bg-slate-950 w-1/6">Fecha</th>
+                        <th class="px-1 py-3 text-center text-blue-400 bg-slate-950 w-1/6">Peso</th>
+                        <th class="px-1 py-3 text-center text-green-400 bg-slate-950 w-1/6">VFC</th>
+                        <th class="px-1 py-3 text-center text-red-400 bg-slate-950 w-1/6">PPM</th>
+                        <th class="px-1 py-3 text-center text-purple-400 bg-slate-950 w-1/6">Sueño</th>
+                        <th class="px-1 py-3 text-right bg-slate-950 w-1/6"></th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody" class="divide-y divide-slate-800/50"></tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="pt-4">
+        <button onclick="generatePDF()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all">
+            <i data-lucide="file-down" class="text-yellow-400 w-4 h-4"></i>
+            <span class="uppercase text-[10px] tracking-widest">Generar Informe PDF</span>
+        </button>
+    </div>
+
+</div>
 
     </main>
 
@@ -783,7 +770,6 @@
         <button onclick="switchTab('running')" id="btn-running" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="footprints"></i></button>
         <button onclick="switchTab('strength')" id="btn-strength" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="dumbbell"></i></button>
         <button onclick="switchTab('supplements')" id="btn-supplements" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="pill"></i></button>
-        <button onclick="switchTab('stats')" id="btn-stats" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="activity"></i></button>
         <button onclick="switchTab('profile')" id="btn-profile" class="nav-btn p-2 w-full flex flex-col items-center gap-1"><i data-lucide="user-circle"></i></button>
     </nav>
 <!-- CANVAS OCULTO PARA GENERAR GRÁFICAS DEL PDF -->
@@ -1190,75 +1176,216 @@ function renderPlan() {
             }).join('');
         }
 
-		// --- SALUD Y KI (CORREGIDO) ---
-        document.getElementById('entryForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const newEntry = {
-                date: document.getElementById('inputDate').value,
-                weight: parseFloat(document.getElementById('inputWeight').value),
-                vfc: parseFloat(document.getElementById('inputVfc').value),
-                rhr: parseFloat(document.getElementById('inputRhr').value) || 0,
-                sleep: parseFloat(document.getElementById('inputSleep').value) || 0
-            };
-            
-            appData.progress.push(newEntry);
-            saveDataToCloud(); 
-            updateHistoryTable(); 
-            e.target.reset();
-            document.getElementById('inputDate').valueAsDate = new Date();
-            alert("✅ Diagnóstico vital sincronizado.");
-        });
+		
+		
+// --- LOGICA DE GUARDADO DE SALUD (INTELIGENTE) ---
+		// --- GUARDADO DE SALUD BLINDADO ---
+		// --- LOGICA DE GUARDADO DE SALUD ---
+		document.getElementById('entryForm').addEventListener('submit', e => {
+			e.preventDefault();
+			
+			// Función auxiliar: Si el campo está vacío, guarda null.
+			// Si tiene algo, lo guarda como número.
+			const getVal = (id) => {
+				const val = document.getElementById(id).value;
+				return val === "" ? null : parseFloat(val);
+			};
 
+			const newEntry = {
+				date: document.getElementById('inputDate').value,
+				weight: parseFloat(document.getElementById('inputWeight').value),
+				vfc: getVal('inputVfc'),
+				rhr: getVal('inputRhr'),
+				sleep: getVal('inputSleep')
+			};
+			
+			// Si no existe el array, lo creamos
+			if (!appData.progress) appData.progress = [];
+			
+			appData.progress.push(newEntry);
+			saveDataToCloud(); 
+			updateHistoryTable(); 
+			
+			// Limpieza visual
+			e.target.reset();
+			document.getElementById('inputDate').valueAsDate = new Date();
+			document.getElementById('inputWeight').value = newEntry.weight; // Dejamos el peso puesto
+			
+			alert("✅ Registro guardado correctamente.");
+		});
+
+		// --- FUNCIÓN TABLA (SOLUCIÓN ESTRUCTURAL) ---
 		function updateHistoryTable() {
-            const sorted = [...appData.progress].sort((a,b) => new Date(b.date) - new Date(a.date));
-            const tbody = document.getElementById('historyTableBody'); 
-            if(!tbody) return;
+			const tbody = document.getElementById('historyTableBody'); 
+			if(!tbody) return;
+			
+			const list = appData.progress || [];
+			// Ordenamos y guardamos índice real
+			const sorted = list.map((item, index) => ({...item, originalIndex: index}))
+							   .sort((a,b) => new Date(b.date) - new Date(a.date));
 
-            tbody.innerHTML = sorted.map((r, i) => `
-                <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
-                    <td class="px-2 py-4 font-mono text-slate-400 text-[10px] font-bold uppercase">${r.date.slice(5)}</td>
-                    <td class="px-2 py-4 font-bold text-white text-base">${r.weight}kg</td>
-                    <td class="px-2 py-4 text-green-400 font-bold">${r.vfc}</td>
-                    <td class="px-2 py-4 text-red-400 font-bold">${r.rhr || '-'}</td>
-                    <td class="px-2 py-4 text-right">
-                        <button onclick="delProg(${i})" class="text-slate-600 hover:text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`).join('');
-            
-            lucide.createIcons(); 
-            renderStatsCharts(); // Esto dibuja las 4 gráficas automáticamente
-        }
+			if (sorted.length === 0) {
+				tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500 italic">Sin datos.</td></tr>';
+				return;
+			}
 
-        function renderStatsCharts() {
-            const data = [...appData.progress].sort((a,b) => new Date(a.date) - new Date(b.date));
-            const lbs = data.map(d => d.date.slice(5));
+			tbody.innerHTML = sorted.map((r) => {
+				// 1. LIMPIEZA DE DATOS (Nullish Coalescing)
+				// Usamos ?? para que el 0 sea válido. Si es null/undefined, probamos otros nombres.
+				const valWeight = r.weight ?? r.inputWeight ?? r.peso;
+				const valVfc    = r.vfc    ?? r.inputVfc;
+				const valRhr    = r.rhr    ?? r.inputRhr   ?? r.ppm;
+				const valSleep  = r.sleep  ?? r.inputSleep ?? r.sueno;
 
-            const build = (id, label, set, col) => {
-                const canvas = document.getElementById(id); if(!canvas) return;
-                const ctx = canvas.getContext('2d'); 
-                if(window[id+'Inst']) window[id+'Inst'].destroy();
-                window[id+'Inst'] = new Chart(ctx, { 
-                    type: 'line', 
-                    data: { labels: lbs, datasets: [{ label, data: set, borderColor: col, backgroundColor: col+'15', fill: true, tension: 0.3 }] }, 
-                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { ticks: { color: '#64748b', font: { size: 8 } } } } } 
-                });
-            };
+				// 2. FORMATEO VISUAL (Guiones visibles si no hay dato)
+				// Peso
+				const showWeight = (valWeight !== null && valWeight !== "") 
+					? `<span class="text-white font-bold">${valWeight}</span>` 
+					: '<span class="text-slate-600">--</span>';
 
-            build('chartWeight', 'Peso', data.map(d=>d.weight), '#3b82f6');
-            build('chartVfc', 'VFC', data.map(d=>d.vfc), '#22c55e');
-            build('chartRhr', 'PPM', data.map(d=>d.rhr), '#ef4444');
-            build('chartSleep', 'Sueño', data.map(d=>d.sleep), '#a855f7');
-        }
-        function delProg(i) { if(confirm("¿Borrar?")) { const sorted=[...appData.progress].sort((a,b)=>new Date(b.date)-new Date(a.date)); const realIdx=appData.progress.indexOf(sorted[i]); if(realIdx>-1){ appData.progress.splice(realIdx,1); saveDataToCloud(); updateHistoryTable(); } } }
+				// VFC
+				const showVfc = (valVfc !== null && valVfc !== "") 
+					? `<span class="text-green-400 font-bold">${valVfc}</span>` 
+					: '<span class="text-slate-600 font-bold">-</span>';
 
-        // --- SUPLEMENTOS (PROTOCOLO KI) ---
-        function renderSupplements() {
-            const c = document.getElementById('supplements-list'); if(!c) return;
-            if(!appData.supplements.length) { c.innerHTML='<p class="text-slate-500 text-center italic py-10 opacity-50">Pulsa "+" para registrar suministros de Ki.</p>'; return; }
-            const trans = { 'morning':'Mañana', 'workout':'Entrenamiento', 'meal':'Comida', 'night':'Noche' };
-            c.innerHTML = appData.supplements.map(s => `<div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-5 relative mb-4 ${s.active?'':'opacity-40 grayscale'}"><div class="flex justify-between items-start mr-8"><div><h4 class="font-bold text-white text-base uppercase italic tracking-wider">${s.name}</h4><div class="text-[11px] text-teal-400 font-mono font-black mt-1 uppercase italic">${s.dose}</div></div><span class="text-[9px] px-3 py-1 border rounded-full uppercase font-black text-teal-300 border-teal-500/50 bg-teal-900/40">${trans[s.timing] || s.timing}</span></div><p class="text-[10px] text-slate-500 mt-4 leading-relaxed italic">${s.desc}</p><button onclick="openSuppModal('${s.id}')" class="absolute top-5 right-5 text-slate-600 hover:text-white transition-all transform active:scale-75 p-2"><i data-lucide="edit-2" class="w-5 h-5"></i></button></div>`).join('');
-            lucide.createIcons();
-        }
+				// PPM
+				const showRhr = (valRhr !== null && valRhr !== "") 
+					? `<span class="text-red-400 font-bold">${valRhr}</span>` 
+					: '<span class="text-slate-600 font-bold">-</span>';
+
+				// SUEÑO (La columna problemática)
+				const showSleep = (valSleep !== null && valSleep !== "") 
+					? `<span class="text-purple-400 font-bold">${valSleep}h</span>` 
+					: '<span class="text-slate-600 font-bold">-</span>';
+
+				// 3. GENERACIÓN DE FILA (6 CELDAS EXACTAS)
+				return `
+				<tr class="hover:bg-slate-800/40 transition-colors">
+					<td class="px-2 py-3 font-mono text-slate-400 text-[10px] font-bold uppercase truncate">
+						${r.date ? r.date.slice(5) : '??-??'}
+					</td>
+					
+					<td class="px-1 py-3 text-center text-sm">
+						${showWeight}
+					</td>
+					
+					<td class="px-1 py-3 text-center text-xs">
+						${showVfc}
+					</td>
+
+					<td class="px-1 py-3 text-center text-xs">
+						${showRhr}
+					</td>
+
+					<td class="px-1 py-3 text-center text-xs">
+						${showSleep}
+					</td>
+					
+					<td class="px-2 py-3 text-right">
+						<button onclick="delProg(${r.originalIndex})" class="bg-red-900/10 hover:bg-red-900/30 text-red-500 p-2 rounded-lg transition-colors">
+							<i data-lucide="trash-2" class="w-4 h-4"></i>
+						</button>
+					</td>
+				</tr>`;
+			}).join('');
+			
+			lucide.createIcons(); 
+			
+			if (typeof renderStatsCharts === 'function') renderStatsCharts(); 
+		}
+		// --- FUNCIÓN DE BORRADO DE SALUD ---
+		function delProg(realIndex) { 
+			if(confirm("¿Eliminar este registro de salud?")) { 
+				// Borrado directo y seguro usando el índice real
+				if (appData.progress && appData.progress[realIndex]) {
+					appData.progress.splice(realIndex, 1); 
+					saveDataToCloud(); 
+					updateHistoryTable(); 
+				} else {
+					alert("Error al borrar: índice no encontrado.");
+					// Recargar por si acaso
+					updateHistoryTable();
+				}
+			} 
+		}
+
+		function renderStatsCharts() {
+			const data = [...(appData.progress || [])].sort((a,b) => new Date(a.date) - new Date(b.date));
+			if (data.length === 0) return;
+			
+			const lbs = data.map(d => d.date.slice(5)); // Fechas eje X
+
+			// Función constructora inteligente
+			const buildSmartChart = (canvasId, containerId, label, rawData, color) => {
+				const container = document.getElementById(containerId);
+				const canvas = document.getElementById(canvasId);
+				
+                // Si no existe el elemento en el HTML, salimos sin error
+				if(!container || !canvas) return;
+
+				// 1. COMPROBACIÓN INTELIGENTE: ¿Hay algún dato válido en todo el historial?
+				const hasData = rawData.some(v => v !== null && v !== 0 && v !== undefined && !isNaN(v));
+
+				if (!hasData) {
+					// NO HAY DATOS: Ocultamos el contenedor entero (el cuadro con borde)
+					container.classList.add('hidden');
+					return; // No dibujamos nada más
+				} else {
+					// SÍ HAY DATOS: Mostramos el contenedor
+					container.classList.remove('hidden');
+				}
+
+				const ctx = canvas.getContext('2d');
+				// Destruir gráfica anterior para evitar bugs visuales
+				if(window[canvasId+'Inst']) window[canvasId+'Inst'].destroy();
+				
+				window[canvasId+'Inst'] = new Chart(ctx, { 
+					type: 'line', 
+					data: { 
+						labels: lbs, 
+						datasets: [{ 
+							label, 
+							data: rawData, 
+							borderColor: color, 
+							backgroundColor: color+'15', 
+							fill: true, 
+							tension: 0.3, 
+							pointRadius: 3,
+                            // CRÍTICO: spanGaps true une los puntos aunque haya días vacíos (null) entre medias
+							spanGaps: true 
+						}] 
+					}, 
+					options: { 
+						maintainAspectRatio: false, 
+						plugins: { legend: { display: false } }, 
+						scales: { 
+							x: { display: false }, 
+							y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' } } 
+						} 
+					} 
+				});
+			};
+
+			buildSmartChart('chartWeight', 'container-weight', 'Peso', data.map(d=>d.weight), '#3b82f6');
+			buildSmartChart('chartVfc', 'container-vfc', 'VFC', data.map(d=>d.vfc), '#22c55e');
+			buildSmartChart('chartRhr', 'container-rhr', 'PPM', data.map(d=>d.rhr), '#ef4444');
+			buildSmartChart('chartSleep', 'container-sleep', 'Sueño', data.map(d=>d.sleep), '#a855f7');
+		}
+		// --- FUNCIÓN DE BORRADO DE SALUD ---
+		function delProg(realIndex) { 
+			if(confirm("¿Eliminar este registro de salud?")) { 
+				// Borrado directo y seguro usando el índice real
+				if (appData.progress && appData.progress[realIndex]) {
+					appData.progress.splice(realIndex, 1); 
+					saveDataToCloud(); 
+					updateHistoryTable(); 
+				} else {
+					alert("Error al borrar: índice no encontrado.");
+					// Recargar por si acaso
+					updateHistoryTable();
+				}
+			} 
+		}
 
         function openSuppModal(id) {
             document.getElementById('suppForm').reset();
@@ -1344,96 +1471,139 @@ function renderPlan() {
         }
 
         // --- IA PROMPT MAESTRO ---
-function copyPrompt() {
-            // VALIDACIÓN: ¿Tiene meta de peso y lesiones?
-            if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
-                alert("⚠️ ¡ERROR DE PROTOCOLO!\n\nAntes de hablar con la IA, debes ir a la pestaña PERFIL (icono de usuario) y configurar tu Meta de Peso y tus Lesiones/Notas Médicas.");
-                switchTab('profile'); // Lo mandamos automáticamente a la pestaña de perfil
-                return;
-            }
+		function copyPrompt() {
+			// 1. SEGURIDAD: Comprobar Datos Obligatorios
+			// Meta de Peso y Lesiones ahora están en esta misma pestaña (Perfil), así que es fácil ver si faltan.
+			if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
+				alert("⚠️ ¡FALTAN DATOS!\n\nPor favor, rellena tu META DE PESO y tus LESIONES en la sección 'Objetivos & Limitaciones' de esta pantalla.");
+				// No hace falta switchTab porque ya estamos en Profile/Stats unificado
+				document.getElementById('profile-target').focus();
+				return;
+			}
 
-            const today = new Date(); 
-            const nm = new Date(today); 
-            nm.setDate(today.getDate() + ((1+7-today.getDay())%7||7)); 
-            const ns = new Date(nm); 
-            ns.setDate(nm.getDate()+6);
-            const dStr = `${nm.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} al ${ns.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}`;
-            
-            const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
-            const misSupps = appData.supplements.map(s => s.name).join(", ");
+			const today = new Date(); 
+			const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+			const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
+			const misSupps = appData.supplements.map(s => s.name).join(", ");
+			
+			// DETECCIÓN ROBUSTA: ¿Es el plan de ejemplo?
+			// Miramos si hay planes, y si el primero es el de inicio (por ID o por Nombre)
+			let isExamplePlan = true;
+			if (appData.plan.length > 0) {
+				const first = appData.plan[0];
+				// Si el plan NO es el w-init y NO se llama "Protocolo Inicial", entonces NO es ejemplo (es evolución)
+				if (first.id !== 'w-init' && !first.label.includes('Protocolo Inicial') && !first.label.includes('Semana 1')) {
+					isExamplePlan = false;
+				}
+			}
 
-            const prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica. Genera el código JSON para mi próxima semana de entrenamiento: del ${dStr}.
+			let prompt = "";
 
-DATOS CRÍTICOS DEL ATLETA:
-- Peso Actual: ${ultimoPeso} kg.
-- Meta de Peso: ${appData.targetWeight} kg.
-- Lesiones/Limitaciones: ${appData.injuries}.
-- Suplementación: ${misSupps}.
+			if (isExamplePlan) {
+				// --- MODO GÉNESIS ---
+				prompt = `Actúa como mi entrenador personal Saiyan experto en biomecánica.
+		Genera el código JSON para mi SEMANA 1 de entrenamiento.
 
-REGLAS OBLIGATORIAS: Responde SOLO con el código JSON. Genera 7 días. Usa "track": true en pesas. Adapta la rutina para NO agravar mis lesiones mencionadas.
+		DATOS DEL GUERRERO (Ya cargados):
+		- Peso Actual: ${ultimoPeso} kg.
+		- Meta de Peso: ${appData.targetWeight} kg.
+		- Lesiones (CRÍTICO): ${appData.injuries}.
+		- Suplementación: ${misSupps}.
 
-ESTRUCTURA: { "id": "tactica-${Date.now()}", "label": "Semana X: [Título]", "days": [...] }`;
+		INSTRUCCIONES TÉCNICAS:
+		1. Responde SOLO con el código JSON.
+		2. Estructura de 7 días.
+		3. Usa "track": true para ejercicios de pesas.
+		4. Basa el diseño en los OBJETIVOS que escribo al final de este mensaje.
 
-            navigator.clipboard.writeText(prompt).then(() => alert("✅ ¡COMANDO MAESTRO COPIADO!\n\nPégalo en Gemini ahora. Tus lesiones y metas van incluidas."));
-        }
+		ESTRUCTURA JSON REQUERIDA:
+		{
+		  "id": "gen-w1-${Date.now()}",
+		  "label": "Semana 1: El Despertar",
+		  "days": [ ... ]
+		}
 
+		👇 EL USUARIO DEBE COMPLETAR ESTO AQUÍ ABAJO 👇
+		-------------------------------------------------------
+		OBJETIVO PRINCIPAL: [ESCRIBE AQUÍ: Hipertrofia / Fuerza / Perder Grasa / Resistencia]
+		DÍAS DE ENTRENO DISPONIBLES: [ESCRIBE AQUÍ: Ej. 3 días, 4 días, 5 días...]
+		PREFERENCIAS: [ESCRIBE AQUÍ: Ej. Enfasis en glúteo, Solo mancuernas, Odio correr...]
+		-------------------------------------------------------`;
+				
+				alert("✅ PROMPT DE INICIO COPIADO.\n\nEl sistema ha detectado que es tu primera vez.\nPega el texto en la IA y RELLENA tus objetivos al final.");
+
+			} else {
+				// --- MODO EVOLUCIÓN ---
+				const planActual = JSON.stringify(appData.plan[currentWeekIndex] || {}, null, 2);
+				
+				prompt = `Actúa como entrenador Saiyan. Tengo este plan actual (JSON abajo) que acabo de terminar.
+		DATOS: Peso: ${ultimoPeso}kg. Meta: ${appData.targetWeight}kg. Lesiones: ${appData.injuries}.
+		TAREA: Genera el JSON de la SIGUIENTE semana de entrenamiento empezando el ${dStr}.
+
+		REGLAS DE PROGRESIÓN:
+		1. Aplica sobrecarga progresiva (sube peso, reps o series) sobre lo que ya hago.
+		2. Mantén la estructura si funciona, cambia ejercicios si hay estancamiento.
+		3. Respeta mis lesiones.
+		4. **PRIORIDAD:** Aplica cualquier cambio solicitado en la sección "MODIFICACIONES TÁCTICAS" al final de este mensaje.
+
+		PLAN BASE (SEMANA ANTERIOR):
+		${planActual}
+
+		ESTRUCTURA RESPUESTA: Solo el JSON válido.
+
+		👇 MODIFICACIONES TÁCTICAS (Rellenar si es necesario) 👇
+		-------------------------------------------------------
+		CAMBIOS DESEADOS: [ESCRIBE AQUÍ: Ej. "Quita las zancadas que me duelen", "Solo tengo 3 días esta semana", "Quiero priorizar hombros"... Si no hay cambios, déjalo en blanco.]
+		-------------------------------------------------------`;
+				
+				alert("✅ PROMPT DE EVOLUCIÓN COPIADO.\n\nEl sistema ha leído tu plan actual para mejorarlo.\nPuedes pedir cambios específicos al final del texto copiado.");
+			}
+
+			navigator.clipboard.writeText(prompt);
+		}
         // --- UTILS RESTANTES ---
-function switchTab(id) {
-            // 1. Ocultar todas las pestañas con doble seguridad (clase propia y tailwind)
-            document.querySelectorAll('.tab-content').forEach(e => {
-                e.classList.add('hidden-tab');
-                e.classList.add('hidden'); 
-            });
-            // 2. Quitar estado activo de todos los botones de navegación
-            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active')); 
-            
-            // 3. Mostrar la pestaña seleccionada
-            const target = document.getElementById(`tab-${id}`);
-            if(target) {
-                target.classList.remove('hidden-tab');
-                target.classList.remove('hidden');
-            }
-            
-            // 4. Activar el botón correspondiente en el menú
-            const btn = document.getElementById(`btn-${id}`); 
-            if(btn) btn.classList.add('active'); 
+		function switchTab(id) {
+			// 1. Ocultar todas
+			document.querySelectorAll('.tab-content').forEach(e => {
+				e.classList.add('hidden-tab');
+				e.classList.add('hidden'); 
+			});
+			// 2. Desactivar botones
+			document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active')); 
+			
+			// 3. Mostrar target
+			const target = document.getElementById(`tab-${id}`);
+			if(target) {
+				target.classList.remove('hidden-tab');
+				target.classList.remove('hidden');
+			}
+			
+			// 4. Activar botón
+			const btn = document.getElementById(`btn-${id}`); 
+			if(btn) btn.classList.add('active'); 
 
-            // 5. Cargas automáticas de datos al entrar en la pestaña
+			// 5. Cargas automáticas
 			if(id==='strength') { renderStrengthChart(); updatePRs(); }
 			if(id==='running') updateRunningUI();
-			if(id==='stats') updateHistoryTable();
-            if(id==='ranking') { 
-				loadLeaderboard(); 
-				updateHomeMiniStats(); // <--- AÑADIR ESTA LÍNEA AQUÍ
+			
+			// AHORA PROFILE CARGA TODO LO DE SALUD
+			if(id==='profile') { 
+				document.getElementById('profile-target').value = appData.targetWeight || "";
+				document.getElementById('profile-injuries').value = appData.injuries || "";
+				updateHistoryTable(); // Esto carga la tabla Y las gráficas de salud
 			}
-            if(id==='supplements') renderSupplements();
-            if(id==='home') updateHomeMiniStats();
-            if(id==='profile') { 
-                document.getElementById('profile-target').value = appData.targetWeight || "";
-                document.getElementById('profile-injuries').value = appData.injuries || "";
-            }
-            lucide.createIcons();
-        }
+			
+			if(id==='ranking') { 
+				loadLeaderboard(); 
+				updateHomeMiniStats(); 
+			}
+			
+			if(id==='supplements') renderSupplements();
+			if(id==='home') updateHomeMiniStats();
+			
+			lucide.createIcons();
+		}
 
-        function updateHistoryTable() {
-            const tbody = document.getElementById('historyTableBody'); 
-            if(!tbody) return;
-            const sorted = [...appData.progress].sort((a,b) => new Date(b.date) - new Date(a.date));
-
-            tbody.innerHTML = sorted.map((r, i) => `
-                <tr class="border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
-                    <td class="px-2 py-4 font-mono text-slate-400 text-[10px] font-bold uppercase">${r.date.slice(5)}</td>
-                    <td class="px-2 py-4 font-bold text-white text-base text-center">${r.weight}kg</td>
-                    <td class="px-2 py-4 text-green-400 font-bold text-center">${r.vfc}</td>
-                    <td class="px-2 py-4 text-red-400 font-bold text-center">${r.rhr || '-'}</td>
-                    <td class="px-2 py-4 text-right">
-                        <button onclick="delProg(${i})" class="text-slate-600 hover:text-red-500 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`).join('');
-            
-            lucide.createIcons(); 
-            renderStatsCharts();
-        }
 
         function renderStatsCharts() {
             const data = [...appData.progress].sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -1457,33 +1627,7 @@ function switchTab(id) {
             build('chartSleep', 'Sueño', data.map(d=>d.sleep), '#a855f7');
         }
 
-        // --- VALIDACIÓN DE SEGURIDAD PARA EL COMANDO IA ---
-		function copyPrompt() {
-			if (!appData.targetWeight || appData.targetWeight <= 0 || !appData.injuries) {
-				alert("⚠️ ¡ERROR!\nConfigura Meta y Lesiones en PERFIL primero.");
-				switchTab('profile'); return;
-			}
-			
-			const today = new Date(); 
-			const dStr = today.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-			const ultimoPeso = appData.progress.length > 0 ? appData.progress[appData.progress.length-1].weight : "No registrado";
-			const misSupps = appData.supplements.map(s => s.name).join(", ");
-			
-			// INGENIERÍA INVERSA: Le damos el plan actual
-			const planActual = JSON.stringify(appData.plan[currentWeekIndex] || {}, null, 2);
 
-			const prompt = `Actúa como entrenador Saiyan. Tengo este plan actual (JSON abajo).
-		DATOS: Peso: ${ultimoPeso}kg. Meta: ${appData.targetWeight}kg. Lesiones: ${appData.injuries}. Suplementos: ${misSupps}.
-		TAREA: Genera el JSON de la SIGUIENTE semana de entrenamiento empezando el ${dStr}. Basa la progresión en el plan actual que te adjunto, pero aplica sobrecarga progresiva.
-		REGLAS: Responde SOLO el JSON. Usa "track": true en pesas.
-
-		PLAN ACTUAL (BASE):
-		${planActual}
-
-		ESTRUCTURA RESPUESTA: { "id": "tactic-${Date.now()}", "label": "Semana X", "days": [...] }`;
-
-			navigator.clipboard.writeText(prompt).then(() => alert("✅ COMANDO INTELIGENTE COPIADO.\nIncluye tu plan actual para que la IA sepa qué ejercicios haces."));
-		}
         function toggleSettings() { document.getElementById('settings-panel').classList.toggle('hidden'); }
         function changeNickname() { const n=prompt("Nuevo apodo:", appData.nickname); if(n){ appData.nickname=n; document.getElementById('header-username').innerText=n; saveDataToCloud(); } }
         function changeGroup() { const g=prompt("Nuevo clan:", appData.group); if(g){ appData.group=g.trim(); saveDataToCloud(); loadLeaderboard(); } }
@@ -1504,29 +1648,49 @@ function switchTab(id) {
             saveDataToCloud(); // Guarda automáticamente en Firebase
         }
 		function importNewWeek() { 
-            try { 
-                let text = document.getElementById('import-code-area').value.trim();
-                // Limpiar posibles bloques de código Markdown de la IA (```json ... ```)
-                text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-                
-                const w = JSON.parse(text); 
-                if(!w.days) throw new Error("Formato inválido"); 
-                
-                // Forzar un nombre legible para evitar el 'undefined'
-                w.label = w.label || w.title || `Ciclo Z ${appData.plan.length + 1}`;
-                w.id = w.id || "tactica-" + Date.now();
+			try { 
+				let text = document.getElementById('import-code-area').value.trim();
+				text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+				
+				const w = JSON.parse(text); 
+				if(!w.days) throw new Error("Formato inválido"); 
+				
+				w.label = w.label || w.title || `Ciclo Z ${appData.plan.length + 1}`;
+				w.id = w.id || "tactica-" + Date.now();
 
-                appData.plan.push(w); 
-                saveDataToCloud(); 
-                currentWeekIndex = appData.plan.length - 1; 
-                renderPlan(); 
-                toggleSettings(); 
-                document.getElementById('import-code-area').value = "";
-                alert("✅ ¡Plan Maestro Importado!"); 
-            } catch(e) { 
-                alert("❌ ERROR: El código JSON es incorrecto o está incompleto."); 
-            } 
-        }
+				// DETECCIÓN ROBUSTA (Idéntica a copyPrompt)
+				let isExamplePlan = true;
+				if (appData.plan.length > 0) {
+					const first = appData.plan[0];
+					if (first.id !== 'w-init' && !first.label.includes('Protocolo Inicial') && !first.label.includes('Semana 1')) {
+						isExamplePlan = false;
+					}
+				}
+
+				if (isExamplePlan) {
+					if(confirm("⚠ DETECTADO PLAN DE INICIO.\n\n¿Quieres SOBRESCRIBIRLO con esta nueva rutina personalizada?\n(Recomendado para empezar limpio)")) {
+						appData.plan = [w]; 
+						currentWeekIndex = 0;
+						alert("🚀 ¡Plan de Ejemplo eliminado! Tu Semana 1 comienza ahora.");
+					} else {
+						appData.plan.push(w); 
+						currentWeekIndex = appData.plan.length - 1;
+					}
+				} else {
+					appData.plan.push(w); 
+					currentWeekIndex = appData.plan.length - 1;
+					alert("✅ ¡Nueva semana cargada! A por la sobrecarga."); 
+				}
+
+				saveDataToCloud(); 
+				renderPlan(); 
+				toggleSettings(); 
+				document.getElementById('import-code-area').value = "";
+				
+			} catch(e) { 
+				alert("❌ ERROR: El código JSON es incorrecto. Asegúrate de copiar solo el código que te da la IA."); 
+			} 
+		}
 
         function deleteCurrentWeek() {
             if (appData.plan.length <= 1) {
@@ -2658,7 +2822,73 @@ window.delRun = function(idToDelete) {
             // Guardar en Firebase y recalcular Ranking
             saveDataToCloud();
         }
+		// --- RENDERIZADOR DE SUPLEMENTOS BLINDADO ---
+		function renderSupplements() {
+			const container = document.getElementById('supplements-list'); 
+			if(!container) return;
 
+			// 1. Seguridad: Si la lista no existe, la inicializamos vacía
+			if (!appData.supplements) appData.supplements = [];
+
+			// 2. Si está vacía, mostramos mensaje de ayuda
+			if(appData.supplements.length === 0) {
+				container.innerHTML = `
+					<div class="text-center p-10 border-2 border-dashed border-slate-700 rounded-3xl bg-slate-900/50">
+						<i data-lucide="flask-conical" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+						<p class="text-slate-500 text-xs italic">Tu inventario está vacío.</p>
+						<button onclick="appData.supplements=getDefaultSupplements(); saveDataToCloud(); renderSupplements();" class="mt-4 text-[10px] text-teal-400 underline uppercase font-bold">Cargar Básicos</button>
+					</div>`;
+				lucide.createIcons();
+				return;
+			}
+
+			// 3. Mapeo de Textos para que se vea bonito
+			const timeMap = {
+				'morning': '☀️ Mañana',
+				'workout': '⚡ Entreno',
+				'meal': '🍽️ Comida',
+				'night': '🌙 Noche'
+			};
+
+			// 4. Generar HTML
+			container.innerHTML = appData.supplements.map(s => {
+				// Estilos dinámicos según si está activo o no
+				const opacityClass = s.active ? 'opacity-100' : 'opacity-40 grayscale';
+				const borderClass = s.active ? 'border-teal-500' : 'border-slate-600';
+				const activeDot = s.active ? '<span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse shadow-[0_0_8px_#2dd4bf]"></span>' : '<span class="w-2 h-2 rounded-full bg-slate-600"></span>';
+
+				return `
+				<div class="glass p-5 rounded-3xl border-l-4 ${borderClass} relative group transition-all ${opacityClass} overflow-hidden">
+					<div class="absolute right-0 top-0 w-24 h-24 bg-teal-500/5 rounded-bl-full pointer-events-none"></div>
+
+					<div class="flex justify-between items-start relative z-10">
+						<div class="flex-1 pr-8">
+							<div class="flex items-center gap-2 mb-1">
+								${activeDot}
+								<h4 class="font-bold text-white text-base uppercase italic tracking-wider">${s.name}</h4>
+							</div>
+							<div class="text-[11px] text-teal-300 font-mono font-bold uppercase bg-teal-900/30 inline-block px-2 py-0.5 rounded border border-teal-500/20">
+								${s.dose}
+							</div>
+						</div>
+						
+						<span class="text-[9px] bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-600 uppercase font-bold tracking-wider">
+							${timeMap[s.timing] || s.timing}
+						</span>
+					</div>
+
+					<p class="text-[10px] text-slate-400 mt-4 italic border-t border-white/5 pt-2 leading-relaxed">
+						${s.desc || 'Sin descripción táctica.'}
+					</p>
+
+					<button onclick="openSuppModal('${s.id}')" class="absolute top-4 right-4 text-slate-500 hover:text-white p-2 rounded-full hover:bg-slate-700/50 transition-all">
+						<i data-lucide="edit-2" class="w-4 h-4"></i>
+					</button>
+				</div>`;
+			}).join('');
+
+			lucide.createIcons();
+		}
     </script>
 </body>
 </html>
