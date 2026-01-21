@@ -362,23 +362,26 @@
 
         <div id="tab-plan" class="tab-content hidden-tab fade-in space-y-6">
 		<!-- REEMPLAZAR EL DIV DE CONTROLES DE "tab-plan" POR ESTE BLOQUE: -->
-		<div class="glass p-4 rounded-2xl border border-slate-700 flex flex-col gap-4 mb-4">
-			<div class="flex justify-between items-center gap-4">
-				<select id="week-selector" onchange="changeWeek()" class="bg-slate-900 text-white scouter-font font-bold p-3 rounded-xl flex-1 outline-none border border-slate-700"></select>
-				<button onclick="openSpyModal()" class="glass p-3 rounded-xl border border-purple-500 text-purple-300 font-bold text-xs flex items-center gap-2"><i data-lucide="eye"></i> ESPIAR</button>
-			</div>
-			
-			<!-- NUEVO: Toggle de Edición -->
-			<div class="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl">
-				<span class="text-xs text-slate-300 uppercase font-bold tracking-widest flex items-center gap-2">
-					<i data-lucide="edit-3" class="w-4 h-4 text-yellow-500"></i> Modo Editor
-				</span>
-				<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-					<input type="checkbox" name="toggle" id="edit-mode-toggle" onchange="renderPlan()" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-600 left-0 transition-all duration-300"/>
-					<label for="edit-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-700 cursor-pointer"></label>
+			<div class="glass p-4 rounded-2xl border border-slate-700 flex flex-col gap-4 mb-4">
+				
+				<div class="flex flex-col sm:flex-row gap-3">
+					<select id="week-selector" onchange="changeWeek()" class="w-full bg-slate-900 text-white scouter-font font-bold p-3 rounded-xl outline-none border border-slate-700 focus:border-yellow-500 transition-colors shadow-inner appearance-none text-center sm:text-left"></select>
+					
+					<button onclick="openSpyModal()" class="glass p-3 rounded-xl border border-purple-500/50 text-purple-300 font-bold text-xs flex items-center justify-center gap-2 hover:bg-purple-900/20 transition-all w-full sm:w-auto whitespace-nowrap shadow-lg">
+						<i data-lucide="eye" class="w-4 h-4"></i> ESPIAR RIVALES
+					</button>
+				</div>
+				
+				<div class="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl border border-white/5">
+					<span class="text-xs text-slate-300 uppercase font-bold tracking-widest flex items-center gap-2">
+						<i data-lucide="edit-3" class="w-4 h-4 text-yellow-500"></i> Modo Editor
+					</span>
+					<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+						<input type="checkbox" name="toggle" id="edit-mode-toggle" onchange="renderPlan()" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-600 left-0 transition-all duration-300"/>
+						<label for="edit-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-700 cursor-pointer"></label>
+					</div>
 				</div>
 			</div>
-		</div>
 			
 
             <div class="grid grid-cols-7 gap-2 text-center" id="calendar-grid">
