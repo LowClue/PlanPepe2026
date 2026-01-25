@@ -815,12 +815,10 @@
         </div>
     </div>
 <!-- CRONÓMETRO FLOTANTE INTELIGENTE -->
-    <div id="rest-timer-widget" class="fixed bottom-24 right-4 z-[70] flex flex-col items-end pointer-events-none">
-        
-        <!-- Panel del Reloj -->
+   <div id="rest-timer-widget" class="fixed bottom-24 right-4 z-[70] flex flex-col items-end pointer-events-none">
+    
         <div id="timer-display" class="bg-slate-900/95 border-2 border-yellow-500/50 p-4 rounded-2xl shadow-[0_0_30px_rgba(234,179,8,0.2)] mb-3 backdrop-blur-md pointer-events-auto hidden transform transition-all origin-bottom-right w-64">
             
-            <!-- Configuración Rápida -->
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
                 <div class="flex items-center gap-2">
                     <span class="text-[9px] font-bold text-slate-400 uppercase">Auto-Start</span>
@@ -835,24 +833,25 @@
                 </div>
             </div>
 
-            <!-- Cuenta Atrás -->
             <div class="text-center">
                 <span id="timer-countdown" class="font-mono text-5xl font-black text-white tabular-nums tracking-tighter drop-shadow-lg">00:00</span>
-                <p class="text-[9px] text-yellow-500 uppercase tracking-widest mb-3 mt-1 font-bold animate-pulse" id="timer-status">Esperando serie...</p>
+                <p class="text-[9px] text-yellow-500 uppercase tracking-widest mb-3 mt-1 font-bold animate-pulse" id="timer-status">Esperando...</p>
                 
-                <!-- Controles -->
                 <div class="flex justify-between gap-2">
-                    <button onclick="stopTimer()" class="flex-1 bg-red-900/80 hover:bg-red-800 text-red-100 text-[10px] py-2 rounded-lg uppercase font-bold border border-red-700/50">Stop</button>
+                    <button id="btn-timer-action" onclick="toggleTimerManual()" class="flex-1 bg-green-700 hover:bg-green-600 text-white text-[10px] py-2 rounded-lg uppercase font-bold border border-green-500/50 flex items-center justify-center gap-1 transition-colors">
+                        <i data-lucide="play" class="w-3 h-3"></i> Iniciar
+                    </button>
+                    
                     <button onclick="addTime(30)" class="flex-1 bg-blue-900/80 hover:bg-blue-800 text-blue-100 text-[10px] py-2 rounded-lg uppercase font-bold border border-blue-700/50">+30s</button>
                 </div>
             </div>
         </div>
 
-        <!-- Botón Flotante -->
         <button onclick="toggleTimer()" class="pointer-events-auto bg-yellow-500 hover:bg-yellow-400 text-black p-4 rounded-full shadow-[0_0_20px_rgba(234,179,8,0.6)] transition-all transform active:scale-90 flex items-center justify-center border-4 border-black/20 z-50 group">
             <i data-lucide="timer" class="w-7 h-7 group-hover:rotate-12 transition-transform"></i>
         </button>
     </div>
+
 <!-- WIDGET SPOTIFY (MUSICAL) MEJORADO -->
     <div id="spotify-widget" class="fixed bottom-24 left-4 z-[60] flex flex-col items-start pointer-events-none">
         <!-- Contenedor del Reproductor -->
@@ -937,7 +936,7 @@
         let rhrChartInstance = null;
         let sleepChartInstance = null;
         let strengthChartInstance = null;
-
+        let showFullWeek = false; // Por defecto solo vemos un día
         let appData = {
             nickname: "Guerrero Z", group: "Global", targetWeight: 0,
             plan: [], strength: {}, running: [], progress: [], supplements: []
@@ -1142,118 +1141,177 @@
 	}
 
 		function renderPlan() {
-			const isEditMode = document.getElementById('edit-mode-toggle')?.checked; 
-			const s = document.getElementById('week-selector');
-			
-			// Configurar Selector
-			if(appData.plan.length === 0) {
-				document.getElementById('plan-container').innerHTML = `<div class="text-center p-10 opacity-50"><p class="text-yellow-500 comic-font text-xl">SIN DATOS DE COMBATE</p><p class="text-xs text-slate-400">Ve a Inicio para generar tu plan.</p></div>`;
-				return;
-			}
+            const isEditMode = document.getElementById('edit-mode-toggle')?.checked;
+            const s = document.getElementById('week-selector');
+            const container = document.getElementById('plan-container');
+            
+            // 1. Configurar Selector y Validaciones
+            if (appData.plan.length === 0) {
+                container.innerHTML = `<div class="text-center p-10 opacity-50"><p class="text-yellow-500 comic-font text-xl">SIN DATOS DE COMBATE</p><p class="text-xs text-slate-400">Ve a Inicio para generar tu plan.</p></div>`;
+                return;
+            }
 
-			s.innerHTML = appData.plan.map((w, i) => `<option value="${i}" ${i === currentWeekIndex ? 'selected' : ''}>${w.label || "Protocolo"}</option>`).join('');
-			if(!appData.plan[currentWeekIndex]) return;
+            s.innerHTML = appData.plan.map((w, i) => `<option value="${i}" ${i === currentWeekIndex ? 'selected' : ''}>${w.label || "Protocolo"}</option>`).join('');
+            
+            const currentWeek = appData.plan[currentWeekIndex];
+            if (!currentWeek || !currentWeek.days) return;
 
-			// --- CÁLCULO DE FECHAS REALES ---
-			const today = new Date();
-			const currentDayIdx = today.getDay(); // 0 (Dom) - 6 (Sab)
-			// Truco: Calcular el LUNES de la semana actual real
-			const diff = today.getDate() - currentDayIdx + (currentDayIdx === 0 ? -6 : 1); 
-			const mondayDate = new Date(today);
-			mondayDate.setDate(diff);
+            // 2. Cálculos de Tiempos y Fechas
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 (Dom) a 6 (Sáb)
+            // Convertimos a índice de array: Lunes=0 ... Domingo=6
+            const currentDayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1; 
 
-			// Renderizar Días
-			const daysMap = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo"];
-			const realMap = [0, 1, 2, 2, 3, 4, 5, 5, 6]; // Mapeamos nombres a índice (0=Lunes... espera, MondayDate es base)
-			
-			// Ajuste: MondayDate es nuestro punto 0.
-			
-			document.getElementById('plan-container').innerHTML = appData.plan[currentWeekIndex].days.map((day, dIdx) => {
-				let color = day.type === 'gym' ? 'border-blue-500' : day.type === 'cardio' ? 'border-green-500' : 'border-purple-500';
-				
-				// --- MAGIA DE FECHAS: Detectar día por nombre ---
-				let dayOffset = dIdx; // Por defecto usamos el orden del array
-				const dayLower = day.day.toLowerCase().trim();
-				
-				// Buscamos si el nombre del día coincide con alguno conocido
-				// Lunes=0, Martes=1... Domingo=6
-				const mapIdx = daysMap.indexOf(dayLower);
-				if (mapIdx !== -1) {
-					// El array realMap corrige tildes duplicadas (miércoles/miercoles)
-					dayOffset = realMap[mapIdx];
-				}
+            // Calculamos el lunes de la semana actual para poner fechas correctas
+            const diff = today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
+            const mondayDate = new Date(today);
+            mondayDate.setDate(diff);
 
-				// Calculamos la fecha real de esa tarjeta
-				const cardDate = new Date(mondayDate);
-				cardDate.setDate(mondayDate.getDate() + dayOffset);
-				
-				const monthShort = cardDate.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
-				const dayNum = cardDate.getDate();
+            // 3. Filtrado de días (Vista Hoy vs Vista Semana)
+            // Si estamos en modo edición o showFullWeek es true, mostramos todo. Si no, solo hoy.
+            // IMPORTANTE: Mantenemos el índice real (realDayIdx) para que al guardar datos no falle.
+            let daysToRender = [];
+            
+            if (showFullWeek || isEditMode) {
+                daysToRender = currentWeek.days.map((d, i) => ({...d, realIdx: i}));
+            } else {
+                if(currentWeek.days[currentDayIdx]) {
+                    daysToRender = [{...currentWeek.days[currentDayIdx], realIdx: currentDayIdx}];
+                }
+            }
 
-				// (El resto del renderizado de ejercicios sigue igual...)
-				const exHtml = day.exercises.map((ex, eIdx) => {
-					if (isEditMode) {
-						// MODO EDITOR
-					   return `<div class="py-4 border-b border-slate-700/50 bg-slate-800/30 p-2 rounded mb-2"><div class="grid grid-cols-12 gap-2 mb-2"><div class="col-span-12"><label class="text-[9px] text-yellow-500 font-bold uppercase">Ejercicio</label><input type="text" value="${ex.name}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'name', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-sm font-bold"></div><div class="col-span-4"><label class="text-[9px] text-blue-300 font-bold uppercase">Series</label><input type="text" value="${ex.sets}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'sets', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center"></div><div class="col-span-4"><label class="text-[9px] text-blue-300 font-bold uppercase">Reps</label><input type="text" value="${ex.reps}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'reps', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center"></div><div class="col-span-4 flex items-end"><button onclick="deleteExercise(${dIdx}, ${eIdx})" class="w-full bg-red-900/50 text-red-300 border border-red-800 rounded py-1 text-[10px] uppercase font-bold hover:bg-red-800">Borrar</button></div></div></div>`;
-					} else {
-						// MODO VISTA
-						const vid = ex.vid ? `<a href="${ex.vid}" target="_blank" class="text-pink-400 text-[10px] ml-2 border border-pink-500/30 rounded px-2 py-0.5 font-bold uppercase italic">Video</a>` : '';
-						let inputHtml = '';
-						const sets = parseInt(ex.sets) || 1; 
-						const potentialKi = sets * 100; 
+            // 4. Botón de Alternancia de Vista (Solo aparece si no estamos editando)
+            let toggleBtnHtml = "";
+            if (!isEditMode) {
+                const btnText = showFullWeek ? "Ver solo el entrenamiento de hoy" : "Ver semana completa";
+                const btnIcon = showFullWeek ? "eye-off" : "calendar";
+                const btnColor = showFullWeek ? "border-slate-600 text-slate-400" : "border-yellow-500/50 text-yellow-400";
+                
+                toggleBtnHtml = `
+                    <div class="flex justify-center mb-6">
+                        <button onclick="toggleWeekView()" class="glass border ${btnColor} px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-white/5 transition-all shadow-lg">
+                            <i data-lucide="${btnIcon}" class="w-4 h-4"></i> ${btnText}
+                        </button>
+                    </div>
+                `;
+            }
 
-						if (ex.track && sets > 1 && sets < 10) {
-							const saved = (ex.weight || "").toString().split('/');
-							const checks = ex.checks || []; 
-							let boxes = '';
-							for(let i=0; i<sets; i++) {
-								const isChecked = checks[i] === true;
-								const btnClass = isChecked ? "bg-green-600 text-white border-green-500" : "bg-slate-700/50 text-slate-400 border-slate-600";
-								const inpClass = isChecked ? "completed-set" : "";
-								boxes += `<div class="flex flex-col items-center gap-1"><input type="number" placeholder="kg" value="${saved[i]||''}" class="bg-slate-800 border-slate-600 rounded-lg w-12 text-center text-white text-xs py-2 focus:border-yellow-400 outline-none transition-colors ${inpClass}" onchange="saveMultiSetWeight(${dIdx}, ${eIdx}, ${sets}, this)"><button onclick="toggleSetCheck(${dIdx}, ${eIdx}, ${i}, this)" class="w-12 h-6 hover:bg-green-500 rounded text-[10px] transition-all border ${btnClass}">✔</button></div>`;
-							}
-							inputHtml = `<div class="flex flex-wrap justify-end items-center mt-2 gap-1"><span class="text-[8px] text-slate-500 mr-2 font-bold italic uppercase self-start mt-2">Series:</span>${boxes}</div>`;
-						} else {
-							const isChecked = (ex.checks && ex.checks[0] === true);
-							const btnClass = isChecked ? "bg-green-600 text-white border-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" : "bg-slate-700/50 text-slate-400 border-slate-600";
-							const weightInput = ex.track ? `<input type="text" placeholder="KG" value="${ex.weight || ''}" class="bg-slate-800 border-slate-600 rounded-lg w-16 text-center text-white text-xs py-2 focus:border-yellow-500 outline-none transition-colors ${isChecked ? 'completed-set' : ''}" onchange="saveWeight(${dIdx}, ${eIdx}, this.value)">` : '';
-							inputHtml = `<div class="flex items-center gap-2 mt-2 sm:mt-0">${weightInput}<button onclick="toggleSetCheck(${dIdx}, ${eIdx}, 0, this)" class="w-10 h-10 hover:bg-green-500 rounded-xl transition-all border flex items-center justify-center ${btnClass}"><i data-lucide="check" class="w-5 h-5"></i></button></div>`;
-						}
+            // 5. Mapeo y Generación de HTML
+            const daysHtml = daysToRender.map((day) => {
+                const dIdx = day.realIdx; // USAMOS EL ÍNDICE REAL SIEMPRE
+                
+                let color = day.type === 'gym' ? 'border-blue-500' : day.type === 'cardio' ? 'border-green-500' : 'border-purple-500';
+                
+                const daysMap = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo"];
+                const realMap = [0, 1, 2, 2, 3, 4, 5, 5, 6];
+                const dayLower = day.day.toLowerCase().trim();
+                let dayOffset = dIdx;
+                const mapIdx = daysMap.indexOf(dayLower);
+                if (mapIdx !== -1) dayOffset = realMap[mapIdx];
 
-						return `<div class="py-3 border-b border-slate-800/50 flex flex-col sm:flex-row sm:items-center justify-between group hover:bg-slate-800/10 rounded-xl px-2 transition-colors">
-							<div class="flex-1 pr-4">
-								<div class="flex items-center flex-wrap">
-									<span class="text-white font-bold text-sm uppercase italic mr-2">${ex.name}</span>
-									${vid}
-								</div>
-								<div class="flex gap-2 items-center mt-1">
-									<span class="text-[10px] text-blue-300 font-mono bg-blue-900/30 px-1.5 rounded">${ex.sets} x ${ex.reps}</span>
-									<span class="text-[9px] text-yellow-500 font-bold uppercase tracking-tighter flex items-center gap-1 bg-yellow-900/20 px-2 rounded border border-yellow-500/10">
-										<i data-lucide="zap" class="w-3 h-3"></i> ${potentialKi} Ki • ${monthShort}
-									</span>
-								</div>
-								<div class="text-[10px] text-slate-500 italic mt-1 leading-tight">${ex.desc || ''}</div>
-							</div>
-							${inputHtml}
-						</div>`;
-					}
-				}).join('');
+                const cardDate = new Date(mondayDate);
+                cardDate.setDate(mondayDate.getDate() + dayOffset);
+                const monthShort = cardDate.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
+                const dayNum = cardDate.getDate();
 
-				const addBtn = isEditMode ? `<button onclick="addNewExercise(${dIdx})" class="w-full mt-2 py-2 bg-green-900/30 text-green-400 border border-green-800 border-dashed rounded-xl text-xs font-bold uppercase hover:bg-green-900/50 transition-all">+ Añadir Ejercicio</button>` : '';
+                const exHtml = day.exercises.map((ex, eIdx) => {
+                    if (isEditMode) {
+                        return `<div class="py-4 border-b border-slate-700/50 bg-slate-800/30 p-2 rounded mb-2">
+                            <div class="grid grid-cols-12 gap-2 mb-2">
+                                <div class="col-span-12">
+                                    <label class="text-[9px] text-yellow-500 font-bold uppercase">Ejercicio</label>
+                                    <input type="text" value="${ex.name}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'name', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-sm font-bold">
+                                </div>
+                                <div class="col-span-4">
+                                    <label class="text-[9px] text-blue-300 font-bold uppercase">Series</label>
+                                    <input type="text" value="${ex.sets}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'sets', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center">
+                                </div>
+                                <div class="col-span-4">
+                                    <label class="text-[9px] text-blue-300 font-bold uppercase">Reps</label>
+                                    <input type="text" value="${ex.reps}" onchange="updateExerciseData(${dIdx}, ${eIdx}, 'reps', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1 text-white text-xs text-center">
+                                </div>
+                                <div class="col-span-4 flex items-end">
+                                    <button onclick="deleteExercise(${dIdx}, ${eIdx})" class="w-full bg-red-900/50 text-red-300 border border-red-800 rounded py-1 text-[10px] uppercase font-bold hover:bg-red-800">Borrar</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        const vid = ex.vid ? `<a href="${ex.vid}" target="_blank" class="text-pink-400 text-[10px] ml-2 border border-pink-500/30 rounded px-2 py-0.5 font-bold uppercase italic">Video</a>` : '';
+                        let inputHtml = '';
+                        const sets = parseInt(ex.sets) || 1;
+                        const potentialKi = sets * 100;
 
-				return `<div id="day-card-${dayOffset}" class="glass rounded-3xl shadow-lg border-l-4 ${color} mb-5 anime-border overflow-hidden transition-all">
-					<div class="p-4 bg-slate-900/80 flex justify-between items-center border-b border-slate-800 shadow-sm">
-						<h3 class="font-bold text-white text-[12px] uppercase tracking-widest italic flex items-center gap-2">
-							${day.day} | ${day.title} 
-							<span class="text-[9px] text-slate-500 font-mono">(${dayNum}/${monthShort})</span>
-						</h3>
-						<button onclick="editDay(${dIdx})" class="p-2 hover:bg-slate-700 rounded-xl transition-all text-slate-500 hover:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-					</div>
-					<div class="p-3 bg-slate-900/20">${exHtml}${addBtn}${day.notes ? `<div class="mt-3 text-[10px] text-yellow-200 bg-yellow-900/30 p-3 rounded-xl border border-yellow-500/10 flex gap-2 italic"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500"></i>${day.notes}</div>` : ''}</div>
-				</div>`;
-			}).join('');
-			lucide.createIcons();
-		}
+                        if (ex.track && sets > 1 && sets < 10) {
+                            const saved = (ex.weight || "").toString().split('/');
+                            const checks = ex.checks || [];
+                            let boxes = '';
+                            for(let i=0; i<sets; i++) {
+                                const isChecked = checks[i] === true;
+                                const btnClass = isChecked ? "bg-green-600 text-white border-green-500" : "bg-slate-700/50 text-slate-400 border-slate-600";
+                                const inpClass = isChecked ? "completed-set" : "";
+                                boxes += `<div class="flex flex-col items-center gap-1">
+                                    <input type="number" placeholder="kg" value="${saved[i]||''}" 
+                                    class="bg-slate-900/50 border border-slate-700 rounded-lg w-12 text-center text-white text-xs py-2 focus:border-yellow-400 outline-none transition-colors ${inpClass}" 
+                                    onchange="saveMultiSetWeight(${dIdx}, ${eIdx}, ${sets}, this)">
+                                    <button onclick="toggleSetCheck(${dIdx}, ${eIdx}, ${i}, this)" 
+                                    class="w-12 h-6 hover:bg-green-500 rounded text-[10px] transition-all border ${btnClass}">✔</button>
+                                </div>`;
+                            }
+                            inputHtml = `<div class="flex flex-wrap justify-end items-center mt-2 gap-1">${boxes}</div>`;
+                        } else {
+                            const isChecked = (ex.checks && ex.checks[0] === true);
+                            const btnClass = isChecked ? "bg-green-600 text-white border-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" : "bg-slate-700/50 text-slate-400 border-slate-600";
+                            const weightInput = ex.track ? `<input type="text" placeholder="KG" value="${ex.weight || ''}" class="bg-slate-900/50 border border-slate-700 rounded-lg w-16 text-center text-white text-xs py-2 focus:border-yellow-500 outline-none transition-colors ${isChecked ? 'completed-set' : ''}" onchange="saveWeight(${dIdx}, ${eIdx}, this.value)">` : '';
+                            inputHtml = `<div class="flex items-center gap-2 mt-2 sm:mt-0">${weightInput}<button onclick="toggleSetCheck(${dIdx}, ${eIdx}, 0, this)" class="w-10 h-10 hover:bg-green-500 rounded-xl transition-all border flex items-center justify-center ${btnClass}"><i data-lucide="check" class="w-5 h-5"></i></button></div>`;
+                        }
+
+                        return `<div class="py-3 border-b border-slate-800/50 flex flex-col sm:flex-row sm:items-center justify-between group hover:bg-slate-800/5 rounded-xl px-2 transition-colors">
+                            <div class="flex-1 pr-4">
+                                <div class="flex items-center flex-wrap">
+                                    <span class="text-white font-bold text-sm uppercase italic mr-2">${ex.name}</span>
+                                    ${vid}
+                                </div>
+                                <div class="flex gap-2 items-center mt-1">
+                                    <span class="text-[10px] text-blue-300 font-mono bg-blue-900/30 px-1.5 rounded">${ex.sets} x ${ex.reps}</span>
+                                    <span class="text-[9px] text-yellow-500 font-bold uppercase tracking-tighter flex items-center gap-1">
+                                        <i data-lucide="zap" class="w-3 h-3"></i> ${potentialKi} Ki
+                                    </span>
+                                </div>
+                            </div>
+                            ${inputHtml}
+                        </div>`;
+                    }
+                }).join('');
+
+                const addBtn = isEditMode ? `<button onclick="addNewExercise(${dIdx})" class="w-full mt-2 py-2 bg-green-900/30 text-green-400 border border-green-800 border-dashed rounded-xl text-xs font-bold uppercase hover:bg-green-900/50 transition-all">+ Añadir Ejercicio</button>` : '';
+
+                return `<div id="day-card-${dayOffset}" class="glass rounded-3xl shadow-lg border-l-4 ${color} mb-5 anime-border overflow-hidden transition-all ${(!showFullWeek && !isEditMode) ? 'scale-105 border-yellow-500/50' : ''}">
+                    <div class="p-4 bg-slate-900/80 flex justify-between items-center border-b border-slate-800 shadow-sm">
+                        <h3 class="font-bold text-white text-[12px] uppercase tracking-widest italic flex items-center gap-2">
+                            ${day.day} | ${day.title} 
+                            <span class="text-[9px] text-slate-500 font-mono">(${dayNum}/${monthShort}) ${(!showFullWeek && !isEditMode) ? '🔥 HOY' : ''}</span>
+                        </h3>
+                        <button onclick="editDay(${dIdx})" class="p-2 hover:bg-slate-700 rounded-xl transition-all text-slate-500 hover:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="p-3 bg-slate-900/20">${exHtml}${addBtn}${day.notes ? `<div class="mt-3 text-[10px] text-yellow-200 bg-yellow-900/30 p-3 rounded-xl border border-yellow-500/10 flex gap-2 italic"><i data-lucide="sticky-note" class="w-4 h-4 mt-0.5 flex-shrink-0 text-yellow-500"></i>${day.notes}</div>` : ''}</div>
+                </div>`;
+            }).join('');
+
+            const emptyState = daysToRender.length === 0 ? `<div class="text-center p-10 glass rounded-3xl border border-slate-800"><p class="text-slate-400 text-xs uppercase font-bold tracking-widest mb-4">No hay entrenamiento programado para hoy</p><button onclick="toggleWeekView()" class="text-yellow-400 text-[10px] font-bold border border-yellow-500/30 px-4 py-2 rounded-xl uppercase">Ver semana completa</button></div>` : "";
+
+            container.innerHTML = toggleBtnHtml + daysHtml + emptyState;
+            lucide.createIcons();
+        }
+
+        function toggleWeekView() {
+            showFullWeek = !showFullWeek;
+            renderPlan();
+            // Si pasamos a vista diaria, hacemos scroll suave arriba
+            if(!showFullWeek) {
+                const container = document.getElementById('plan-container');
+                if(container) container.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 		function changeWeek() {
             const selector = document.getElementById('week-selector');
             currentWeekIndex = parseInt(selector.value);
@@ -1262,20 +1320,26 @@
             updateCalendarDates(); 
         }
 
-	function saveMultiSetWeight(d, e, s, el) {
-		const inputs = el.parentElement.querySelectorAll('input');
-		const vals = Array.from(inputs).map(i => i.value);
-		appData.plan[currentWeekIndex].days[d].exercises[e].weight = vals.join('/');
-		saveDataToCloud();
-		
-		// LÓGICA AUTO-TIMER: Si hay valor, color verde y arranca el crono
-		if(el.value !== "") {
-			el.classList.add('completed-set'); 
-			triggerAutoTimer(); 
-		} else {
-			el.classList.remove('completed-set');
-		}
-	}
+    function saveMultiSetWeight(d, e, s, el) {
+        // 1. Buscamos el contenedor del ejercicio específico
+        const container = el.closest('.flex-wrap'); 
+        const inputs = container.querySelectorAll('input[type="number"]');
+        
+        // 2. Extraemos todos los valores de las series de ese ejercicio
+        const vals = Array.from(inputs).map(i => i.value || "");
+        
+        // 3. Guardamos la cadena unida por "/" (ej: "50/50/45")
+        appData.plan[currentWeekIndex].days[d].exercises[e].weight = vals.join('/');
+        
+        // 4. Feedback visual: si el input tiene valor, marcar como completado
+        if(el.value !== "") {
+            el.classList.add('completed-set');
+        } else {
+            el.classList.remove('completed-set');
+        }
+        
+        saveDataToCloud();
+    }
 
 	function saveWeight(d, e, v) {
 		appData.plan[currentWeekIndex].days[d].exercises[e].weight = v;
@@ -1289,7 +1353,7 @@
 		const inputEl = document.activeElement; 
 		if(inputEl && inputEl.tagName === 'INPUT' && v !== "") {
 			inputEl.classList.add('completed-set');
-			triggerAutoTimer();
+			//triggerAutoTimer();
 		} else if (inputEl) {
 			inputEl.classList.remove('completed-set');
 		}
@@ -1734,7 +1798,22 @@
 				target.classList.remove('hidden-tab');
 				target.classList.remove('hidden');
 			}
-			
+                    // --- 4. CONTROL DE WIDGETS (CRONO Y SPOTIFY) ---
+            // Definimos en qué pestañas queremos ver los widgets
+            const workoutTabs = ['plan']; 
+            
+            const timerWidget = document.getElementById('rest-timer-widget');
+            const spotifyWidget = document.getElementById('spotify-widget');
+
+            if (workoutTabs.includes(id)) {
+                // Si estamos entrenando, MOSTRAMOS los widgets
+                if(timerWidget) timerWidget.classList.remove('hidden');
+                if(spotifyWidget) spotifyWidget.classList.remove('hidden');
+            } else {
+                // Si estamos en Inicio, Perfil, Ranking... los OCULTAMOS
+                if(timerWidget) timerWidget.classList.add('hidden');
+                if(spotifyWidget) spotifyWidget.classList.add('hidden');
+            }
 			// 4. Activar botón
 			const btn = document.getElementById(`btn-${id}`); 
 			if(btn) btn.classList.add('active'); 
@@ -2856,18 +2935,6 @@ window.delRun = function(idToDelete) {
 		saveDataToCloud(); renderPlan();
 	}
 
-	// --- FUNCIONES MEJORADAS DE FUERZA (Para borrar si el input está vacío) ---
-	function saveWeight(d, e, v) {
-		appData.plan[currentWeekIndex].days[d].exercises[e].weight = v;
-		const n = parseFloat(v);
-		if (!isNaN(n) && n > 0) {
-			saveStrengthRecord(appData.plan[currentWeekIndex].days[d].exercises[e].name, n);
-		} else if (v === "") {
-			// Lógica opcional: Si borras el peso hoy, ¿quieres borrar el record de hoy?
-			// Por seguridad, mejor usar la tabla de historial para borrar.
-		}
-		saveDataToCloud();
-	}
 
 	// --- GESTOR DE HISTORIAL Y SELECTOR ---
 	function handleStrengthSelectChange() {
@@ -3013,9 +3080,11 @@ window.delRun = function(idToDelete) {
 		}
 
 		
-        // --- CRONÓMETRO INTELIGENTE (AUTO-REST) ---
-        let timerInterval; let timeRemaining = 0; const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
+        // --- CRONÓMETRO INTELIGENTE MEJORADO ---
+        let timerInterval = null; 
+        let timeRemaining = 0; 
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
         // Cargar preferencia guardada
         window.addEventListener('load', () => {
             const savedTime = localStorage.getItem('pepeRestTime');
@@ -3027,78 +3096,122 @@ window.delRun = function(idToDelete) {
             d.classList.toggle('hidden'); 
         }
 
-        // Esta función la llamaremos cuando guardes un peso
+        // Lógica del botón Play/Stop Manual
+        function toggleTimerManual() {
+            if (timerInterval) {
+                // Si está corriendo, lo paramos
+                stopTimer();
+            } else {
+                // Si está parado, lo iniciamos con el tiempo del input
+                const secs = parseInt(document.getElementById('timer-default-time').value) || 90;
+                startTimer(secs);
+            }
+        }
+
+        // Disparador automático (Check)
         function triggerAutoTimer() {
             const autoOn = document.getElementById('timer-auto-switch').checked;
             if(autoOn) {
                 const secs = parseInt(document.getElementById('timer-default-time').value) || 90;
                 startTimer(secs);
-                // Abrir el panel si está cerrado para que veas que ha empezado
                 document.getElementById('timer-display').classList.remove('hidden');
             }
         }
 
         function startTimer(seconds) { 
-            clearInterval(timerInterval); 
+            // Limpiamos intervalo anterior si existe
+            stopTimer(false); // false para no resetear visuales aun
+
             timeRemaining = seconds; 
             updateTimerVisuals(); 
+            
+            // UI: Cambiar botón a STOP (Rojo)
+            const btn = document.getElementById('btn-timer-action');
+            if(btn) {
+                btn.innerHTML = '<i data-lucide="square" class="w-3 h-3 fill-current"></i> Stop';
+                btn.className = "flex-1 bg-red-900 hover:bg-red-800 text-white text-[10px] py-2 rounded-lg uppercase font-bold border border-red-700/50 flex items-center justify-center gap-1 transition-colors";
+                lucide.createIcons();
+            }
+
             document.getElementById('timer-status').innerText = "RECUPERANDO...";
-            document.getElementById('timer-status').classList.remove('text-green-500');
-            document.getElementById('timer-status').classList.add('text-yellow-500');
+            document.getElementById('timer-status').className = "text-[9px] text-yellow-500 uppercase tracking-widest mb-3 mt-1 font-bold animate-pulse";
 
             timerInterval = setInterval(() => { 
                 timeRemaining--; 
                 updateTimerVisuals(); 
                 if (timeRemaining <= 0) { 
-                    clearInterval(timerInterval); 
-                    playAlarm(); 
-                    if(navigator.vibrate) navigator.vibrate([200, 100, 200]); 
+                    stopTimer(true); // Parar lógica
+                    playAlarm(); // SONIDO FUERTE
+                    
+                    // VIBRACIÓN AGRESIVA (500ms vibrar, 200ms para, 500ms vibrar)
+                    if(navigator.vibrate) navigator.vibrate([500, 200, 500]); 
+                    
                     document.getElementById('timer-status').innerText = "¡A LA BATALLA!";
-                    document.getElementById('timer-status').classList.replace('text-yellow-500', 'text-green-500');
+                    document.getElementById('timer-status').className = "text-[9px] text-green-500 uppercase tracking-widest mb-3 mt-1 font-bold animate-bounce";
                 } 
             }, 1000); 
         }
 
-        function stopTimer() { clearInterval(timerInterval); timeRemaining = 0; updateTimerVisuals(); document.getElementById('timer-status').innerText = "PAUSADO"; }
-        function addTime(s) { timeRemaining += s; updateTimerVisuals(); }
-        
+        function stopTimer(resetUI = true) { 
+            if(timerInterval) clearInterval(timerInterval); 
+            timerInterval = null;
+            
+            if(resetUI) {
+                timeRemaining = 0; 
+                updateTimerVisuals(); 
+                
+                // UI: Volver botón a PLAY (Verde)
+                const btn = document.getElementById('btn-timer-action');
+                if(btn) {
+                    btn.innerHTML = '<i data-lucide="play" class="w-3 h-3"></i> Iniciar';
+                    btn.className = "flex-1 bg-green-700 hover:bg-green-600 text-white text-[10px] py-2 rounded-lg uppercase font-bold border border-green-500/50 flex items-center justify-center gap-1 transition-colors";
+                    lucide.createIcons();
+                }
+                
+                document.getElementById('timer-status').innerText = "LISTO";
+                document.getElementById('timer-status').className = "text-[9px] text-slate-500 uppercase tracking-widest mb-3 mt-1 font-bold";
+            }
+        }
+
+        function addTime(s) { 
+            if (!timerInterval) {
+                // Si está parado y añadimos tiempo, arrancamos
+                startTimer(s);
+            } else {
+                timeRemaining += s; 
+                updateTimerVisuals(); 
+            }
+        }
+
         function updateTimerVisuals() { 
-            const m = Math.floor(timeRemaining / 60); const s = timeRemaining % 60; 
+            const m = Math.floor(timeRemaining / 60); 
+            const s = timeRemaining % 60; 
             document.getElementById('timer-countdown').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
         }
-        
-        function playAlarm() { /* (Mismo código de sonido beep de antes) */ if (audioContext.state === 'suspended') audioContext.resume(); const osc = audioContext.createOscillator(); const gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'square'; osc.frequency.setValueAtTime(880, audioContext.currentTime); osc.frequency.setValueAtTime(440, audioContext.currentTime + 0.1); gain.gain.setValueAtTime(0.1, audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5); osc.start(); osc.stop(audioContext.currentTime + 0.5); }
-// --- FUNCIÓN DEL CHECK CON GUARDADO EN NUBE ---
-        function toggleSetCheck(dayIdx, exIdx, setIdx, btn) {
-            // Accedemos al ejercicio concreto
-            const exercise = appData.plan[currentWeekIndex].days[dayIdx].exercises[exIdx];
-            
-            // Inicializamos el array de checks si no existe
-            if (!exercise.checks) exercise.checks = [];
-            
-            // Cambiamos el estado (True <-> False)
-            const newState = !exercise.checks[setIdx];
-            exercise.checks[setIdx] = newState;
 
-            // Actualizamos visualmente al instante (para que se sienta rápido)
-            const wrapper = btn.parentElement;
-            const input = wrapper.querySelector('input');
+        // SONIDO POTENCIADO
+        function playAlarm() { 
+            if (audioContext.state === 'suspended') audioContext.resume();
             
-            if (newState) {
-                // MARCADO
-                if(input) input.classList.add('completed-set');
-                btn.classList.remove('bg-slate-700/50', 'text-slate-400', 'border-slate-600');
-                btn.classList.add('bg-green-600', 'text-white', 'border-green-500');
-                triggerAutoTimer(); // Lanzar crono
-            } else {
-                // DESMARCADO
-                if(input) input.classList.remove('completed-set');
-                btn.classList.remove('bg-green-600', 'text-white', 'border-green-500');
-                btn.classList.add('bg-slate-700/50', 'text-slate-400', 'border-slate-600');
-            }
-
-            // Guardar en Firebase y recalcular Ranking
-            saveDataToCloud();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            // Tipo de onda "sawtooth" (diente de sierra) es más molesta/fuerte que "square"
+            osc.type = 'sawtooth'; 
+            
+            // Frecuencia aguda (1000Hz)
+            osc.frequency.setValueAtTime(1000, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.5);
+            
+            // VOLUMEN AL 100% (1.0)
+            gain.gain.setValueAtTime(1.0, audioContext.currentTime); 
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            osc.start();
+            osc.stop(audioContext.currentTime + 0.5);
         }
 		// --- RENDERIZADOR DE SUPLEMENTOS BLINDADO ---
 		function renderSupplements() {
